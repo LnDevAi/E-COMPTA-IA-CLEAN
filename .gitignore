@@ -1,0 +1,36 @@
+# OS / général
+.DS_Store
+Thumbs.db
+*.log
+logs/
+tmp/
+*.tmp
+.env
+
+# IDE / éditeurs
+.vscode/
+.idea/
+*.iml
+
+# Node / Angular (frontend)
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/npm-debug.log*
+frontend/yarn-error.log*
+
+# Java / Maven (backend)
+backend/target/
+*.class
+*.jar
+*.war
+dependency-reduced-pom.xml
+
+# Tests et rapports
+**/coverage/
+**/.nyc_output/
+
+# Divers
+.cache/
+.husky/_/
+*.local
