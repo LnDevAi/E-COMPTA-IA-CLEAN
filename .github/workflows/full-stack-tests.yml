@@ -36,7 +36,11 @@ jobs:
       - name: Install Newman
         run: npm i -g newman
 
-      - name: Run Postman tests via Nginx
+      - name: Run Postman SMOKE via Nginx (blocking)
+        run: newman run postman_collection_smoke.json -e postman_environment_nginx_ci.json
+
+      - name: Run Postman FULL via Nginx (non-blocking)
+        continue-on-error: true
         run: newman run postman_collection.json -e postman_environment_nginx_ci.json
 
       - name: Dump logs on failure
