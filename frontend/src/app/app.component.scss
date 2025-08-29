@@ -16,6 +16,16 @@
   .content-wrapper {
     padding: 24px;
     min-height: calc(100vh - 64px);
+    
+    .health-banner {
+      background: #eef8ee;
+      border: 1px solid #b6e0b6;
+      color: #225c22;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
   }
 }
 
