@@ -1,0 +1,14 @@
+.git
+.gitignore
+frontend/node_modules
+frontend/dist
+frontend/.angular
+backend/target
+**/*.log
+logs
+.tmp
+.temp
+.cache
+.vscode
+.idea
+newman
