@@ -19,6 +19,7 @@ public class CorsConfig {
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost",
             "http://localhost:80",
+            "http://localhost:8081",
             "http://localhost:4200",
             "http://frontend",
             "http://frontend:80",
