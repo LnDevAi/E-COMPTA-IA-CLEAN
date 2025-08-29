@@ -32,12 +32,7 @@ public class EmployeeController {
             // Utiliser le repository pour récupérer les vrais employés
             List<Employee> employees = employeeRepository.findAll();
             
-            // Si aucun employé en base, créer des données de test
-            if (employees.isEmpty()) {
-                // Créer des employés de test
-                createSampleEmployees();
-                employees = employeeRepository.findAll();
-            }
+            // Ne pas injecter de données mock; retourner simplement la liste (peut être vide)
 
             Map<String, Object> response = new HashMap<>();
             response.put("data", employees);
@@ -183,37 +178,5 @@ public class EmployeeController {
     /**
      * Créer des employés de test
      */
-    private void createSampleEmployees() {
-        try {
-            // Employé 1
-            humanResourceService.createEmployee(
-                "EMP001", "Jean", "Dupont", "jean.dupont@entreprise.com",
-                Employee.Gender.MALE, Employee.ContractType.CDI, "Finance", "Comptable",
-                new java.math.BigDecimal("450000"), "XOF", 1L
-            );
-
-            // Employé 2
-            humanResourceService.createEmployee(
-                "EMP002", "Marie", "Martin", "marie.martin@entreprise.com",
-                Employee.Gender.FEMALE, Employee.ContractType.CDI, "Ressources Humaines", "Directeur RH",
-                new java.math.BigDecimal("650000"), "XOF", 1L
-            );
-
-            // Employé 3
-            humanResourceService.createEmployee(
-                "EMP003", "Pierre", "Durand", "pierre.durand@entreprise.com",
-                Employee.Gender.MALE, Employee.ContractType.CDI, "IT", "Développeur",
-                new java.math.BigDecimal("550000"), "XOF", 1L
-            );
-
-            // Employé 4
-            humanResourceService.createEmployee(
-                "EMP004", "Sophie", "Bernard", "sophie.bernard@entreprise.com",
-                Employee.Gender.FEMALE, Employee.ContractType.CDI, "Administration", "Assistante",
-                new java.math.BigDecimal("350000"), "XOF", 1L
-            );
-        } catch (Exception e) {
-            // Ignorer les erreurs lors de la création des données de test
-        }
-    }
+    private void createSampleEmployees() { }
 }

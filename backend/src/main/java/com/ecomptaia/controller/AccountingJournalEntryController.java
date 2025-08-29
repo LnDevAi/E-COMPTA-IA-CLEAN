@@ -29,11 +29,7 @@ public class AccountingJournalEntryController {
             // Utiliser le repository pour récupérer les vraies écritures
             List<JournalEntry> entries = journalEntryRepository.findAll();
             
-            // Si aucune écriture en base, créer des données de test
-            if (entries.isEmpty()) {
-                createSampleJournalEntries();
-                entries = journalEntryRepository.findAll();
-            }
+            // Ne pas injecter de données mock; retourner simplement la liste (peut être vide)
 
             Map<String, Object> response = new HashMap<>();
             response.put("data", entries);
@@ -230,54 +226,5 @@ public class AccountingJournalEntryController {
     /**
      * Créer des écritures de test
      */
-    private void createSampleJournalEntries() {
-        try {
-            // Écriture 1
-            JournalEntry entry1 = new JournalEntry();
-            entry1.setEntryNumber("EC-2025-001");
-            entry1.setEntryDate(java.time.LocalDate.of(2025, 1, 15));
-            entry1.setDescription("Vente de marchandises");
-            entry1.setJournalType("VENTES");
-            entry1.setCurrency("XOF");
-            entry1.setTotalDebit(new java.math.BigDecimal("0"));
-            entry1.setTotalCredit(new java.math.BigDecimal("150000"));
-            entry1.setCompanyId(1L);
-            entry1.setCountryCode("CI");
-            entry1.setAccountingStandard("OHADA");
-            entry1.setStatus("VALIDÉ");
-            journalEntryRepository.save(entry1);
-
-            // Écriture 2
-            JournalEntry entry2 = new JournalEntry();
-            entry2.setEntryNumber("EC-2025-002");
-            entry2.setEntryDate(java.time.LocalDate.of(2025, 1, 15));
-            entry2.setDescription("Achat de fournitures");
-            entry2.setJournalType("ACHATS");
-            entry2.setCurrency("XOF");
-            entry2.setTotalDebit(new java.math.BigDecimal("25000"));
-            entry2.setTotalCredit(new java.math.BigDecimal("0"));
-            entry2.setCompanyId(1L);
-            entry2.setCountryCode("CI");
-            entry2.setAccountingStandard("OHADA");
-            entry2.setStatus("BROUILLON");
-            journalEntryRepository.save(entry2);
-
-            // Écriture 3
-            JournalEntry entry3 = new JournalEntry();
-            entry3.setEntryNumber("EC-2025-003");
-            entry3.setEntryDate(java.time.LocalDate.of(2025, 1, 14));
-            entry3.setDescription("Paiement salaires");
-            entry3.setJournalType("BANQUE");
-            entry3.setCurrency("XOF");
-            entry3.setTotalDebit(new java.math.BigDecimal("80000"));
-            entry3.setTotalCredit(new java.math.BigDecimal("0"));
-            entry3.setCompanyId(1L);
-            entry3.setCountryCode("CI");
-            entry3.setAccountingStandard("OHADA");
-            entry3.setStatus("VALIDÉ");
-            journalEntryRepository.save(entry3);
-        } catch (Exception e) {
-            // Ignorer les erreurs lors de la création des données de test
-        }
-    }
+    private void createSampleJournalEntries() { }
 }

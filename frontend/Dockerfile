@@ -11,8 +11,8 @@ RUN apk add --no-cache git
 COPY package*.json ./
 
 # Installer les dépendances avec nettoyage du cache
-RUN npm cache clean --force
-RUN npm install --legacy-peer-deps
+ENV NODE_OPTIONS=--max_old_space_size=4096
+RUN npm ci --legacy-peer-deps
 
 # Copier le code source
 COPY . .

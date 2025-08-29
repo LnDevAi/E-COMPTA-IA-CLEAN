@@ -1,0 +1,7 @@
+services:
+  frontend:
+    ports:
+      - "8081:80"
+  postgres:
+    ports:
+      - "5433:5432"

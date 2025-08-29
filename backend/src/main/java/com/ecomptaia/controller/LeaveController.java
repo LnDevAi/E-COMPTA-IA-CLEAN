@@ -32,11 +32,7 @@ public class LeaveController {
             // Utiliser le repository pour récupérer les vraies demandes de congés
             List<Leave> leaves = leaveRepository.findAll();
             
-            // Si aucune demande en base, créer des données de test
-            if (leaves.isEmpty()) {
-                createSampleLeaves();
-                leaves = leaveRepository.findAll();
-            }
+            // Ne pas injecter de données mock; retourner simplement la liste (peut être vide)
 
             Map<String, Object> response = new HashMap<>();
             response.put("data", leaves);
@@ -270,52 +266,5 @@ public class LeaveController {
     /**
      * Créer des demandes de congé de test
      */
-    private void createSampleLeaves() {
-        try {
-            // Demande de congé 1
-            Leave leave1 = new Leave();
-            leave1.setLeaveCode("CONG-2025-001");
-            leave1.setEmployeeId(1L);
-            leave1.setLeaveType(Leave.LeaveType.ANNUAL);
-            leave1.setStartDate(java.time.LocalDate.of(2025, 2, 1));
-            leave1.setEndDate(java.time.LocalDate.of(2025, 2, 7));
-            leave1.setTotalDays(7);
-            leave1.setReason("Congés annuels");
-            leave1.setLeaveStatus(Leave.LeaveStatus.APPROVED);
-            leave1.setApprovedAt(java.time.LocalDateTime.now());
-            leave1.setApprovedBy(1L);
-            leave1.setEntrepriseId(1L);
-            leaveRepository.save(leave1);
-
-            // Demande de congé 2
-            Leave leave2 = new Leave();
-            leave2.setLeaveCode("CONG-2025-002");
-            leave2.setEmployeeId(2L);
-            leave2.setLeaveType(Leave.LeaveType.SICK);
-            leave2.setStartDate(java.time.LocalDate.of(2025, 1, 20));
-            leave2.setEndDate(java.time.LocalDate.of(2025, 1, 22));
-            leave2.setTotalDays(3);
-            leave2.setReason("Maladie");
-            leave2.setLeaveStatus(Leave.LeaveStatus.APPROVED);
-            leave2.setApprovedAt(java.time.LocalDateTime.now());
-            leave2.setApprovedBy(1L);
-            leave2.setEntrepriseId(1L);
-            leaveRepository.save(leave2);
-
-            // Demande de congé 3
-            Leave leave3 = new Leave();
-            leave3.setLeaveCode("CONG-2025-003");
-            leave3.setEmployeeId(3L);
-            leave3.setLeaveType(Leave.LeaveType.MATERNITY);
-            leave3.setStartDate(java.time.LocalDate.of(2025, 3, 1));
-            leave3.setEndDate(java.time.LocalDate.of(2025, 6, 30));
-            leave3.setTotalDays(120);
-            leave3.setReason("Congé maternité");
-            leave3.setLeaveStatus(Leave.LeaveStatus.PENDING);
-            leave3.setEntrepriseId(1L);
-            leaveRepository.save(leave3);
-        } catch (Exception e) {
-            // Ignorer les erreurs lors de la création des données de test
-        }
-    }
+    private void createSampleLeaves() { }
 }

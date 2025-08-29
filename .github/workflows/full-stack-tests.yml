@@ -1,0 +1,50 @@
+name: Full-stack checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and start stack (Docker Compose)
+        run: |
+          docker compose -f docker/docker-compose.yml -f docker/docker-compose.ci.yml up --build -d
+
+      - name: Wait for backend via Nginx proxy
+        run: |
+          for i in {1..60}; do
+            if curl -sf http://localhost:8081/api/health > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          echo "Backend did not respond healthy via Nginx" && exit 1
+
+      - name: Check frontend index page served by Nginx
+        run: |
+          curl -sSf http://localhost:8081/ >/dev/null
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Newman
+        run: npm i -g newman
+
+      - name: Run Postman SMOKE via Nginx (blocking)
+        run: newman run postman_collection_smoke.json -e postman_environment_nginx_ci.json
+
+      - name: Run Postman FULL via Nginx (non-blocking)
+        continue-on-error: true
+        run: newman run postman_collection.json -e postman_environment_nginx_ci.json
+
+      - name: Dump logs on failure
+        if: failure()
+        run: |
+          docker compose -f docker/docker-compose.yml -f docker/docker-compose.ci.yml ps
+          docker compose -f docker/docker-compose.yml -f docker/docker-compose.ci.yml logs --no-color | tail -n 500

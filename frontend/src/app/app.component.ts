@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { ApiService } from './core/services/api';
 
 import { HeaderComponent } from './shared/components/header/header.component';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
@@ -12,7 +14,8 @@ import { SidebarComponent } from './shared/components/sidebar/sidebar.component'
     CommonModule,
     RouterOutlet,
     HeaderComponent,
-    SidebarComponent
+    SidebarComponent,
+    HttpClientModule
   ],
   template: `
     <div class="app-container">
@@ -25,6 +28,9 @@ import { SidebarComponent } from './shared/components/sidebar/sidebar.component'
       <!-- Main content -->
       <main class="main-content">
         <div class="content-wrapper">
+          <div class="health-banner" *ngIf="healthStatus">
+            Backend: {{ healthStatus.status }} — {{ healthStatus.message }}
+          </div>
           <router-outlet></router-outlet>
         </div>
       </main>
@@ -32,8 +38,18 @@ import { SidebarComponent } from './shared/components/sidebar/sidebar.component'
   `,
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'E-COMPTA-IA';
+  healthStatus: any = null;
+
+  constructor(private api: ApiService) {}
+
+  ngOnInit(): void {
+    this.api.getHealth().subscribe({
+      next: (data) => this.healthStatus = data,
+      error: () => this.healthStatus = { status: 'DOWN', message: 'Backend unreachable' }
+    });
+  }
 }
 
 

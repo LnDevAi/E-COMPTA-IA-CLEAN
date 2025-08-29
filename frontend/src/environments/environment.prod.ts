@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8080',
+  apiUrl: '',
   appName: 'E-COMPTA-IA',
   appVersion: '1.0.0',
   defaultLanguage: 'fr',

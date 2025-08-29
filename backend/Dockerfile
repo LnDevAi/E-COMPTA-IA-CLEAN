@@ -1,8 +1,8 @@
 # Utiliser l'image OpenJDK 17
-FROM openjdk:17-jdk-slim
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 
 # Définir le répertoire de travail
-WORKDIR /app
+WORKDIR /build
 
 # Copier le fichier pom.xml
 COPY pom.xml .
@@ -11,10 +11,17 @@ COPY pom.xml .
 COPY src ./src
 
 # Installer Maven et construire l'application
-RUN apt-get update && apt-get install -y maven curl
+RUN mvn -q -e -DskipTests dependency:go-offline
 
 # Construire l'application avec le profil de production
-RUN mvn clean package -DskipTests -Pprod
+RUN mvn -q clean package -DskipTests -Pprod
+
+FROM eclipse-temurin:17-jre-alpine AS runtime
+WORKDIR /app
+RUN apk add --no-cache curl
+COPY --from=build /build/target/ecomptaia-backend-1.0.0.jar /app/app.jar
+EXPOSE 8080
+CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/app/app.jar"]
 
 # Exposer le port 8080
 EXPOSE 8080
