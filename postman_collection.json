@@ -59,6 +59,136 @@
           }
         }
       ]
+    },
+    {
+      "name": "Auth - Register (sample)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","auth","register"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test.user@example.com\",\n  \"password\": \"Test@1234\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\"\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Status is 200 or 201', function () { pm.expect([200,201]).to.include(pm.response.code); });"
+          ],
+          "type": "text/javascript"
+        }
+      }]
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","auth","login"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test.user@example.com\",\n  \"password\": \"Test@1234\"\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+            "const json = pm.response.json();",
+            "pm.environment.set('token', json.token);",
+            "pm.test('Token present', function () { pm.expect(json.token).to.be.a('string'); });"
+          ],
+          "type": "text/javascript"
+        }
+      }]
+    },
+    {
+      "name": "Dashboard - KPIs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"}
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/dashboard/financial/kpis?companyId=1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","dashboard","financial","kpis"],
+          "query": [{"key": "companyId", "value": "1"}]
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {"exec": ["pm.test('Status is 200', function () { pm.response.to.have.status(200); });"],"type":"text/javascript"}
+      }]
+    },
+    {
+      "name": "Third-parties - Suppliers list",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"}
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/third-parties/suppliers",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","third-parties","suppliers"]
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {"exec": ["pm.test('Status is 200', function () { pm.response.to.have.status(200); });"],"type":"text/javascript"}
+      }]
+    },
+    {
+      "name": "Accounting - Chart of accounts",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"}
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/accounting/chart-of-accounts",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","accounting","chart-of-accounts"]
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {"exec": ["pm.test('Status is 200', function () { pm.response.to.have.status(200); });"],"type":"text/javascript"}
+      }]
+    },
+    {
+      "name": "Reporting - Balance Sheet",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"}
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/reporting/balance-sheet",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","reporting","balance-sheet"]
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {"exec": ["pm.test('Status is 200', function () { pm.response.to.have.status(200); });"],"type":"text/javascript"}
+      }]
     }
   ]
 }
