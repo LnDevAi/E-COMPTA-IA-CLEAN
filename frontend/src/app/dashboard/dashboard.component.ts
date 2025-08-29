@@ -135,9 +135,6 @@ export class DashboardComponent implements OnInit {
         this.error = 'Impossible de charger les données du dashboard. Vérifiez la connexion au backend.';
         this.isLoading = false;
         
-        // Fallback vers les données mockées
-        this.loadMockData();
-        
         this.snackBar.open('Erreur de connexion au backend', 'Fermer', {
           duration: 5000,
           horizontalPosition: 'end',
@@ -148,18 +145,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  private loadMockData(): void {
-    this.dashboardData = {
-      revenue: 2450000,
-      expenses: 1850000,
-      profit: 600000,
-      employees: 45,
-      revenueGrowth: 12.5,
-      expensesGrowth: 8.2,
-      profitGrowth: 18.7,
-      employeesGrowth: 3
-    };
-  }
+  private loadMockData(): void {}
 
   refreshDashboard(): void {
     this.loadDashboardData();

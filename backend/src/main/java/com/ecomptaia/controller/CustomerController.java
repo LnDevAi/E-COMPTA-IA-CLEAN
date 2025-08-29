@@ -32,11 +32,7 @@ public class CustomerController {
             // Utiliser le repository pour récupérer les vrais clients
             List<ThirdParty> customers = thirdPartyRepository.findClientsByCompany(1L);
             
-            // Si aucun client en base, créer des données de test
-            if (customers.isEmpty()) {
-                createSampleCustomers();
-                customers = thirdPartyRepository.findClientsByCompany(1L);
-            }
+            // Ne pas injecter de données mock; retourner simplement la liste (peut être vide)
 
             Map<String, Object> response = new HashMap<>();
             response.put("data", customers);
@@ -238,72 +234,5 @@ public class CustomerController {
     /**
      * Créer des clients de test
      */
-    private void createSampleCustomers() {
-        try {
-            // Client 1
-            ThirdParty customer1 = new ThirdParty();
-            customer1.setCode("CLI001");
-            customer1.setAccountNumber("4110001");
-            customer1.setName("ABC Corporation");
-            customer1.setType("CLIENT");
-            customer1.setCategory("Entreprise");
-            customer1.setEmail("contact@abccorp.com");
-            customer1.setPhone("+225 27 22 49 50 00");
-            customer1.setAddress("123 Avenue des Banques, Abidjan");
-            customer1.setCity("Abidjan");
-            customer1.setCountryCode("CI");
-            customer1.setCurrency("XOF");
-            customer1.setCreditLimit(new java.math.BigDecimal("5000000"));
-            customer1.setPaymentTerms("30 jours");
-            customer1.setPaymentDelay(30);
-            customer1.setCompanyId(1L);
-            customer1.setAccountingStandard("OHADA");
-            customer1.setIsActive(true);
-            thirdPartyRepository.save(customer1);
-
-            // Client 2
-            ThirdParty customer2 = new ThirdParty();
-            customer2.setCode("CLI002");
-            customer2.setAccountNumber("4110002");
-            customer2.setName("XYZ Industries");
-            customer2.setType("CLIENT");
-            customer2.setCategory("Entreprise");
-            customer2.setEmail("info@xyzindustries.com");
-            customer2.setPhone("+225 27 22 49 50 01");
-            customer2.setAddress("456 Boulevard du Commerce, Abidjan");
-            customer2.setCity("Abidjan");
-            customer2.setCountryCode("CI");
-            customer2.setCurrency("XOF");
-            customer2.setCreditLimit(new java.math.BigDecimal("3000000"));
-            customer2.setPaymentTerms("45 jours");
-            customer2.setPaymentDelay(45);
-            customer2.setCompanyId(1L);
-            customer2.setAccountingStandard("OHADA");
-            customer2.setIsActive(true);
-            thirdPartyRepository.save(customer2);
-
-            // Client 3
-            ThirdParty customer3 = new ThirdParty();
-            customer3.setCode("CLI003");
-            customer3.setAccountNumber("4110003");
-            customer3.setName("Tech Solutions SARL");
-            customer3.setType("CLIENT");
-            customer3.setCategory("Entreprise");
-            customer3.setEmail("contact@techsolutions.ci");
-            customer3.setPhone("+225 27 22 49 50 02");
-            customer3.setAddress("789 Rue des Entrepreneurs, Abidjan");
-            customer3.setCity("Abidjan");
-            customer3.setCountryCode("CI");
-            customer3.setCurrency("XOF");
-            customer3.setCreditLimit(new java.math.BigDecimal("8000000"));
-            customer3.setPaymentTerms("30 jours");
-            customer3.setPaymentDelay(30);
-            customer3.setCompanyId(1L);
-            customer3.setAccountingStandard("OHADA");
-            customer3.setIsActive(true);
-            thirdPartyRepository.save(customer3);
-        } catch (Exception e) {
-            // Ignorer les erreurs lors de la création des données de test
-        }
-    }
+    private void createSampleCustomers() { }
 }
