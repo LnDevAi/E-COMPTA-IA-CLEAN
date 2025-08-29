@@ -1,0 +1,362 @@
+{
+  "info": {
+    "_postman_id": "ecomptaia-test-validation-final",
+    "name": "E-COMPTA-IA - Test Validation Final",
+    "description": "Test de validation final pour s'assurer que l'authentification et tous les modules fonctionnent parfaitement",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🔐 1. Test Authentification",
+      "item": [
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.token) {",
+                  "        pm.environment.set('jwtToken', response.token);",
+                  "        console.log('✅ Token JWT sauvegardé avec succès');",
+                  "        pm.test('Login réussi', function () {",
+                  "            pm.expect(pm.response.code).to.eql(200);",
+                  "            pm.expect(response).to.have.property('token');",
+                  "        });",
+                  "    }",
+                  "} else {",
+                  "    pm.test('Login échoué', function () {",
+                  "        pm.expect.fail('Login a échoué avec le code: ' + pm.response.code);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@ecomptaia.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🌐 2. Test Endpoints Publics",
+      "item": [
+        {
+          "name": "Test Public",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Endpoint public accessible', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/public",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "public"]
+            }
+          }
+        },
+        {
+          "name": "Standards Comptables",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Standards comptables accessibles', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/accounting/standards",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "accounting", "standards"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔒 3. Test Endpoints Protégés (AVEC Token)",
+      "item": [
+        {
+          "name": "Test Endpoint Protégé",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Endpoint protégé accessible avec token', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('message');",
+                  "    pm.expect(response.message).to.include('protégé');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/protected",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "protected"]
+            }
+          }
+        },
+        {
+          "name": "Journal Entries",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Journal Entries accessible avec token', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/journal-entries/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "journal-entries", "all"]
+            }
+          }
+        },
+        {
+          "name": "Tiers",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Tiers accessible avec token', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/third-parties/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "third-parties", "all"]
+            }
+          }
+        },
+        {
+          "name": "Employés RH",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Employés RH accessible avec token', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hr/employees",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hr", "employees"]
+            }
+          }
+        },
+        {
+          "name": "Actifs (Module 16)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Actifs (Module 16) accessible avec token', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/asset-inventory/assets",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asset-inventory", "assets"]
+            }
+          }
+        },
+        {
+          "name": "Documents GED (Module 17)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Documents GED (Module 17) accessible avec token', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/document-management/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "document-management", "documents"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🚫 4. Test Sécurité (SANS Token)",
+      "item": [
+        {
+          "name": "Test Endpoint Protégé (SANS Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Endpoint protégé refusé sans token', function () {",
+                  "    pm.expect(pm.response.code).to.eql(403);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/protected",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "protected"]
+            }
+          }
+        },
+        {
+          "name": "Journal Entries (SANS Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Journal Entries refusé sans token', function () {",
+                  "    pm.expect(pm.response.code).to.eql(403);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/journal-entries/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "journal-entries", "all"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "jwtToken",
+      "value": ""
+    }
+  ]
+}
+
+

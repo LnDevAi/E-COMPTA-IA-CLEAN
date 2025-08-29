@@ -1,0 +1,462 @@
+{
+	"id": "afb1fa37-da28-45b7-87fc-48692548a844",
+	"name": "E-COMPTA-IA - Plateformes Gouvernementales et Logiciels Tiers",
+	"timestamp": "2025-08-27T21:53:29.176Z",
+	"collection_id": "47106328-9aef0519-6e49-4c0f-956f-5b310efbe7f6",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 0,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-08-27T21:53:19.008Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "1092d0d5-c7f9-484b-8d25-fa74f0248491",
+			"name": "1. Test de Base du Module",
+			"url": "http://localhost:8080/api/government-platform/test",
+			"time": 302,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				302
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "93e8244c-2b65-4689-b25a-4d3bac469505",
+			"name": "2. Plateformes Gouvernementales - Sénégal",
+			"url": "http://localhost:8080/api/government-platform/platforms/SN",
+			"time": 56,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				56
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "2231e092-d386-44a3-9b90-45f7d66dc2e2",
+			"name": "3. Plateformes Gouvernementales - France",
+			"url": "http://localhost:8080/api/government-platform/platforms/FR",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				9
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "fec3d302-ce67-4b0d-9a77-e68bee5a5535",
+			"name": "4. Test Connexion Plateforme Fiscale - Sénégal",
+			"url": "http://localhost:8080/api/government-platform/test-connection/SN",
+			"time": 73,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				73
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "794c1414-fa64-4d5c-b6a3-cb5d2dbb1abe",
+			"name": "5. Déclaration TVA - Sénégal",
+			"url": "http://localhost:8080/api/government-platform/submit-tax-declaration/SN",
+			"time": 19,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				19
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "8a637447-bea3-4c3e-8c0b-d80b08499d17",
+			"name": "6. Déclaration Sociale - Sénégal",
+			"url": "http://localhost:8080/api/government-platform/submit-social-declaration/SN",
+			"time": 18,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				18
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "37f58db7-0d01-43eb-a14a-727c02cb7f2a",
+			"name": "7. Statut Déclaration",
+			"url": "http://localhost:8080/api/government-platform/declaration-status/DECL_123456",
+			"time": 13,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				13
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "bcf540a2-4556-443e-b6f0-cc4da909e9d3",
+			"name": "8. Notifications Gouvernementales",
+			"url": "http://localhost:8080/api/government-platform/notifications/SN",
+			"time": 29,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				29
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "96c22d4c-88e1-4fda-8251-460ae0f7dfcc",
+			"name": "9. Logiciels Tiers Disponibles",
+			"url": "http://localhost:8080/api/government-platform/third-party-software",
+			"time": 15,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				15
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "0f96abb9-8a86-470a-af0b-ece491294a27",
+			"name": "10. Test Connexion Sage",
+			"url": "http://localhost:8080/api/government-platform/test-software-connection",
+			"time": 468,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				468
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "0078edac-f8a4-4235-8786-73a30b2e4c94",
+			"name": "11. Synchronisation Sage - Comptes",
+			"url": "http://localhost:8080/api/government-platform/sync-software-data",
+			"time": 25,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				25
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "c4a801b9-dead-4e01-8be7-07f07a1d99df",
+			"name": "12. Logs de Synchronisation Sage",
+			"url": "http://localhost:8080/api/government-platform/software-sync-logs/SAGE",
+			"time": 14,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				14
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "d9a5255e-3639-40e6-972b-9c9edce2c74d",
+			"name": "13. Configuration Intégration Sage",
+			"url": "http://localhost:8080/api/government-platform/configure-software-integration",
+			"time": 11,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				11
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "99dd5aff-57ca-485f-91dd-8808bfc71b1f",
+			"name": "14. Statistiques Intégrations",
+			"url": "http://localhost:8080/api/government-platform/integration-statistics",
+			"time": 12,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				12
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "034a7693-1a1d-4f62-b0db-3d9f4ada7ccd",
+			"name": "15. Test Complet du Module",
+			"url": "http://localhost:8080/api/government-platform/complete-test",
+			"time": 3785,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				3785
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "a91b43a1-38cc-4d6e-af4a-5e406412048c",
+			"name": "16. Test Salesforce CRM",
+			"url": "http://localhost:8080/api/government-platform/test-software-connection",
+			"time": 377,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				377
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "f9bf9695-9b12-47e0-bf8c-20f2e41984c3",
+			"name": "17. Test Stripe Paiements",
+			"url": "http://localhost:8080/api/government-platform/test-software-connection",
+			"time": 244,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				244
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "eba5932e-517f-4754-aeee-257564df7fc4",
+			"name": "18. Test Workday HR",
+			"url": "http://localhost:8080/api/government-platform/test-software-connection",
+			"time": 1345,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				1345
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "7a6ecef3-8088-4fdd-a133-1abb763a3316",
+			"name": "19. Test NetSuite ERP",
+			"url": "http://localhost:8080/api/government-platform/test-software-connection",
+			"time": 137,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				137
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "80855699-8fbb-487d-aaf6-a26b46e94345",
+			"name": "20. Test FreshBooks Facturation",
+			"url": "http://localhost:8080/api/government-platform/test-software-connection",
+			"time": 840,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				840
+			],
+			"allTests": [
+				{}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 7792,
+	"collection": {
+		"requests": [
+			{
+				"id": "1092d0d5-c7f9-484b-8d25-fa74f0248491",
+				"method": "GET"
+			},
+			{
+				"id": "93e8244c-2b65-4689-b25a-4d3bac469505",
+				"method": "GET"
+			},
+			{
+				"id": "2231e092-d386-44a3-9b90-45f7d66dc2e2",
+				"method": "GET"
+			},
+			{
+				"id": "fec3d302-ce67-4b0d-9a77-e68bee5a5535",
+				"method": "POST"
+			},
+			{
+				"id": "794c1414-fa64-4d5c-b6a3-cb5d2dbb1abe",
+				"method": "POST"
+			},
+			{
+				"id": "8a637447-bea3-4c3e-8c0b-d80b08499d17",
+				"method": "POST"
+			},
+			{
+				"id": "37f58db7-0d01-43eb-a14a-727c02cb7f2a",
+				"method": "GET"
+			},
+			{
+				"id": "bcf540a2-4556-443e-b6f0-cc4da909e9d3",
+				"method": "GET"
+			},
+			{
+				"id": "96c22d4c-88e1-4fda-8251-460ae0f7dfcc",
+				"method": "GET"
+			},
+			{
+				"id": "0f96abb9-8a86-470a-af0b-ece491294a27",
+				"method": "POST"
+			},
+			{
+				"id": "0078edac-f8a4-4235-8786-73a30b2e4c94",
+				"method": "POST"
+			},
+			{
+				"id": "c4a801b9-dead-4e01-8be7-07f07a1d99df",
+				"method": "GET"
+			},
+			{
+				"id": "d9a5255e-3639-40e6-972b-9c9edce2c74d",
+				"method": "POST"
+			},
+			{
+				"id": "99dd5aff-57ca-485f-91dd-8808bfc71b1f",
+				"method": "GET"
+			},
+			{
+				"id": "034a7693-1a1d-4f62-b0db-3d9f4ada7ccd",
+				"method": "GET"
+			},
+			{
+				"id": "a91b43a1-38cc-4d6e-af4a-5e406412048c",
+				"method": "POST"
+			},
+			{
+				"id": "f9bf9695-9b12-47e0-bf8c-20f2e41984c3",
+				"method": "POST"
+			},
+			{
+				"id": "eba5932e-517f-4754-aeee-257564df7fc4",
+				"method": "POST"
+			},
+			{
+				"id": "7a6ecef3-8088-4fdd-a133-1abb763a3316",
+				"method": "POST"
+			},
+			{
+				"id": "80855699-8fbb-487d-aaf6-a26b46e94345",
+				"method": "POST"
+			}
+		]
+	}
+}

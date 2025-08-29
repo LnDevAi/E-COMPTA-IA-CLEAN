@@ -1,0 +1,103 @@
+{
+  "info": {
+    "_postman_id": "ecomptaia-auth-test-debug",
+    "name": "E-COMPTA-IA - Test Authentification Debug",
+    "description": "Collection pour tester l'authentification avec logs de débogage JWT",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Login et Récupération Token",
+      "item": [
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.token) {",
+                  "        pm.environment.set('jwtToken', response.token);",
+                  "        console.log('Token JWT sauvegardé: ' + response.token.substring(0, 50) + '...');",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@ecomptaia.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Test Endpoint Protégé avec Token",
+      "item": [
+        {
+          "name": "Test Endpoint Protégé (AVEC Token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/protected",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "protected"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Test Endpoint Protégé sans Token",
+      "item": [
+        {
+          "name": "Test Endpoint Protégé (SANS Token)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/protected",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "protected"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "jwtToken",
+      "value": ""
+    }
+  ]
+}
+
+

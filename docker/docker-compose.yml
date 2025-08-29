@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: ../backend
+    container_name: ecomptaia-backend
+    ports:
+      - "8080:8080"
+    networks:
+      - ecomptaia-network
+
+  frontend:
+    build:
+      context: ../frontend
+    container_name: ecomptaia-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - ecomptaia-network
+
+networks:
+  ecomptaia-network:
+    driver: bridge

@@ -1,0 +1,251 @@
+{
+  "info": {
+    "_postman_id": "ecomptaia-test-final-complet",
+    "name": "E-COMPTA-IA - Test Final Complet",
+    "description": "Collection finale complète pour tester tous les modules avec authentification JWT fonctionnelle",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentification",
+      "item": [
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.token) {",
+                  "        pm.environment.set('jwtToken', response.token);",
+                  "        console.log('✅ Token JWT sauvegardé');",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@ecomptaia.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Tests Endpoints Publics",
+      "item": [
+        {
+          "name": "Test Public",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/public",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "public"]
+            }
+          }
+        },
+        {
+          "name": "Standards Comptables",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/accounting/standards",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "accounting", "standards"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Tests Endpoints Protégés (AVEC Token)",
+      "item": [
+        {
+          "name": "Test Endpoint Protégé",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/protected",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "protected"]
+            }
+          }
+        },
+        {
+          "name": "Journal Entries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/journal-entries/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "journal-entries", "all"]
+            }
+          }
+        },
+        {
+          "name": "Tiers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/third-parties/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "third-parties", "all"]
+            }
+          }
+        },
+        {
+          "name": "Employés RH",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hr/employees",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hr", "employees"]
+            }
+          }
+        },
+        {
+          "name": "Congés RH",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hr/leaves",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hr", "leaves"]
+            }
+          }
+        },
+        {
+          "name": "Paies RH",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hr/payrolls",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hr", "payrolls"]
+            }
+          }
+        },
+        {
+          "name": "Actifs (Module 16)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/asset-inventory/assets",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asset-inventory", "assets"]
+            }
+          }
+        },
+        {
+          "name": "Inventaire (Module 16)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/asset-inventory/inventory",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asset-inventory", "inventory"]
+            }
+          }
+        },
+        {
+          "name": "Documents GED (Module 17)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/document-management/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "document-management", "documents"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "jwtToken",
+      "value": ""
+    }
+  ]
+}
+
+

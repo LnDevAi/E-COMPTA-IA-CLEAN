@@ -1,0 +1,777 @@
+{
+	"info": {
+		"_postman_id": "e-compta-ia-tests-2024",
+		"name": "E-COMPTA-IA - Tests Complets",
+		"description": "Collection complète pour tester tous les endpoints de l'API E-COMPTA-IA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Health & System",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "health"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.token) {",
+									"        pm.environment.set('auth_token', jsonData.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"test@ecomptaia.com\",\n    \"password\": \"TestPassword123!\",\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\",\n    \"companyName\": \"Test Company\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.token) {",
+									"        pm.environment.set('auth_token', jsonData.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"TestPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/test",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "test"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Count",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/users/count",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "users", "count"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Dashboard",
+			"item": [
+				{
+					"name": "Dashboard Test",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/test",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dashboard", "test"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Financial KPIs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/financial/kpis?companyId=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dashboard", "financial", "kpis"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Operational Metrics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/operational/metrics?companyId=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dashboard", "operational", "metrics"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Analytics Overview",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/analytics/overview?companyId=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dashboard", "analytics", "overview"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Performance Indicators",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/performance/indicators?companyId=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dashboard", "performance", "indicators"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Accounting",
+			"item": [
+				{
+					"name": "Get Chart of Accounts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/accounting/chart-of-accounts?companyId=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "accounting", "chart-of-accounts"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountNumber\": \"401001\",\n    \"accountName\": \"Fournisseurs Test\",\n    \"accountType\": \"LIABILITY\",\n    \"parentAccountId\": null,\n    \"companyId\": 1,\n    \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/accounting/accounts",
+							"host": ["{{base_url}}"],
+							"path": ["api", "accounting", "accounts"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Journal Entries",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/accounting/journal-entries?companyId=1&page=0&size=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "accounting", "journal-entries"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Journal Entry",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Test Journal Entry\",\n    \"reference\": \"JE001\",\n    \"companyId\": 1,\n    \"entryLines\": [\n        {\n            \"accountId\": 1,\n            \"debitAmount\": 1000.00,\n            \"creditAmount\": 0.00,\n            \"description\": \"Debit entry\"\n        },\n        {\n            \"accountId\": 2,\n            \"debitAmount\": 0.00,\n            \"creditAmount\": 1000.00,\n            \"description\": \"Credit entry\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/accounting/journal-entries",
+							"host": ["{{base_url}}"],
+							"path": ["api", "accounting", "journal-entries"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. Third Parties",
+			"item": [
+				{
+					"name": "Get All Third Parties",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/third-parties?companyId=1&page=0&size=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "third-parties"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Third Party",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Supplier\",\n    \"type\": \"SUPPLIER\",\n    \"email\": \"supplier@test.com\",\n    \"phone\": \"+225 01 02 03 04 05\",\n    \"address\": \"123 Test Street, Abidjan\",\n    \"taxNumber\": \"CI123456789\",\n    \"companyId\": 1,\n    \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/third-parties",
+							"host": ["{{base_url}}"],
+							"path": ["api", "third-parties"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6. Reports",
+			"item": [
+				{
+					"name": "Balance Sheet",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/reports/balance-sheet?companyId=1&asOfDate=2024-12-31",
+							"host": ["{{base_url}}"],
+							"path": ["api", "reports", "balance-sheet"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								},
+								{
+									"key": "asOfDate",
+									"value": "2024-12-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Income Statement",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/reports/income-statement?companyId=1&startDate=2024-01-01&endDate=2024-12-31",
+							"host": ["{{base_url}}"],
+							"path": ["api", "reports", "income-statement"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								},
+								{
+									"key": "startDate",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-12-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cash Flow Statement",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/reports/cash-flow?companyId=1&startDate=2024-01-01&endDate=2024-12-31",
+							"host": ["{{base_url}}"],
+							"path": ["api", "reports", "cash-flow"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								},
+								{
+									"key": "startDate",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-12-31"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7. AI Features",
+			"item": [
+				{
+					"name": "AI Analysis",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"Analyze the financial performance of the company\",\n    \"companyId\": 1,\n    \"analysisType\": \"FINANCIAL_PERFORMANCE\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/ai/analyze",
+							"host": ["{{base_url}}"],
+							"path": ["api", "ai", "analyze"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AI Recommendations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/ai/recommendations?companyId=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "ai", "recommendations"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "8. HR Management",
+			"item": [
+				{
+					"name": "Get All Employees",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/hr/employees?companyId=1&page=0&size=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hr", "employees"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@company.com\",\n    \"phone\": \"+225 07 08 09 10 11\",\n    \"position\": \"Accountant\",\n    \"department\": \"Finance\",\n    \"salary\": 500000,\n    \"hireDate\": \"2024-01-15\",\n    \"companyId\": 1,\n    \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/hr/employees",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hr", "employees"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "9. Asset Management",
+			"item": [
+				{
+					"name": "Get All Assets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/assets?companyId=1&page=0&size=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "assets"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Asset",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Office Computer\",\n    \"description\": \"Dell Laptop for accounting\",\n    \"category\": \"IT_EQUIPMENT\",\n    \"purchasePrice\": 750000,\n    \"purchaseDate\": \"2024-01-10\",\n    \"depreciationMethod\": \"STRAIGHT_LINE\",\n    \"usefulLife\": 3,\n    \"companyId\": 1,\n    \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/assets",
+							"host": ["{{base_url}}"],
+							"path": ["api", "assets"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "10. Document Management",
+			"item": [
+				{
+					"name": "Get All Documents",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/documents?companyId=1&page=0&size=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents"],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

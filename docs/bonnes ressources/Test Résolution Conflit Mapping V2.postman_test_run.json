@@ -1,0 +1,659 @@
+{
+	"id": "6fa9a876-1a62-4031-b8c9-4c01cf403841",
+	"name": "Test Résolution Conflit Mapping V2",
+	"timestamp": "2025-08-28T10:05:39.816Z",
+	"collection_id": "47106328-9301c445-a6e9-4a19-a35e-54f69f02c658",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 48,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-08-28T10:05:35.354Z",
+	"totalFail": 4,
+	"results": [
+		{
+			"id": "c2584b06-0426-4da4-a29d-987cdf5aa5f5",
+			"name": "1. Test Endpoint Base (403 Résolu)",
+			"url": "http://localhost:8080/api/hr/test/base",
+			"time": 437,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				437
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "c285a4a9-69de-4aae-8f8b-f6cb41287811",
+			"name": "2. Test GET /employees (Simple - 403 Résolu)",
+			"url": "http://localhost:8080/api/hr/employees",
+			"time": 39,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				39
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "4798009d-b665-4c7e-a2b3-e007eb872c70",
+			"name": "3. Test GET /employees/{entrepriseId} (Complexe - 403 Résolu)",
+			"url": "http://localhost:8080/api/hr/employees/1",
+			"time": 231,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				231
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "e6a19e21-0599-463a-88f2-e9c563a9a90e",
+			"name": "4. Test GET /leaves (Simple - 403 Résolu)",
+			"url": "http://localhost:8080/api/hr/leaves",
+			"time": 99,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				99
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "9e416e22-6d4d-4b6c-9d9b-18d0168da14d",
+			"name": "5. Test GET /leaves/test (Complexe - 403 Résolu)",
+			"url": "http://localhost:8080/api/hr/leaves/test",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "5be65c4c-c06b-4685-8b56-4a76d6a75070",
+			"name": "6. Test GET /payrolls (Simple - 403 Résolu)",
+			"url": "http://localhost:8080/api/hr/payrolls",
+			"time": 223,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				223
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "8159f7c2-b36f-43cd-a3f9-f9fc99a2e40b",
+			"name": "7. Test POST /payrolls (Création - 403 Résolu)",
+			"url": "http://localhost:8080/api/hr/payrolls",
+			"time": 278,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				278
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "9283aca3-a210-4d2b-9ece-20352ce7afeb",
+			"name": "8. Test POST /employees (Création - 403 Résolu)",
+			"url": "http://localhost:8080/api/hr/employees",
+			"time": 40,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				40
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "08f40e3a-ac1b-4ae9-977d-b3181e45084e",
+			"name": "9. Test POST /leaves (Création - 403 Résolu)",
+			"url": "http://localhost:8080/api/hr/leaves",
+			"time": 53,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				53
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "ac52c2bb-cf70-47e2-b898-f3995ab467a1",
+			"name": "10. Test Asset Inventory (403 Résolu)",
+			"url": "http://localhost:8080/api/asset-inventory/assets",
+			"time": 24,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				24
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "86ab17a9-ab91-42ac-a7fd-d8fc655b8bc8",
+			"name": "11. Test Document Management (403 Résolu)",
+			"url": "http://localhost:8080/api/document-management/documents",
+			"time": 25,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				25
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "9bb1ada0-11c0-4c7f-8ae7-3267c5ec0c26",
+			"name": "12. Test Dashboard HR (403 Résolu)",
+			"url": "http://localhost:8080/api/hr/1/dashboard",
+			"time": 651,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": true,
+				"Response has valid JSON": true,
+				"Response has status field": true,
+				"No 403 Forbidden error": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has valid JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has status field": {
+					"pass": 1,
+					"fail": 0
+				},
+				"No 403 Forbidden error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				651
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": true,
+					"Response has valid JSON": true,
+					"Response has status field": true,
+					"No 403 Forbidden error": true
+				}
+			]
+		},
+		{
+			"id": "931cc1ef-eae6-43fa-9bae-c6c226f0c4d9",
+			"name": "13. Test Conflit Mapping Résolu",
+			"url": "http://localhost:8080/api/hr/test/complete",
+			"time": 42,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {
+				"Status code is 200 (403 résolu)": false,
+				"Response has valid JSON": false,
+				"Response has status field": false,
+				"No 403 Forbidden error": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200 (403 résolu)": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response has valid JSON": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response has status field": {
+					"pass": 0,
+					"fail": 1
+				},
+				"No 403 Forbidden error": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				42
+			],
+			"allTests": [
+				{
+					"Status code is 200 (403 résolu)": false,
+					"Response has valid JSON": false,
+					"Response has status field": false,
+					"No 403 Forbidden error": false
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 2151,
+	"collection": {
+		"requests": [
+			{
+				"id": "c2584b06-0426-4da4-a29d-987cdf5aa5f5",
+				"method": "GET"
+			},
+			{
+				"id": "c285a4a9-69de-4aae-8f8b-f6cb41287811",
+				"method": "GET"
+			},
+			{
+				"id": "4798009d-b665-4c7e-a2b3-e007eb872c70",
+				"method": "GET"
+			},
+			{
+				"id": "e6a19e21-0599-463a-88f2-e9c563a9a90e",
+				"method": "GET"
+			},
+			{
+				"id": "9e416e22-6d4d-4b6c-9d9b-18d0168da14d",
+				"method": "GET"
+			},
+			{
+				"id": "5be65c4c-c06b-4685-8b56-4a76d6a75070",
+				"method": "GET"
+			},
+			{
+				"id": "8159f7c2-b36f-43cd-a3f9-f9fc99a2e40b",
+				"method": "POST"
+			},
+			{
+				"id": "9283aca3-a210-4d2b-9ece-20352ce7afeb",
+				"method": "POST"
+			},
+			{
+				"id": "08f40e3a-ac1b-4ae9-977d-b3181e45084e",
+				"method": "POST"
+			},
+			{
+				"id": "ac52c2bb-cf70-47e2-b898-f3995ab467a1",
+				"method": "GET"
+			},
+			{
+				"id": "86ab17a9-ab91-42ac-a7fd-d8fc655b8bc8",
+				"method": "GET"
+			},
+			{
+				"id": "9bb1ada0-11c0-4c7f-8ae7-3267c5ec0c26",
+				"method": "GET"
+			},
+			{
+				"id": "931cc1ef-eae6-43fa-9bae-c6c226f0c4d9",
+				"method": "GET"
+			}
+		]
+	}
+}

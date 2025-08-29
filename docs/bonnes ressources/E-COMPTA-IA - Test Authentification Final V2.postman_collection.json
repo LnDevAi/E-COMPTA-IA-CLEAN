@@ -1,0 +1,219 @@
+{
+  "info": {
+    "_postman_id": "ecomptaia-auth-test-final-v2",
+    "name": "E-COMPTA-IA - Test Authentification Final V2",
+    "description": "Collection finale V2 pour tester l'authentification après correction de l'endpoint de test protégé",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Tests Publics",
+      "item": [
+        {
+          "name": "Test Public",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/public",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "public"]
+            }
+          }
+        },
+        {
+          "name": "Test Auth Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/test",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "test"]
+            }
+          }
+        },
+        {
+          "name": "Standards Comptables",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/accounting/standards",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "accounting", "standards"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Authentification",
+      "item": [
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.token) {",
+                  "        pm.environment.set('jwtToken', response.token);",
+                  "        console.log('Token JWT sauvegardé');",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@ecomptaia.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Tests Endpoints Protégés (AVEC Token)",
+      "item": [
+        {
+          "name": "Test Endpoint Protégé (AVEC Token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/protected",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "protected"]
+            }
+          }
+        },
+        {
+          "name": "Journal Entries (avec Token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/journal-entries/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "journal-entries", "all"]
+            }
+          }
+        },
+        {
+          "name": "Tiers (avec Token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/third-parties/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "third-parties", "all"]
+            }
+          }
+        },
+        {
+          "name": "Employés RH (avec Token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/hr/employees",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hr", "employees"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Tests Endpoints Protégés (SANS Token)",
+      "item": [
+        {
+          "name": "Test Endpoint Protégé (SANS Token)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/protected",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "protected"]
+            }
+          }
+        },
+        {
+          "name": "Journal Entries (SANS Token)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/journal-entries/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "journal-entries", "all"]
+            }
+          }
+        },
+        {
+          "name": "Employés RH (SANS Token)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hr/employees",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "hr", "employees"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "jwtToken",
+      "value": ""
+    }
+  ]
+}
+
+

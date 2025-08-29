@@ -1,0 +1,264 @@
+{
+	"id": "d065757a-ca06-4bee-891b-0379502f5171",
+	"name": "E-COMPTA-IA - Test Authentification Final V2",
+	"timestamp": "2025-08-27T23:18:33.545Z",
+	"collection_id": "47106328-eb42e53f-8941-430e-a4dd-82b9e3455823",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 0,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-08-27T23:18:29.822Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "37a6ed5d-b990-474a-8b17-c44aa32f47f5",
+			"name": "Test Public",
+			"url": "http://localhost:8080/api/test/public",
+			"time": 529,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				529
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "8461d097-1256-4138-a417-bc714d5c07f8",
+			"name": "Test Auth Endpoint",
+			"url": "http://localhost:8080/api/auth/test",
+			"time": 16,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				16
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "d961befc-23ea-42b7-b5bd-4c9b4272dfaa",
+			"name": "Standards Comptables",
+			"url": "http://localhost:8080/api/accounting/standards",
+			"time": 24,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				24
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "25b12e1c-c908-4d28-845f-f504d50bf8b1",
+			"name": "Login Admin",
+			"url": "http://localhost:8080/api/auth/login",
+			"time": 1023,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				1023
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "1e50d512-d82f-4aeb-9e2c-eb113b8875e8",
+			"name": "Test Endpoint Protégé (AVEC Token)",
+			"url": "http://localhost:8080/api/test/protected",
+			"time": 17,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				17
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "1f2225b3-5d42-4a3e-863d-2a934f90bfad",
+			"name": "Journal Entries (avec Token)",
+			"url": "http://localhost:8080/api/journal-entries/all",
+			"time": 188,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				188
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "46c3adf8-d6fa-4bee-b80a-f4095ca628a1",
+			"name": "Tiers (avec Token)",
+			"url": "http://localhost:8080/api/third-parties/all",
+			"time": 88,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				88
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "32434afa-4d71-45c4-b9f7-d88e9ec918cc",
+			"name": "Employés RH (avec Token)",
+			"url": "http://localhost:8080/api/hr/employees",
+			"time": 49,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				49
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "670eb55f-8ca5-4c33-b69f-3204a591c491",
+			"name": "Test Endpoint Protégé (SANS Token)",
+			"url": "http://localhost:8080/api/test/protected",
+			"time": 11,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				11
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "cfa4fd42-7d22-408b-8588-8e212b805632",
+			"name": "Journal Entries (SANS Token)",
+			"url": "http://localhost:8080/api/journal-entries/all",
+			"time": 11,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				11
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "ec7e0524-f221-4b52-815e-c46edd02dd74",
+			"name": "Employés RH (SANS Token)",
+			"url": "http://localhost:8080/api/hr/employees",
+			"time": 16,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				16
+			],
+			"allTests": [
+				{}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 1972,
+	"collection": {
+		"requests": [
+			{
+				"id": "37a6ed5d-b990-474a-8b17-c44aa32f47f5",
+				"method": "GET"
+			},
+			{
+				"id": "8461d097-1256-4138-a417-bc714d5c07f8",
+				"method": "GET"
+			},
+			{
+				"id": "d961befc-23ea-42b7-b5bd-4c9b4272dfaa",
+				"method": "GET"
+			},
+			{
+				"id": "25b12e1c-c908-4d28-845f-f504d50bf8b1",
+				"method": "POST"
+			},
+			{
+				"id": "1e50d512-d82f-4aeb-9e2c-eb113b8875e8",
+				"method": "GET"
+			},
+			{
+				"id": "1f2225b3-5d42-4a3e-863d-2a934f90bfad",
+				"method": "GET"
+			},
+			{
+				"id": "46c3adf8-d6fa-4bee-b80a-f4095ca628a1",
+				"method": "GET"
+			},
+			{
+				"id": "32434afa-4d71-45c4-b9f7-d88e9ec918cc",
+				"method": "GET"
+			},
+			{
+				"id": "670eb55f-8ca5-4c33-b69f-3204a591c491",
+				"method": "GET"
+			},
+			{
+				"id": "cfa4fd42-7d22-408b-8588-8e212b805632",
+				"method": "GET"
+			},
+			{
+				"id": "ec7e0524-f221-4b52-815e-c46edd02dd74",
+				"method": "GET"
+			}
+		]
+	}
+}

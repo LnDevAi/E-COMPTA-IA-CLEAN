@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E COMPTA IA INTERNATIONAL - Roadmap Interactive</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --ohada: #9b59b6;
+            --ifrs: #1abc9c;
+            --gaap: #e67e22;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-bottom: 50px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-banner {
+            background: linear-gradient(to right, var(--warning), var(--success));
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .country-selector {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .system-preview {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .day-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .day-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            color: white;
+            font-weight: bold;
+        }
+        
+        .completed {
+            border-left: 5px solid var(--success);
+        }
+        
+        .in-progress {
+            border-left: 5px solid var(--warning);
+        }
+        
+        .not-started {
+            border-left: 5px solid var(--light);
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        
+        .task-item {
+            border-bottom: 1px solid #eee;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+        
+        .task-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stats-box {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .country-flag {
+            width: 24px;
+            height: 16px;
+            margin-right: 8px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .system-badge {
+            margin-right: 5px;
+        }
+        
+        .badge-ohada {
+            background-color: var(--ohada);
+        }
+        
+        .badge-ifrs {
+            background-color: var(--ifrs);
+        }
+        
+        .badge-gaap {
+            background-color: var(--gaap);
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-list li i {
+            margin-right: 10px;
+            color: var(--success);
+        }
+        
+        .current-day {
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+            border: 2px solid var(--secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .day-card {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fa-solid fa-rocket"></i> E COMPTA IA INTERNATIONAL</h1>
+                    <p class="lead">Roadmap Interactive - Jour 1 en cours</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="btn-group">
+                        <button class="btn btn-outline-light" id="saveBtn"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>
+                        <button class="btn btn-outline-light" id="resetBtn"><i class="fa-solid fa-rotate-left"></i> Réinitialiser</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Bannière de statut -->
+        <div class="status-banner">
+            <h5><i class="fa-solid fa-calendar-day"></i> Nous sommes le Jour 1 - Développement en cours</h5>
+            <p>Progression actuelle: <span id="current-day-progress">25%</span> des tâches du jour complétées</p>
+        </div>
+
+        <!-- Sélecteur de pays -->
+        <div class="country-selector">
+            <h4><i class="fa-solid fa-globe"></i> Sélection du Pays</h4>
+            <p>Choisissez un pays pour visualiser le système comptable, fiscal et linguistique qui sera chargé automatiquement</p>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="countrySelect" class="form-label">Sélectionnez un pays:</label>
+                    <select class="form-select" id="countrySelect">
+                        <option value="">-- Choisissez un pays --</option>
+                        <option value="SN">Sénégal (SYSCOHADA - XOF)</option>
+                        <option value="CI">Côte d'Ivoire (SYSCOHADA - XOF)</option>
+                        <option value="FR">France (IFRS - EUR)</option>
+                        <option value="DE">Allemagne (HGB - EUR)</option>
+                        <option value="US">États-Unis (US GAAP - USD)</option>
+                        <option value="CA">Canada (ASPE - CAD)</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Filtre par région:</label>
+                    <div class="btn-group w-100">
+                        <button type="button" class="btn btn-outline-primary region-filter active" data-region="all">Tous</button>
+                        <button type="button" class="btn btn-outline-primary region-filter" data-region="OHADA">OHADA</button>
+                        <button type="button" class="btn btn-outline-primary region-filter" data-region="EU">Europe</button>
+                        <button type="button" class="btn btn-outline-primary region-filter" data-region="NA">Amérique</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aperçu du système chargé -->
+        <div class="system-preview" id="systemPreview">
+            <h4><i class="fa-solid fa-gears"></i> Configuration du système pour: <span id="selectedCountry"></span></h4>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">Système Comptable</div>
+                        <div class="card-body">
+                            <p id="accountingSystem">-</p>
+                            <p id="accountingStandard">-</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">Devise</div>
+                        <div class="card-body">
+                            <p id="currency">-</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">Langue</div>
+                        <div class="card-body">
+                            <p id="language">-</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">Fiscalité</div>
+                        <div class="card-body">
+                            <p id="taxSystem">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-3">
+                <h5>Éléments chargés automatiquement:</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="feature-list">
+                            <li><i class="fa-solid fa-check"></i> Plan comptable spécifique</li>
+                            <li><i class="fa-solid fa-check"></i> Structure des journaux comptables</li>
+                            <li><i class="fa-solid fa-check"></i> Modèles d'écriture comptable</li>
+                            <li><i class="fa-solid fa-check"></i> Workflow de validation</li>
+                            <li><i class="fa-solid fa-check"></i> Règles de conversion de devise</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="feature-list">
+                            <li><i class="fa-solid fa-check"></i> États financiers normalisés</li>
+                            <li><i class="fa-solid fa-check"></i> Déclarations fiscales</li>
+                            <li><i class="fa-solid fa-check"></i> Rapports réglementaires</li>
+                            <li><i class="fa-solid fa-check"></i> Modules de paie sociale</li>
+                            <li><i class="fa-solid fa-check"></i> Interface utilisateur localisée</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-box">
+                    <h6>Jours écoulés</h6>
+                    <div class="stats-number" id="days-passed">1/14</div>
+                    <small>Prochain jour: <span id="next-day">J2</span></small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-box">
+                    <h6>Tâches complétées</h6>
+                    <div class="stats-number" id="tasks-completed">2/98</div>
+                    <small><span id="tasks-remaining">96</span> restantes</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-box">
+                    <h6>Progression globale</h6>
+                    <div class="stats-number" id="global-progress">2%</div>
+                    <small>Objectif: 100% en 14 jours</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-box">
+                    <h6>Prochaine échéance</h6>
+                    <div class="stats-number" id="next-deadline">J2</div>
+                    <small>Modèles Comptables Multi-Standards</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Progression générale du projet</h5>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 2%;" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" id="main-progress-bar">2%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <ul class="nav nav-tabs" id="roadmapTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="week1-tab" data-bs-toggle="tab" data-bs-target="#week1" type="button" role="tab">Semaine 1</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="week2-tab" data-bs-toggle="tab" data-bs-target="#week2" type="button" role="tab">Semaine 2</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="architecture-tab" data-bs-toggle="tab" data-bs-target="#architecture" type="button" role="tab">Architecture Multi-Pays</button>
+            </li>
+        </ul>
+        
+        <div class="tab-content p-3 border border-top-0 rounded-bottom" id="roadmapTabsContent">
+            <!-- Semaine 1 -->
+            <div class="tab-pane fade show active" id="week1" role="tabpanel">
+                <div class="row" id="week1-days">
+                    <!-- Jours 1 à 7 générés par JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Semaine 2 -->
+            <div class="tab-pane fade" id="week2" role="tabpanel">
+                <div class="row" id="week2-days">
+                    <!-- Jours 8 à 14 générés par JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Architecture Multi-Pays -->
+            <div class="tab-pane fade" id="architecture" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fa-solid fa-diagram-project"></i> Architecture Multi-Pays
+                            </div>
+                            <div class="card-body">
+                                <h6>Factory Pattern pour Standards Comptables</h6>
+                                <pre class="bg-light p-3 rounded">
+public interface AccountingStandardFactory {
+    ChartOfAccounts createChartOfAccounts(CountryCode country);
+    FinancialStatements createFinancialStatements(AccountingStandard standard);
+    TaxDeclarations createTaxDeclarations(CountryCode country);
+    SocialDeclarations createSocialDeclarations(CountryCode country);
+}
+                                </pre>
+                                
+                                <h6>Modèle de Données International</h6>
+                                <pre class="bg-light p-3 rounded">
+@Entity
+public class Entreprise {
+    private CountryCode pays; // ISO 3166-1
+    private AccountingStandard standard; // OHADA, IFRS, GAAP, etc.
+    private Currency currency; // Multi-devises
+    private LocaleSettings locale; // i18n/l10n
+    private TaxSystem taxSystem; // Système fiscal
+    private SocialSystem socialSystem; // Système social
+}
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fa-solid fa-gears"></i> Mécanisme de Chargement Automatique
+                            </div>
+                            <div class="card-body">
+                                <h6>Processus de détection et d'adaptation</h6>
+                                <ol>
+                                    <li>Sélection du pays par l'utilisateur</li>
+                                    <li>Chargement du système comptable approprié</li>
+                                    <li>Application des règles fiscales spécifiques</li>
+                                    <li>Adaptation de l'interface linguistique</li>
+                                    <li>Configuration de la devise par défaut</li>
+                                    <li>Chargement des modèles de déclaration</li>
+                                </ol>
+                                
+                                <h6>Composants techniques</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="badge bg-primary">Country Detection</span>
+                                    <span class="badge bg-primary">Dynamic Loading</span>
+                                    <span class="badge bg-primary">i18n Service</span>
+                                    <span class="badge bg-primary">Currency Converter</span>
+                                    <span class="badge bg-primary">Tax Calculator</span>
+                                    <span class="badge bg-primary">Rule Engine</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <i class="fa-solid fa-flag"></i> Prochaines Étapes d'Expansion
+                            </div>
+                            <div class="card-body">
+                                <ol>
+                                    <li>Phase 1.1 - Afrique de l'Ouest (Mois 1)</li>
+                                    <li>Phase 1.2 - Afrique Centrale/Est (Mois 2-3)</li>
+                                    <li>Phase 2.0 - Europe (Mois 4-6)</li>
+                                    <li>Phase 3.0 - Amérique du Nord (Mois 7-9)</li>
+                                    <li>Phase 4.0 - Asie-Pacifique (Mois 10-12)</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">E COMPTA IA INTERNATIONAL - Démarrage réussi du projet © 2023</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Données des pays et leurs systèmes
+        const countryData = {
+            "SN": {
+                name: "Sénégal",
+                accountingSystem: "SYSCOHADA",
+                currency: "XOF (Franc CFA)",
+                language: "Français",
+                taxSystem: "Impôt sur les Sociétés (30%), TVA (18%)",
+                region: "OHADA"
+            },
+            "CI": {
+                name: "Côte d'Ivoire",
+                accountingSystem: "SYSCOHADA",
+                currency: "XOF (Franc CFA)",
+                language: "Français",
+                taxSystem: "Impôt sur les Sociétés (25%), TVA (18%)",
+                region: "OHADA"
+            },
+            "FR": {
+                name: "France",
+                accountingSystem: "IFRS",
+                currency: "EUR (Euro)",
+                language: "Français",
+                taxSystem: "Impôt sur les Sociétés (25%), TVA (20%)",
+                region: "EU"
+            },
+            "DE": {
+                name: "Allemagne",
+                accountingSystem: "HGB",
+                currency: "EUR (Euro)",
+                language: "Allemand",
+                taxSystem: "Impôt sur les Sociétés (15%), TVA (19%)",
+                region: "EU"
+            },
+            "US": {
+                name: "États-Unis",
+                accountingSystem: "US GAAP",
+                currency: "USD (Dollar US)",
+                language: "Anglais",
+                taxSystem: "Federal Tax (21%), State Tax (variable)",
+                region: "NA"
+            },
+            "CA": {
+                name: "Canada",
+                accountingSystem: "ASPE",
+                currency: "CAD (Dollar Canadien)",
+                language: "Anglais, Français",
+                taxSystem: "Impôt Fédéral (15%), Provincial (variable)",
+                region: "NA"
+            }
+        };
+
+        // Données de la feuille de route avec progression du Jour 1
+        const roadmapData = {
+            days: [
+                {
+                    id: 1,
+                    title: "JOUR 1 - FONDATIONS BACKEND + ARCHITECTURE INTERNATIONALE",
+                    status: "in-progress",
+                    tasks: [
+                        { id: "1-1", description: "Setup projet Spring Boot 3.x + PostgreSQL + i18n", hours: "H1-H4", status: "completed", notes: "Terminé avec succès" },
+                        { id: "1-2", description: "Configuration sécurité JWT + CORS + multi-tenant", hours: "H5-H8", status: "in-progress", notes: "En cours de développement" },
+                        { id: "1-3", description: "Modèles Entreprise + Utilisateur + Pays/Région + JPA", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "1-4", description: "API Auth + CRUD Entreprise + Sélection pays", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "1-5", description: "Docker setup + déploiement VPS + config internationale", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "Backend international avec auth + sélection pays"
+                },
+                {
+                    id: 2,
+                    title: "JOUR 2 - MODÈLES COMPTABLES MULTI-STANDARDS",
+                    status: "not-started",
+                    tasks: [
+                        { id: "2-1", description: "Architecture abstraite Plan Comptable + migration SYSCOHADA", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "2-2", description: "Factory Pattern pour standards comptables (OHADA, IFRS, GAAP, etc.)", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "2-3", description: "Entités Tiers + Écritures + Adaptateurs pays", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "2-4", description: "Relations JPA + contraintes paramétrables par pays", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "2-5", description: "Tests unitaires + config OHADA + base IFRS", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "Architecture comptable internationale extensible"
+                },
+                {
+                    id: 3,
+                    title: "JOUR 3 - APIs MÉTIER INTERNATIONALES",
+                    status: "not-started",
+                    tasks: [
+                        { id: "3-1", description: "API Plan Comptable dynamique (OHADA/IFRS/GAAP)", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "3-2", description: "API Gestion Tiers avec réglementations locales", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "3-3", description: "API Saisie Écritures + validation multi-standards", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "3-4", description: "API Journaux + contrôles par pays + devises", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "3-5", description: "Tests Postman + scénarios multi-pays", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "APIs adaptatives prêtes expansion mondiale"
+                },
+                {
+                    id: 4,
+                    title: "JOUR 4 - CONNEXION FRONTEND + INTERNATIONALISATION",
+                    status: "not-started",
+                    tasks: [
+                        { id: "4-1", description: "Refactoring services Angular + i18n/l10n", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "4-2", description: "Intégration auth + sélection pays + tokens", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "4-3", description: "Connexion modules + adaptation dynamique standards", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "4-4", description: "Interface multi-langues + multi-devises", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "4-5", description: "Tests intégration + simulation pays différents", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "Frontend international connecté backend"
+                },
+                {
+                    id: 5,
+                    title: "JOUR 5 - REPORTING CORE",
+                    status: "not-started",
+                    tasks: [
+                        { id: "5-1", description: "API Grands Livres + Balance générale", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "5-2", description: "API Dashboard + KPIs temps réel", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "5-3", description: "Génération PDF (Balance + Grand Livre)", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "5-4", description: "Frontend reporting connecté", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "5-5", description: "Tests utilisateur + optimisations", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "Reporting comptable fonctionnel"
+                },
+                {
+                    id: 6,
+                    title: "JOUR 6 - ASSISTANT IA MONDIAL",
+                    status: "not-started",
+                    tasks: [
+                        { id: "6-1", description: "Intégration API OpenAI/Claude + prompts multi-standards", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "6-2", description: "Knowledge base OHADA + IFRS + GAAP + bases autres pays", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "6-3", description: "Assistant saisie adaptatif par pays", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "6-4", description: "Suggestions contextuelles + validation multi-réglementaire", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "6-5", description: "Tests IA + scénarios internationaux", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "Assistant IA prêt expansion mondiale"
+                },
+                {
+                    id: 7,
+                    title: "JOUR 7 - INFRASTRUCTURE",
+                    status: "not-started",
+                    tasks: [
+                        { id: "7-1", description: "Configuration VPS optimisée", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "7-2", description: "Docker Compose production", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "7-3", description: "Nginx + SSL + domaine", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "7-4", description: "Monitoring + logs + backup", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "7-5", description: "Tests performance + sécurité", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "Infrastructure production"
+                },
+                {
+                    id: 8,
+                    title: "JOUR 8 - ÉTATS FINANCIERS MULTI-STANDARDS",
+                    status: "not-started",
+                    tasks: [
+                        { id: "8-1", description: "Factory États Financiers (OHADA, IFRS, GAAP, etc.)", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "8-2", description: "Bilan + Compte résultat adaptatifs par pays", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "8-3", description: "Génération PDF templates internationaux", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "8-4", description: "Frontend états dynamiques + sélection standard", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "8-5", description: "Validation conformité experts internationaux", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "États financiers adaptables mondialement"
+                },
+                {
+                    id: 9,
+                    title: "JOUR 9 - RAPPROCHEMENTS",
+                    status: "not-started",
+                    tasks: [
+                        { id: "9-1", description: "Rapprochement bancaire manuel", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "9-2", description: "Lettrage comptes clients/fournisseurs", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "9-3", description: "Contrôles équilibre automatiques", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "9-4", description: "Interface utilisateur rapprochements", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "9-5", description: "Tests validation comptable", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "Module rapprochements complet"
+                },
+                {
+                    id: 10,
+                    title: "JOUR 10 - FISCALITÉ INTERNATIONALE",
+                    status: "not-started",
+                    tasks: [
+                        { id: "10-1", description: "Architecture fiscalité modulaire (TVA, IS, etc.)", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "10-2", description: "Templates BF/CI + base UE/USA/Canada", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "10-3", description: "Calculs automatiques multi-régimes fiscaux", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "10-4", description: "Interface déclarations adaptative pays", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "10-5", description: "Validation réglementaires multi-pays", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "Module fiscal prêt expansion mondiale"
+                },
+                {
+                    id: 11,
+                    title: "JOUR 11 - PLATEFORME SAAS INTERNATIONALE",
+                    status: "not-started",
+                    tasks: [
+                        { id: "11-1", description: "Architecture multi-tenant international", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "11-2", description: "Système abonnements + paiements multi-devises", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "11-3", description: "Gestion permissions + conformité RGPD/CCPA", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "11-4", description: "Onboarding adaptatif par région", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "11-5", description: "Tests parcours client multi-pays", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "Plateforme SaaS mondiale ready"
+                },
+                {
+                    id: 12,
+                    title: "JOUR 12 - OPTIMISATIONS",
+                    status: "not-started",
+                    tasks: [
+                        { id: "12-1", description: "Optimisations backend (cache, index)", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "12-2", description: "Optimisations frontend (lazy loading)", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "12-3", description: "Tests de charge + monitoring", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "12-4", description: "Préparation tests finaux", hours: "H13-H16", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "Système optimisé et stable"
+                },
+                {
+                    id: 13,
+                    title: "JOUR 13 - TESTS FINAUX",
+                    status: "not-started",
+                    tasks: [
+                        { id: "13-1", description: "Tests end-to-end automatisés", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "13-2", description: "Tests utilisateurs finaux", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "13-3", description: "Validation conformité SYSCOHADA", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "13-4", description: "Documentation utilisateur", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "13-5", description: "Préparation lancement", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "Système testé et documenté"
+                },
+                {
+                    id: 14,
+                    title: "JOUR 14 - LANCEMENT",
+                    status: "not-started",
+                    tasks: [
+                        { id: "14-1", description: "Déploiement production final", hours: "H1-H4", status: "not-started", notes: "" },
+                        { id: "14-2", description: "Configuration monitoring production", hours: "H5-H8", status: "not-started", notes: "" },
+                        { id: "14-3", description: "Tests post-déploiement", hours: "H9-H12", status: "not-started", notes: "" },
+                        { id: "14-4", description: "Formation équipe + démonstration", hours: "H13-H16", status: "not-started", notes: "" },
+                        { id: "14-5", description: "Célébration lancement", hours: "SOIR", status: "not-started", notes: "" }
+                    ],
+                    deliverable: "E COMPTA IA 100% opérationnel"
+                }
+            ],
+            currentDay: 1,
+            totalTasks: 98,
+            completedTasks: 2
+        };
+
+        // Initialiser l'interface
+        function initializeUI() {
+            updateProgress();
+            renderDays();
+            setupEventListeners();
+            setupCountrySelector();
+        }
+
+        // Configurer le sélecteur de pays
+        function setupCountrySelector() {
+            const countrySelect = document.getElementById('countrySelect');
+            
+            countrySelect.addEventListener('change', function() {
+                const countryCode = this.value;
+                if (countryCode && countryData[countryCode]) {
+                    showCountrySystem(countryData[countryCode]);
+                } else {
+                    hideCountrySystem();
+                }
+            });
+            
+            // Configurer les filtres de région
+            document.querySelectorAll('.region-filter').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Retirer la classe active de tous les boutons
+                    document.querySelectorAll('.region-filter').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Ajouter la classe active au bouton cliqué
+                    this.classList.add('active');
+                    
+                    const region = this.getAttribute('data-region');
+                    filterCountriesByRegion(region);
+                });
+            });
+        }
+
+        // Afficher les détails du système pour un pays
+        function showCountrySystem(country) {
+            document.getElementById('selectedCountry').textContent = country.name;
+            document.getElementById('accountingSystem').textContent = country.accountingSystem;
+            
+            // Appliquer la classe de badge appropriée
+            let badgeClass = 'bg-secondary';
+            if (country.accountingSystem === 'SYSCOHADA') badgeClass = 'badge-ohada';
+            if (country.accountingSystem === 'IFRS') badgeClass = 'badge-ifrs';
+            if (country.accountingSystem === 'US GAAP') badgeClass = 'badge-gaap';
+            
+            document.getElementById('accountingStandard').innerHTML = `<span class="badge ${badgeClass} system-badge">${country.accountingSystem}</span>`;
+            document.getElementById('currency').textContent = country.currency;
+            document.getElementById('language').textContent = country.language;
+            document.getElementById('taxSystem').textContent = country.taxSystem;
+            
+            document.getElementById('systemPreview').style.display = 'block';
+        }
+
+        // Cacher les détails du système
+        function hideCountrySystem() {
+            document.getElementById('systemPreview').style.display = 'none';
+        }
+
+        // Filtrer les pays par région
+        function filterCountriesByRegion(region) {
+            const countrySelect = document.getElementById('countrySelect');
+            
+            if (region === 'all') {
+                // Afficher toutes les options
+                for (let i = 0; i < countrySelect.options.length; i++) {
+                    countrySelect.options[i].style.display = '';
+                }
+            } else {
+                // Masquer les options qui ne correspondent pas à la région
+                for (let i = 0; i < countrySelect.options.length; i++) {
+                    const option = countrySelect.options[i];
+                    if (option.value && countryData[option.value] && countryData[option.value].region === region) {
+                        option.style.display = '';
+                    } else if (option.value) {
+                        option.style.display = 'none';
+                    }
+                }
+            }
+            
+            // Réinitialiser la sélection
+            countrySelect.value = '';
+            hideCountrySystem();
+        }
+
+        // Mettre à jour la progression
+        function updateProgress() {
+            const completedTasks = calculateCompletedTasks();
+            const progressPercentage = Math.round((completedTasks / roadmapData.totalTasks) * 100);
+            
+            document.getElementById('tasks-completed').textContent = `${completedTasks}/${roadmapData.totalTasks}`;
+            document.getElementById('global-progress').textContent = `${progressPercentage}%`;
+            
+            const progressBar = document.getElementById('main-progress-bar');
+            progressBar.style.width = `${progressPercentage}%`;
+            progressBar.textContent = `${progressPercentage}%`;
+            progressBar.setAttribute('aria-valuenow', progressPercentage);
+            
+            document.getElementById('days-passed').textContent = `${roadmapData.currentDay}/14`;
+            document.getElementById('next-deadline').textContent = `J${roadmapData.currentDay + 1}`;
+            
+            // Mettre à jour la progression du jour actuel
+            const currentDay = roadmapData.days.find(day => day.id === roadmapData.currentDay);
+            if (currentDay) {
+                const dayCompletedTasks = currentDay.tasks.filter(task => task.status === 'completed').length;
+                const dayTotalTasks = currentDay.tasks.length;
+                const dayProgressPercentage = Math.round((dayCompletedTasks / dayTotalTasks) * 100);
+                document.getElementById('current-day-progress').textContent = `${dayProgressPercentage}%`;
+            }
+        }
+
+        // Calculer les tâches complétées
+        function calculateCompletedTasks() {
+            let count = 0;
+            roadmapData.days.forEach(day => {
+                day.tasks.forEach(task => {
+                    if (task.status === 'completed') count++;
+                });
+            });
+            roadmapData.completedTasks = count;
+            return count;
+        }
+
+        // Afficher les jours
+        function renderDays() {
+            const week1Container = document.getElementById('week1-days');
+            const week2Container = document.getElementById('week2-days');
+            
+            week1Container.innerHTML = '';
+            week2Container.innerHTML = '';
+            
+            roadmapData.days.forEach(day => {
+                const dayCard = createDayCard(day);
+                if (day.id <= 7) {
+                    week1Container.appendChild(dayCard);
+                } else {
+                    week2Container.appendChild(dayCard);
+                }
+            });
+        }
+
+        // Créer une carte de jour
+        function createDayCard(day) {
+            const completedTasks = day.tasks.filter(task => task.status === 'completed').length;
+            const totalTasks = day.tasks.length;
+            const progressPercentage = Math.round((completedTasks / totalTasks) * 100);
+            
+            const col = document.createElement('div');
+            col.className = 'col-md-6 col-lg-4';
+            
+            col.innerHTML = `
+                <div class="card day-card ${day.status} ${day.id === roadmapData.currentDay ? 'current-day' : ''}" id="day-${day.id}">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Jour ${day.id}</span>
+                        <span class="badge bg-${day.status === 'completed' ? 'success' : day.status === 'in-progress' ? 'warning' : 'secondary'}">${day.status === 'completed' ? 'Terminé' : day.status === 'in-progress' ? 'En cours' : 'Non commencé'}</span>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title">${day.title.split(':')[1]?.trim() || day.title}</h6>
+                        <div class="progress mb-3">
+                            <div class="progress-bar" role="progressbar" style="width: ${progressPercentage}%;" 
+                                aria-valuenow="${progressPercentage}" aria-valuemin="0" aria-valuemax="100">
+                                ${progressPercentage}%
+                            </div>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            ${day.tasks.map(task => `
+                                <li class="list-group-item task-item d-flex justify-content-between align-items-center ${task.status}" data-task-id="${task.id}">
+                                    <div>
+                                        <i class="fa-solid fa-${task.status === 'completed' ? 'check-circle text-success' : task.status === 'in-progress' ? 'spinner text-warning' : 'circle'} me-2"></i>
+                                        <span>${task.description}</span>
+                                    </div>
+                                    <small class="text-muted">${task.hours}</small>
+                                </li>
+                            `).join('')}
+                        </ul>
+                        <div class="mt-3">
+                            <strong>Livrable:</strong> ${day.deliverable}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return col;
+        }
+
+        // Configurer les écouteurs d'événements
+        function setupEventListeners() {
+            // Événements pour les tâches
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.task-item')) {
+                    const taskItem = e.target.closest('.task-item');
+                    const taskId = taskItem.getAttribute('data-task-id');
+                    toggleTaskStatus(taskId);
+                }
+            });
+            
+            // Événements pour les boutons de sauvegarde et réinitialisation
+            document.getElementById('saveBtn').addEventListener('click', saveData);
+            document.getElementById('resetBtn').addEventListener('click', resetData);
+        }
+
+        // Basculer le statut d'une tâche
+        function toggleTaskStatus(taskId) {
+            for (const day of roadmapData.days) {
+                for (const task of day.tasks) {
+                    if (task.id === taskId) {
+                        if (task.status === 'not-started') {
+                            task.status = 'in-progress';
+                        } else if (task.status === 'in-progress') {
+                            task.status = 'completed';
+                        } else {
+                            task.status = 'not-started';
+                        }
+                        
+                        // Mettre à jour le statut du jour
+                        updateDayStatus(day);
+                        
+                        // Mettre à jour l'interface
+                        updateProgress();
+                        renderDays();
+                        
+                        return;
+                    }
+                }
+            }
+        }
+
+        // Mettre à jour le statut du jour
+        function updateDayStatus(day) {
+            const completedTasks = day.tasks.filter(task => task.status === 'completed').length;
+            const totalTasks = day.tasks.length;
+            
+            if (completedTasks === totalTasks) {
+                day.status = 'completed';
+            } else if (completedTasks > 0) {
+                day.status = 'in-progress';
+            } else {
+                day.status = 'not-started';
+            }
+        }
+
+        // Sauvegarder les données
+        function saveData() {
+            localStorage.setItem('ecompta-roadmap-data', JSON.stringify(roadmapData));
+            alert('Données sauvegardées avec succès!');
+        }
+
+        // Réinitialiser les données
+        function resetData() {
+            if (confirm('Êtes-vous sûr de vouloir réinitialiser toutes les données?')) {
+                localStorage.removeItem('ecompta-roadmap-data');
+                window.location.reload();
+            }
+        }
+
+        // Charger les données
+        function loadData() {
+            const savedData = localStorage.getItem('ecompta-roadmap-data');
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                
+                // Mettre à jour les données avec les données sauvegardées
+                roadmapData.days.forEach((day, index) => {
+                    if (parsedData.days[index]) {
+                        day.status = parsedData.days[index].status;
+                        day.tasks.forEach((task, taskIndex) => {
+                            if (parsedData.days[index].tasks[taskIndex]) {
+                                task.status = parsedData.days[index].tasks[taskIndex].status;
+                                task.notes = parsedData.days[index].tasks[taskIndex].notes;
+                            }
+                        });
+                    }
+                });
+                
+                roadmapData.currentDay = parsedData.currentDay;
+                roadmapData.completedTasks = parsedData.completedTasks;
+            }
+        }
+
+        // Initialiser l'application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            initializeUI();
+        });
+    </script>
+</body>
+</html>

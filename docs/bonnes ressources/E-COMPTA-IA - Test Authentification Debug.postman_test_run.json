@@ -1,0 +1,88 @@
+{
+	"id": "b5c85724-a689-4419-b5c0-909cb31057d3",
+	"name": "E-COMPTA-IA - Test Authentification Debug",
+	"timestamp": "2025-08-27T23:23:52.410Z",
+	"collection_id": "47106328-2e46ec55-78f1-4946-8456-cedffa367fc4",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 0,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-08-27T23:23:50.410Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "8fbd65b7-dc7d-4d89-8ed0-cde119b6e9bf",
+			"name": "Login Admin",
+			"url": "http://localhost:8080/api/auth/login",
+			"time": 885,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				885
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "fd0a1974-cc26-42d8-8e4c-9c6c656bf439",
+			"name": "Test Endpoint Protégé (AVEC Token)",
+			"url": "http://localhost:8080/api/test/protected",
+			"time": 175,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				175
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "b0a8c0e6-fc5d-4d1a-985a-a40155a92dfe",
+			"name": "Test Endpoint Protégé (SANS Token)",
+			"url": "http://localhost:8080/api/test/protected",
+			"time": 24,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				24
+			],
+			"allTests": [
+				{}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 1084,
+	"collection": {
+		"requests": [
+			{
+				"id": "8fbd65b7-dc7d-4d89-8ed0-cde119b6e9bf",
+				"method": "POST"
+			},
+			{
+				"id": "fd0a1974-cc26-42d8-8e4c-9c6c656bf439",
+				"method": "GET"
+			},
+			{
+				"id": "b0a8c0e6-fc5d-4d1a-985a-a40155a92dfe",
+				"method": "GET"
+			}
+		]
+	}
+}
