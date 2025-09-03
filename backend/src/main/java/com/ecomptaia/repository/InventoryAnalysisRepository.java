@@ -44,3 +44,4 @@ public interface InventoryAnalysisRepository extends JpaRepository<InventoryAnal
 }
 
 
+

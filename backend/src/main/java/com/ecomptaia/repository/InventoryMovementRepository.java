@@ -153,3 +153,4 @@ public interface InventoryMovementRepository extends JpaRepository<InventoryMove
 }
 
 
+

@@ -50,3 +50,4 @@ public interface InventoryAnalysisDetailRepository extends JpaRepository<Invento
 }
 
 
+

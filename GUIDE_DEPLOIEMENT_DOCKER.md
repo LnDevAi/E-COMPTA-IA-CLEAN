@@ -214,3 +214,4 @@ export SPRING_DATASOURCE_PASSWORD=your-secure-db-password
 **Version** : 1.0.0  
 **Dernière mise à jour** : $(date)  
 **Auteur** : Équipe E-COMPTA-IA
+

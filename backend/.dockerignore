@@ -1,0 +1,38 @@
+# Fichiers de développement
+target/
+*.iml
+*.iws
+*.ipr
+.idea/
+.vscode/
+*.log
+
+# Fichiers de configuration locaux
+application-local.properties
+application-local.yml
+application-dev.properties
+application-dev.yml
+
+# Fichiers de test
+src/test/
+*.test.*
+*.spec.*
+
+# Fichiers de documentation
+*.md
+docs/
+README*
+
+# Fichiers de logs
+logs/
+*.log
+
+# Fichiers temporaires
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Fichiers de système
+.DS_Store
+Thumbs.db
