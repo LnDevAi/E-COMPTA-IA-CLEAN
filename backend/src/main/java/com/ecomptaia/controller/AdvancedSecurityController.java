@@ -1,7 +1,6 @@
 package com.ecomptaia.controller;
 
 import com.ecomptaia.entity.SecurityAudit;
-import com.ecomptaia.entity.SecurityPolicy;
 import com.ecomptaia.service.AdvancedSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -446,6 +446,7 @@ public class EcritureComptableController {
         Map<String, Object> response = new HashMap<>();
         try {
             String description = (String) request.get("description");
+            @SuppressWarnings("unchecked")
             Map<String, Object> parametres = (Map<String, Object>) request.get("parametres");
             
             EcritureComptable ecriture = aiService.genererEcritureAutomatique(description, parametres);

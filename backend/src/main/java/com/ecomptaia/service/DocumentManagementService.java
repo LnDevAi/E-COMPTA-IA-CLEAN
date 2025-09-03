@@ -438,7 +438,9 @@ public class DocumentManagementService {
         List<Object[]> typeStats = documentRepository.getDocumentTypeStats(companyId);
         Map<String, Long> typeCount = new HashMap<>();
         for (Object[] stat : typeStats) {
-            typeCount.put(stat[0].toString(), (Long) stat[1]);
+            @SuppressWarnings("unchecked")
+            Long count = (Long) stat[1];
+            typeCount.put(stat[0].toString(), count);
         }
         stats.put("byType", typeCount);
         
@@ -446,7 +448,9 @@ public class DocumentManagementService {
         List<Object[]> statusStats = documentRepository.getDocumentStatusStats(companyId);
         Map<String, Long> statusCount = new HashMap<>();
         for (Object[] stat : statusStats) {
-            statusCount.put(stat[0].toString(), (Long) stat[1]);
+            @SuppressWarnings("unchecked")
+            Long count = (Long) stat[1];
+            statusCount.put(stat[0].toString(), count);
         }
         stats.put("byStatus", statusCount);
         
@@ -454,7 +458,9 @@ public class DocumentManagementService {
         List<Object[]> securityStats = documentRepository.getSecurityLevelStats(companyId);
         Map<String, Long> securityCount = new HashMap<>();
         for (Object[] stat : securityStats) {
-            securityCount.put(stat[0].toString(), (Long) stat[1]);
+            @SuppressWarnings("unchecked")
+            Long count = (Long) stat[1];
+            securityCount.put(stat[0].toString(), count);
         }
         stats.put("bySecurityLevel", securityCount);
         
@@ -462,7 +468,9 @@ public class DocumentManagementService {
         List<Object[]> categoryStats = documentRepository.getCategoryStats(companyId);
         Map<String, Long> categoryCount = new HashMap<>();
         for (Object[] stat : categoryStats) {
-            categoryCount.put(stat[0].toString(), (Long) stat[1]);
+            @SuppressWarnings("unchecked")
+            Long count = (Long) stat[1];
+            categoryCount.put(stat[0].toString(), count);
         }
         stats.put("byCategory", categoryCount);
         

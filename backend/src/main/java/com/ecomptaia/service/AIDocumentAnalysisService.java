@@ -58,6 +58,7 @@ public class AIDocumentAnalysisService {
             
             // Génération des suggestions comptables
             Map<String, Object> suggestionsResult = generateAccountingSuggestions(extractedData, countryCode);
+            @SuppressWarnings("unchecked")
             List<Map<String, Object>> suggestions = (List<Map<String, Object>>) suggestionsResult.get("suggestions");
             
             // Calcul du score de confiance
@@ -181,6 +182,7 @@ public class AIDocumentAnalysisService {
         // Validation des champs requis
         Map<String, Object> rules = DOCUMENT_RULES.get(documentType);
         if (rules != null) {
+            @SuppressWarnings("unchecked")
             List<String> requiredFields = (List<String>) rules.get("requiredFields");
             for (String field : requiredFields) {
                 if (!data.containsKey(field) || data.get(field) == null) {
@@ -226,7 +228,9 @@ public class AIDocumentAnalysisService {
 
     private double calculateConfidenceScore(Map<String, Object> data, Map<String, Object> validation) {
         double baseScore = 0.8;
+        @SuppressWarnings("unchecked")
         List<String> errors = (List<String>) validation.get("errors");
+        @SuppressWarnings("unchecked")
         List<String> warnings = (List<String>) validation.get("warnings");
         
         // Réduction du score selon les erreurs
@@ -236,43 +240,13 @@ public class AIDocumentAnalysisService {
         return Math.max(0.0, Math.min(1.0, baseScore));
     }
 
-    private Map<String, Object> suggestAccount(Map<String, Object> data, String countryCode) {
-        Map<String, Object> suggestion = new HashMap<>();
-        suggestion.put("type", "ACCOUNT_SUGGESTION");
-        suggestion.put("accountNumber", "401");
-        suggestion.put("accountName", "Fournisseurs");
-        suggestion.put("confidence", 0.95);
-        suggestion.put("reason", "Document de fournisseur détecté");
-        return suggestion;
-    }
 
-    private Map<String, Object> suggestTax(Map<String, Object> data, String countryCode) {
-        Map<String, Object> suggestion = new HashMap<>();
-        suggestion.put("type", "TAX_SUGGESTION");
-        suggestion.put("taxCode", "4456");
-        suggestion.put("taxName", "TVA déductible");
-        suggestion.put("rate", "20%");
-        suggestion.put("confidence", 0.90);
-        return suggestion;
-    }
 
-    private Map<String, Object> suggestThirdParty(Map<String, Object> data) {
-        Map<String, Object> suggestion = new HashMap<>();
-        suggestion.put("type", "THIRD_PARTY_SUGGESTION");
-        suggestion.put("name", data.get("fournisseur"));
-        suggestion.put("type", "FOURNISSEUR");
-        suggestion.put("confidence", 0.85);
-        return suggestion;
-    }
 
-    private Map<String, Object> suggestValidation(Map<String, Object> data) {
-        Map<String, Object> suggestion = new HashMap<>();
-        suggestion.put("type", "VALIDATION_SUGGESTION");
-        suggestion.put("action", "VALIDER");
-        suggestion.put("confidence", 0.80);
-        suggestion.put("reason", "Document conforme aux règles comptables");
-        return suggestion;
-    }
+
+
+
+
 
     private String determinePriority(Map<String, Object> data) {
         BigDecimal amount = (BigDecimal) data.get("montant_ttc");
@@ -383,6 +357,7 @@ public class AIDocumentAnalysisService {
 
     private Map<String, Object> validateJournalEntry(Map<String, Object> entry) {
         Map<String, Object> validation = new HashMap<>();
+        @SuppressWarnings("unchecked")
         List<Map<String, Object>> lines = (List<Map<String, Object>>) entry.get("lines");
         
         BigDecimal totalDebit = BigDecimal.ZERO;

@@ -392,11 +392,9 @@ public class HumanResourceService {
     public CompletableFuture<Void> dailyEmployeeMonitoring() {
         LocalDate today = LocalDate.now();
         
-        // Vérifier les employés nécessitant une évaluation
-        List<Employee> employeesNeedingEvaluation = employeeRepository.findEmployeesNeedingEvaluation(1L, today);
+
         
-        // Vérifier les employés en congé qui doivent reprendre
-        List<Leave> leavesEndingToday = leaveRepository.findByEntrepriseIdAndEndDate(1L, today);
+
         
         // Logique de notification et de mise à jour
         System.out.println("Surveillance quotidienne des employés terminée");
@@ -427,16 +425,11 @@ public class HumanResourceService {
     public CompletableFuture<Void> weeklyLeaveMonitoring() {
         LocalDate today = LocalDate.now();
         
-        // Vérifier les congés en cours
-        List<Leave> activeLeaves = leaveRepository.findCurrentlyActiveLeaves(1L, today);
+
         
-        // Vérifier les demandes de congé en attente
-        List<Leave> pendingLeaves = leaveRepository.findPendingLeavesByEntrepriseId(1L);
+
         
-        // Vérifier les congés qui commencent cette semaine
-        LocalDate weekStart = today.minusDays(today.getDayOfWeek().getValue() - 1);
-        LocalDate weekEnd = weekStart.plusDays(6);
-        List<Leave> leavesStartingThisWeek = leaveRepository.findByEntrepriseIdAndStartDateBetween(1L, weekStart, weekEnd);
+
         
         System.out.println("Surveillance hebdomadaire des congés terminée");
         

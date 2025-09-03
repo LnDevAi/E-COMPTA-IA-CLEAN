@@ -2,10 +2,10 @@ package com.ecomptaia.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import com.ecomptaia.entity.SubscriptionPlan;
 
 @Entity
 @Table(name = "company_subscriptions")
@@ -352,17 +352,17 @@ public class CompanySubscription {
         BigDecimal price = this.localPrice;
         
         if (this.discountPercentage != null && this.discountPercentage.compareTo(BigDecimal.ZERO) > 0) {
-            BigDecimal discount = price.multiply(this.discountPercentage).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal discount = price.multiply(this.discountPercentage).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
             price = price.subtract(discount);
         }
         
-        this.finalPrice = price.setScale(2, BigDecimal.ROUND_HALF_UP);
+        this.finalPrice = price.setScale(2, RoundingMode.HALF_UP);
     }
     
     public void setLocalizedPricing(BigDecimal exchangeRate) {
         this.exchangeRate = exchangeRate;
         if (exchangeRate != null && exchangeRate.compareTo(BigDecimal.ZERO) > 0) {
-            this.localPrice = this.basePriceUSD.multiply(exchangeRate).setScale(2, BigDecimal.ROUND_HALF_UP);
+            this.localPrice = this.basePriceUSD.multiply(exchangeRate).setScale(2, RoundingMode.HALF_UP);
         } else {
             this.localPrice = this.basePriceUSD;
         }

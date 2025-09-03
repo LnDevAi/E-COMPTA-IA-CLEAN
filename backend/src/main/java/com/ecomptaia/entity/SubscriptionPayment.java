@@ -2,9 +2,9 @@ package com.ecomptaia.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import com.ecomptaia.entity.CompanySubscription;
 
 @Entity
 @Table(name = "subscription_payments")
@@ -256,7 +256,7 @@ public class SubscriptionPayment {
     
     public void calculateAmountUSD() {
         if (this.exchangeRate != null && this.exchangeRate.compareTo(BigDecimal.ZERO) > 0) {
-            this.amountUSD = this.amount.divide(this.exchangeRate, 2, BigDecimal.ROUND_HALF_UP);
+            this.amountUSD = this.amount.divide(this.exchangeRate, 2, RoundingMode.HALF_UP);
         } else if ("USD".equals(this.currency)) {
             this.amountUSD = this.amount;
         }

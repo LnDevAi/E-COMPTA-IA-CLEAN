@@ -2,6 +2,7 @@ package com.ecomptaia.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -262,7 +263,7 @@ public class SubscriptionPlan {
         if (exchangeRate == null || exchangeRate.compareTo(BigDecimal.ZERO) <= 0) {
             return this.basePriceUSD;
         }
-        return this.basePriceUSD.multiply(exchangeRate).setScale(2, BigDecimal.ROUND_HALF_UP);
+        return this.basePriceUSD.multiply(exchangeRate).setScale(2, RoundingMode.HALF_UP);
     }
     
     @Override

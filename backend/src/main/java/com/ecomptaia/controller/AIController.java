@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+
 
 @RestController
 @RequestMapping("/api/ai")
@@ -88,7 +88,7 @@ public class AIController {
     @PostMapping("/process-task/{taskId}")
     public ResponseEntity<?> processTaskAsync(@PathVariable Long taskId) {
         try {
-            CompletableFuture<Map<String, Object>> future = aiService.processTaskAsync(taskId);
+            aiService.processTaskAsync(taskId);
             
             Map<String, Object> response = new HashMap<>();
             response.put("taskId", taskId);

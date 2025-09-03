@@ -2,7 +2,6 @@ package com.ecomptaia.controller;
 
 import com.ecomptaia.entity.JournalEntry;
 import com.ecomptaia.repository.JournalEntryRepository;
-import com.ecomptaia.service.EcritureComptableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +18,6 @@ public class AccountingJournalEntryController {
 
     @Autowired
     private JournalEntryRepository journalEntryRepository;
-
-    @Autowired
-    private EcritureComptableService ecritureComptableService;
 
     @GetMapping("/journal-entries")
     public ResponseEntity<?> getAllJournalEntries() {

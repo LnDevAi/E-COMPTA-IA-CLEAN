@@ -43,6 +43,7 @@ public class ExchangeRateService {
     public Map<String, Object> getExchangeRates(String baseCurrency) {
         try {
             String url = API_BASE_URL + baseCurrency;
+            @SuppressWarnings("unchecked")
             Map<String, Object> response = restTemplate.getForObject(url, Map.class);
             
             if (response != null) {
@@ -68,6 +69,7 @@ public class ExchangeRateService {
 
         try {
             Map<String, Object> rates = getExchangeRates(fromCurrency);
+            @SuppressWarnings("unchecked")
             Map<String, Double> ratesMap = (Map<String, Double>) rates.get("rates");
             
             if (ratesMap != null && ratesMap.containsKey(toCurrency)) {
@@ -94,6 +96,7 @@ public class ExchangeRateService {
 
         try {
             Map<String, Object> rates = getExchangeRates(fromCurrency);
+            @SuppressWarnings("unchecked")
             Map<String, Double> ratesMap = (Map<String, Double>) rates.get("rates");
             
             if (ratesMap != null && ratesMap.containsKey(toCurrency)) {

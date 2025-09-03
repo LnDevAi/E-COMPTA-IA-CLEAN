@@ -10,9 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,14 +34,11 @@ public class EcritureComptableService {
     @Autowired
     private FinancialPeriodRepository periodRepository;
     
-    @Autowired
-    private UserRepository userRepository;
+
     
-    @Autowired
-    private ThirdPartyRepository thirdPartyRepository;
+
     
-    @Autowired
-    private EcritureComptableAIService aiService;
+
     
     @Autowired
     private ObjectMapper objectMapper;
@@ -447,11 +442,7 @@ public class EcritureComptableService {
                 new TypeReference<List<Map<String, Object>>>() {}
             );
             
-            // Parser les formules
-            Map<String, String> formules = objectMapper.readValue(
-                template.getFormules(), 
-                new TypeReference<Map<String, String>>() {}
-            );
+
             
             int ordre = 1;
             for (Map<String, Object> comptePattern : comptesPattern) {

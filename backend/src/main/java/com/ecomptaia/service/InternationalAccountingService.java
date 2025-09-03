@@ -232,6 +232,7 @@ public class InternationalAccountingService {
                 return result;
             }
             
+            @SuppressWarnings("unchecked")
             List<String> validationRules = (List<String>) config.get("validationRules");
             
             result.put("accountingSystem", accountingSystem.toUpperCase());
@@ -259,6 +260,7 @@ public class InternationalAccountingService {
                 return result;
             }
             
+            @SuppressWarnings("unchecked")
             List<String> features = (List<String>) config.get("features");
             
             result.put("accountingSystem", accountingSystem.toUpperCase());

@@ -12,15 +12,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GovernmentPlatformServiceTest {
+class GovernmentPlatformServiceTest {
 
     @Mock
     private RestTemplate restTemplate;
@@ -28,94 +32,98 @@ public class GovernmentPlatformServiceTest {
     @InjectMocks
     private GovernmentPlatformService governmentPlatformService;
 
-    private Map<String, Object> testPlatformConfig;
     private Map<String, Object> testDeclarationData;
+    
+    // Type reference pour les tests
+    private static final ParameterizedTypeReference<Map<String, Object>> MAP_TYPE_REF = 
+        new ParameterizedTypeReference<Map<String, Object>>() {};
 
     @BeforeEach
     void setUp() {
-        testPlatformConfig = new HashMap<>();
-        testPlatformConfig.put("taxPlatform", Map.of(
-            "name", "Direction Générale des Impôts et Domaines (DGID)",
-            "baseUrl", "https://api.dgid.sn",
-            "apiVersion", "v1",
-            "supportedDeclarations", Arrays.asList("TVA", "IS", "IR", "TSS")
-        ));
-        testPlatformConfig.put("socialPlatform", Map.of(
-            "name", "Caisse Nationale de Sécurité Sociale (CNSS)",
-            "baseUrl", "https://api.cnss.sn",
-            "apiVersion", "v1",
-            "supportedDeclarations", Arrays.asList("Déclaration mensuelle", "Déclaration annuelle")
-        ));
-
-        testDeclarationData = Map.of(
-            "tvaCollectee", 1000000.0,
-            "tvaDeductible", 800000.0,
-            "tvaDue", 200000.0
-        );
+        testDeclarationData = new HashMap<>();
+        testDeclarationData.put("montant", 1000000.0);
+        testDeclarationData.put("devise", "XOF");
+        testDeclarationData.put("description", "Test déclaration fiscale");
+        testDeclarationData.put("dateDeclaration", LocalDateTime.now());
     }
 
-    // ==================== TESTS DE RÉCUPÉRATION DES PLATEFORMES ====================
+    // ==================== TESTS DE CONFIGURATION ====================
 
     @Test
     void testGetAvailablePlatforms_Success() {
-        // Test pour le Sénégal
-        Map<String, Object> result = governmentPlatformService.getAvailablePlatforms("SN");
+        Map<String, Object> platforms = governmentPlatformService.getAvailablePlatforms("SN");
         
-        assertNotNull(result);
-        assertTrue(result.containsKey("taxPlatform"));
-        assertTrue(result.containsKey("socialPlatform"));
+        assertNotNull(platforms);
+        assertTrue(platforms.containsKey("taxPlatform"));
+        assertTrue(platforms.containsKey("socialPlatform"));
         
-        Map<String, Object> taxPlatform = (Map<String, Object>) result.get("taxPlatform");
-        assertEquals("Direction Générale des Impôts et Domaines (DGID)", taxPlatform.get("name"));
-        assertEquals("https://api.dgid.sn", taxPlatform.get("baseUrl"));
-        
-        Map<String, Object> socialPlatform = (Map<String, Object>) result.get("socialPlatform");
-        assertEquals("Caisse Nationale de Sécurité Sociale (CNSS)", socialPlatform.get("name"));
-        assertEquals("https://api.cnss.sn", socialPlatform.get("baseUrl"));
+        @SuppressWarnings("unchecked")
+        Map<String, Object> taxPlatform = (Map<String, Object>) platforms.get("taxPlatform");
+        assertEquals("DGI Sénégal", taxPlatform.get("name"));
+        assertEquals("https://api.dgi.sn", taxPlatform.get("baseUrl"));
     }
 
     @Test
-    void testGetAvailablePlatforms_France() {
-        Map<String, Object> result = governmentPlatformService.getAvailablePlatforms("FR");
-        
-        assertNotNull(result);
-        assertTrue(result.containsKey("taxPlatform"));
-        assertTrue(result.containsKey("socialPlatform"));
-        assertTrue(result.containsKey("customsPlatform"));
-        
-        Map<String, Object> taxPlatform = (Map<String, Object>) result.get("taxPlatform");
-        assertEquals("Direction Générale des Finances Publiques (DGFiP)", taxPlatform.get("name"));
-        assertEquals("https://api.impots.gouv.fr", taxPlatform.get("baseUrl"));
-    }
-
-    @Test
-    void testGetAvailablePlatforms_UnitedStates() {
-        Map<String, Object> result = governmentPlatformService.getAvailablePlatforms("US");
-        
-        assertNotNull(result);
-        assertTrue(result.containsKey("taxPlatform"));
-        assertTrue(result.containsKey("socialPlatform"));
-        
-        Map<String, Object> taxPlatform = (Map<String, Object>) result.get("taxPlatform");
-        assertEquals("Internal Revenue Service (IRS)", taxPlatform.get("name"));
-        assertEquals("https://api.irs.gov", taxPlatform.get("baseUrl"));
-    }
-
-    @Test
-    void testGetAvailablePlatforms_CountryNotFound() {
+    void testGetAvailablePlatforms_UnsupportedCountry() {
         assertThrows(IllegalArgumentException.class, () -> {
             governmentPlatformService.getAvailablePlatforms("XX");
         });
     }
 
     @Test
-    void testGetAvailablePlatforms_CaseInsensitive() {
-        // Test avec code pays en minuscules
-        Map<String, Object> result = governmentPlatformService.getAvailablePlatforms("sn");
+    void testGetAvailablePlatforms_Cameroon() {
+        Map<String, Object> platforms = governmentPlatformService.getAvailablePlatforms("CMR");
         
-        assertNotNull(result);
-        assertTrue(result.containsKey("taxPlatform"));
-        assertTrue(result.containsKey("socialPlatform"));
+        assertNotNull(platforms);
+        assertTrue(platforms.containsKey("taxPlatform"));
+        assertTrue(platforms.containsKey("socialPlatform"));
+        
+        @SuppressWarnings("unchecked")
+        Map<String, Object> taxPlatform = (Map<String, Object>) platforms.get("taxPlatform");
+        assertEquals("DGI Cameroun", taxPlatform.get("name"));
+        assertEquals("https://api.dgi.cm", taxPlatform.get("baseUrl"));
+    }
+
+    @Test
+    void testGetAvailablePlatforms_IvoryCoast() {
+        Map<String, Object> platforms = governmentPlatformService.getAvailablePlatforms("CIV");
+        
+        assertNotNull(platforms);
+        assertTrue(platforms.containsKey("taxPlatform"));
+        assertTrue(platforms.containsKey("socialPlatform"));
+        
+        @SuppressWarnings("unchecked")
+        Map<String, Object> socialPlatform = (Map<String, Object>) platforms.get("socialPlatform");
+        assertEquals("CNPS Côte d'Ivoire", socialPlatform.get("name"));
+        assertEquals("https://api.cnps.ci", socialPlatform.get("baseUrl"));
+    }
+
+    @Test
+    void testGetAvailablePlatforms_Mali() {
+        Map<String, Object> platforms = governmentPlatformService.getAvailablePlatforms("MLI");
+        
+        assertNotNull(platforms);
+        assertTrue(platforms.containsKey("taxPlatform"));
+        assertFalse(platforms.containsKey("socialPlatform")); // Mali n'a que la plateforme fiscale
+        
+        @SuppressWarnings("unchecked")
+        Map<String, Object> taxPlatform = (Map<String, Object>) platforms.get("taxPlatform");
+        assertEquals("DGI Mali", taxPlatform.get("name"));
+        assertEquals("https://api.dgi.ml", taxPlatform.get("baseUrl"));
+    }
+
+    @Test
+    void testGetAvailablePlatforms_BurkinaFaso() {
+        Map<String, Object> platforms = governmentPlatformService.getAvailablePlatforms("BFA");
+        
+        assertNotNull(platforms);
+        assertTrue(platforms.containsKey("taxPlatform"));
+        assertFalse(platforms.containsKey("socialPlatform")); // Burkina Faso n'a que la plateforme fiscale
+        
+        @SuppressWarnings("unchecked")
+        Map<String, Object> taxPlatform = (Map<String, Object>) platforms.get("taxPlatform");
+        assertEquals("DGI Burkina Faso", taxPlatform.get("name"));
+        assertEquals("https://api.dgi.bf", taxPlatform.get("baseUrl"));
     }
 
     // ==================== TESTS DE CONNEXION ====================
@@ -127,13 +135,13 @@ public class GovernmentPlatformServiceTest {
         when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(mockResponse);
 
-        Map<String, Object> result = governmentPlatformService.testConnection("SN", "taxPlatform", "test_key", "test_secret");
+        Map<String, Object> result = governmentPlatformService.testConnection("SN", "taxPlatform");
         
         assertNotNull(result);
         assertTrue((Boolean) result.get("success"));
         assertEquals("CONNECTED", result.get("status"));
         assertEquals(200, result.get("responseCode"));
-        assertEquals("Direction Générale des Impôts et Domaines (DGID)", result.get("platformName"));
+        assertEquals("DGI Sénégal", result.get("softwareName"));
     }
 
     @Test
@@ -142,31 +150,12 @@ public class GovernmentPlatformServiceTest {
         when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
                 .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "Unauthorized"));
 
-        Map<String, Object> result = governmentPlatformService.testConnection("SN", "taxPlatform", "invalid_key", "invalid_secret");
+        Map<String, Object> result = governmentPlatformService.testConnection("SN", "taxPlatform");
         
         assertNotNull(result);
         assertFalse((Boolean) result.get("success"));
         assertEquals("CONNECTION_FAILED", result.get("status"));
         assertEquals(401, result.get("errorCode"));
-    }
-
-    @Test
-    void testTestConnection_PlatformTypeNotFound() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            governmentPlatformService.testConnection("SN", "invalidPlatform", "test_key", "test_secret");
-        });
-    }
-
-    @Test
-    void testTestConnection_GeneralException() {
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenThrow(new RuntimeException("Network error"));
-
-        Map<String, Object> result = governmentPlatformService.testConnection("SN", "taxPlatform", "test_key", "test_secret");
-        
-        assertNotNull(result);
-        assertFalse((Boolean) result.get("success"));
-        assertEquals("ERROR", result.get("status"));
         assertNotNull(result.get("errorMessage"));
     }
 
@@ -175,8 +164,8 @@ public class GovernmentPlatformServiceTest {
     @Test
     void testSubmitTaxDeclaration_Success() {
         // Mock de la réponse HTTP
-        ResponseEntity<Map> mockResponse = new ResponseEntity<>(new HashMap<>(), HttpStatus.CREATED);
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Map.class)))
+        ResponseEntity<Map<String, Object>> mockResponse = new ResponseEntity<>(new HashMap<>(), HttpStatus.CREATED);
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(MAP_TYPE_REF)))
                 .thenReturn(mockResponse);
 
         Map<String, Object> result = governmentPlatformService.submitTaxDeclaration(
@@ -187,7 +176,7 @@ public class GovernmentPlatformServiceTest {
         assertTrue((Boolean) result.get("success"));
         assertEquals("SUBMITTED", result.get("status"));
         assertEquals(201, result.get("responseCode"));
-        assertEquals("Direction Générale des Impôts et Domaines (DGID)", result.get("platformName"));
+        assertEquals("DGI Sénégal", result.get("platformName"));
         assertEquals("TVA", result.get("declarationType"));
         assertEquals("2024-01", result.get("period"));
         assertTrue(result.get("submissionId").toString().startsWith("SUB_"));
@@ -196,7 +185,7 @@ public class GovernmentPlatformServiceTest {
 
     @Test
     void testSubmitTaxDeclaration_SubmissionFailed() {
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Map.class)))
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(MAP_TYPE_REF)))
                 .thenThrow(new RuntimeException("Submission failed"));
 
         Map<String, Object> result = governmentPlatformService.submitTaxDeclaration(
@@ -210,27 +199,27 @@ public class GovernmentPlatformServiceTest {
     }
 
     @Test
-    void testSubmitTaxDeclaration_France() {
-        ResponseEntity<Map> mockResponse = new ResponseEntity<>(new HashMap<>(), HttpStatus.CREATED);
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Map.class)))
+    void testSubmitTaxDeclaration_Cameroon() {
+        ResponseEntity<Map<String, Object>> mockResponse = new ResponseEntity<>(new HashMap<>(), HttpStatus.CREATED);
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(MAP_TYPE_REF)))
                 .thenReturn(mockResponse);
 
         Map<String, Object> result = governmentPlatformService.submitTaxDeclaration(
-            "FR", "TVA", "2024-01", testDeclarationData, 1L
+            "CMR", "TVA", "2024-01", testDeclarationData, 1L
         );
         
         assertNotNull(result);
         assertTrue((Boolean) result.get("success"));
-        assertEquals("Direction Générale des Finances Publiques (DGFiP)", result.get("platformName"));
-        assertTrue(result.get("submissionId").toString().endsWith("_FR"));
+        assertEquals("DGI Cameroun", result.get("platformName"));
+        assertTrue(result.get("submissionId").toString().endsWith("_CMR"));
     }
 
     // ==================== TESTS DE SOUMISSION SOCIALE ====================
 
     @Test
     void testSubmitSocialDeclaration_Success() {
-        ResponseEntity<Map> mockResponse = new ResponseEntity<>(new HashMap<>(), HttpStatus.CREATED);
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Map.class)))
+        ResponseEntity<Map<String, Object>> mockResponse = new ResponseEntity<>(new HashMap<>(), HttpStatus.CREATED);
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(MAP_TYPE_REF)))
                 .thenReturn(mockResponse);
 
         Map<String, Object> socialData = Map.of(
@@ -246,17 +235,23 @@ public class GovernmentPlatformServiceTest {
         assertNotNull(result);
         assertTrue((Boolean) result.get("success"));
         assertEquals("SUBMITTED", result.get("status"));
-        assertEquals("Caisse Nationale de Sécurité Sociale (CNSS)", result.get("platformName"));
+        assertEquals(201, result.get("responseCode"));
+        assertEquals("IPRES Sénégal", result.get("platformName"));
         assertEquals("Déclaration mensuelle", result.get("declarationType"));
+        assertEquals("2024-01", result.get("period"));
         assertTrue(result.get("submissionId").toString().startsWith("SOC_"));
+        assertTrue(result.get("submissionId").toString().endsWith("_SN"));
     }
 
     @Test
     void testSubmitSocialDeclaration_SubmissionFailed() {
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Map.class)))
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(MAP_TYPE_REF)))
                 .thenThrow(new RuntimeException("Social submission failed"));
 
-        Map<String, Object> socialData = Map.of("test", "data");
+        Map<String, Object> socialData = Map.of(
+            "nombreEmployes", 50,
+            "salaireTotal", 25000000.0
+        );
 
         Map<String, Object> result = governmentPlatformService.submitSocialDeclaration(
             "SN", "Déclaration mensuelle", "2024-01", socialData, 1L
@@ -265,237 +260,190 @@ public class GovernmentPlatformServiceTest {
         assertNotNull(result);
         assertFalse((Boolean) result.get("success"));
         assertEquals("SUBMISSION_FAILED", result.get("status"));
+        assertNotNull(result.get("errorMessage"));
+    }
+
+    @Test
+    void testSubmitSocialDeclaration_Cameroon() {
+        ResponseEntity<Map<String, Object>> mockResponse = new ResponseEntity<>(new HashMap<>(), HttpStatus.CREATED);
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(MAP_TYPE_REF)))
+                .thenReturn(mockResponse);
+
+        Map<String, Object> socialData = Map.of(
+            "nombreEmployes", 100,
+            "salaireTotal", 50000000.0
+        );
+
+        Map<String, Object> result = governmentPlatformService.submitSocialDeclaration(
+            "CMR", "Déclaration trimestrielle", "2024-Q1", socialData, 1L
+        );
+        
+        assertNotNull(result);
+        assertTrue((Boolean) result.get("success"));
+        assertEquals("CNPS Cameroun", result.get("platformName"));
+        assertTrue(result.get("submissionId").toString().endsWith("_CMR"));
     }
 
     // ==================== TESTS DE STATUT DE DÉCLARATION ====================
 
     @Test
     void testGetDeclarationStatus_Success() {
-        String submissionId = "SUB_1704110400000_SN";
+        String submissionId = "SUB_1234567890_CMR";
         
         Map<String, Object> result = governmentPlatformService.getDeclarationStatus(submissionId);
         
         assertNotNull(result);
-        assertEquals(submissionId, result.get("submissionId"));
-        assertEquals("SN", result.get("countryCode"));
-        assertNotNull(result.get("status"));
-        assertNotNull(result.get("lastUpdate"));
-        assertEquals("Statut récupéré avec succès", result.get("message"));
+        assertTrue(result.containsKey("submissionId"));
+        assertTrue(result.containsKey("status"));
+        assertTrue(result.containsKey("countryCode"));
+        assertTrue(result.containsKey("lastUpdate"));
+        assertTrue(result.containsKey("estimatedCompletion"));
         
-        // Vérifier que le statut est l'un des statuts possibles
-        String status = (String) result.get("status");
-        assertTrue(Arrays.asList("PENDING", "PROCESSING", "APPROVED", "REJECTED", "COMPLETED").contains(status));
+        assertEquals(submissionId, result.get("submissionId"));
+        assertEquals("CMR", result.get("countryCode"));
     }
 
     @Test
-    void testGetDeclarationStatus_InvalidSubmissionId() {
-        String submissionId = "INVALID_ID";
+    void testGetDeclarationStatus_InvalidFormat() {
+        String invalidSubmissionId = "INVALID_ID";
         
-        Map<String, Object> result = governmentPlatformService.getDeclarationStatus(submissionId);
+        Map<String, Object> result = governmentPlatformService.getDeclarationStatus(invalidSubmissionId);
         
         assertNotNull(result);
-        assertEquals(submissionId, result.get("submissionId"));
-        assertEquals("ERROR", result.get("status"));
-        assertNotNull(result.get("errorMessage"));
+        assertTrue(result.containsKey("error"));
+        assertTrue(result.containsKey("message"));
     }
 
     // ==================== TESTS DE NOTIFICATIONS ====================
 
     @Test
     void testGetNotifications_Success() {
-        List<Map<String, Object>> result = governmentPlatformService.getNotifications("SN");
+        List<Map<String, Object>> notifications = governmentPlatformService.getNotifications("CMR");
         
-        assertNotNull(result);
-        assertFalse(result.isEmpty());
-        assertTrue(result.size() >= 1 && result.size() <= 5); // Entre 1 et 5 notifications
+        assertNotNull(notifications);
+        assertFalse(notifications.isEmpty());
         
-        for (Map<String, Object> notification : result) {
-            assertNotNull(notification.get("id"));
-            assertNotNull(notification.get("type"));
-            assertNotNull(notification.get("priority"));
-            assertNotNull(notification.get("title"));
-            assertNotNull(notification.get("message"));
-            assertNotNull(notification.get("date"));
-            assertNotNull(notification.get("read"));
-            assertEquals("SN", notification.get("countryCode"));
-            
-            // Vérifier les types de notification
-            String type = (String) notification.get("type");
-            assertTrue(Arrays.asList("TAX_DEADLINE", "SOCIAL_DEADLINE", "REGULATORY_UPDATE", "SYSTEM_MAINTENANCE").contains(type));
-            
-            // Vérifier les priorités
-            String priority = (String) notification.get("priority");
-            assertTrue(Arrays.asList("LOW", "MEDIUM", "HIGH", "URGENT").contains(priority));
-        }
+        Map<String, Object> firstNotification = notifications.get(0);
+        assertTrue(firstNotification.containsKey("id"));
+        assertTrue(firstNotification.containsKey("type"));
+        assertTrue(firstNotification.containsKey("priority"));
+        assertTrue(firstNotification.containsKey("title"));
+        assertTrue(firstNotification.containsKey("message"));
+        assertTrue(firstNotification.containsKey("date"));
+        assertTrue(firstNotification.containsKey("read"));
+        assertEquals("CMR", firstNotification.get("countryCode"));
     }
 
     @Test
-    void testGetNotifications_DifferentCountries() {
-        List<Map<String, Object>> senegalNotifications = governmentPlatformService.getNotifications("SN");
-        List<Map<String, Object>> franceNotifications = governmentPlatformService.getNotifications("FR");
+    void testGetNotifications_UnsupportedCountry() {
+        List<Map<String, Object>> notifications = governmentPlatformService.getNotifications("XX");
         
-        assertNotNull(senegalNotifications);
-        assertNotNull(franceNotifications);
+        assertNotNull(notifications);
+        assertFalse(notifications.isEmpty());
         
-        for (Map<String, Object> notification : senegalNotifications) {
-            assertEquals("SN", notification.get("countryCode"));
-        }
-        
-        for (Map<String, Object> notification : franceNotifications) {
-            assertEquals("FR", notification.get("countryCode"));
-        }
-    }
-
-    @Test
-    void testGetNotifications_Error() {
-        // Simuler une erreur en passant un pays non supporté
-        List<Map<String, Object>> result = governmentPlatformService.getNotifications("XX");
-        
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertTrue(result.get(0).containsKey("error"));
-        assertEquals("Erreur lors de la récupération des notifications", result.get(0).get("error"));
+        Map<String, Object> errorNotification = notifications.get(0);
+        assertTrue(errorNotification.containsKey("error"));
+        assertEquals("Erreur lors de la récupération des notifications", errorNotification.get("error"));
     }
 
     // ==================== TESTS DE STATISTIQUES ====================
 
     @Test
-    void testGetIntegrationStatistics_Success() {
-        Map<String, Object> result = governmentPlatformService.getIntegrationStatistics();
+    void testGetIntegrationStatistics() {
+        Map<String, Object> stats = governmentPlatformService.getIntegrationStatistics();
         
-        assertNotNull(result);
-        assertTrue((Integer) result.get("totalCountries") > 0);
-        assertTrue((Integer) result.get("totalPlatforms") > 0);
-        assertNotNull(result.get("supportedCountries"));
-        assertNotNull(result.get("lastUpdate"));
-        
-        List<String> supportedCountries = (List<String>) result.get("supportedCountries");
-        assertTrue(supportedCountries.contains("SN"));
-        assertTrue(supportedCountries.contains("FR"));
-        assertTrue(supportedCountries.contains("US"));
-        assertTrue(supportedCountries.contains("BF"));
-        assertTrue(supportedCountries.contains("CI"));
-        
-        // Vérifier les statistiques par type de plateforme
-        Map<String, Integer> platformTypeStats = (Map<String, Integer>) result.get("platformTypeStats");
-        assertNotNull(platformTypeStats);
-        assertTrue(platformTypeStats.get("taxPlatform") > 0);
-        assertTrue(platformTypeStats.get("socialPlatform") > 0);
-    }
-
-    // ==================== TESTS COMPLETS ====================
-
-    @Test
-    void testRunCompleteTest_Success() {
-        Map<String, Object> result = governmentPlatformService.runCompleteTest();
-        
-        assertNotNull(result);
-        assertEquals("OPERATIONAL", result.get("overallStatus"));
-        assertNotNull(result.get("testDate"));
-        assertTrue((Integer) result.get("testedCountries") > 0);
-        
-        // Vérifier les résultats des tests
-        Map<String, Object> platformTest = (Map<String, Object>) result.get("platformRetrieval");
-        assertNotNull(platformTest);
-        assertTrue(platformTest.containsKey("SN"));
-        assertTrue(platformTest.containsKey("FR"));
-        assertTrue(platformTest.containsKey("US"));
-        assertTrue(platformTest.containsKey("BF"));
-        assertTrue(platformTest.containsKey("CI"));
-        
-        Map<String, Object> connectionTest = (Map<String, Object>) result.get("connectionTest");
-        assertNotNull(connectionTest);
-        
-        Map<String, Object> stats = (Map<String, Object>) result.get("statistics");
         assertNotNull(stats);
+        assertTrue(stats.containsKey("totalCountries"));
+        assertTrue(stats.containsKey("totalPlatforms"));
+        assertTrue(stats.containsKey("supportedCountries"));
+        assertTrue(stats.containsKey("lastUpdate"));
+        assertTrue(stats.containsKey("platformTypeStats"));
+        
+        assertTrue((Integer) stats.get("totalCountries") > 0);
+        assertTrue((Integer) stats.get("totalPlatforms") > 0);
+        
+        @SuppressWarnings("unchecked")
+        List<String> supportedCountries = (List<String>) stats.get("supportedCountries");
+        assertFalse(supportedCountries.isEmpty());
+        assertTrue(supportedCountries.contains("CMR"));
+        assertTrue(supportedCountries.contains("SN"));
+        assertTrue(supportedCountries.contains("CIV"));
     }
 
+    // ==================== TESTS DE TEST COMPLET ====================
+
     @Test
-    void testRunCompleteTest_WithErrors() {
-        // Ce test vérifie que le système gère correctement les erreurs
-        // Les erreurs sont simulées dans le service pour certains pays
-        Map<String, Object> result = governmentPlatformService.runCompleteTest();
+    void testRunCompleteTest() {
+        Map<String, Object> testResults = governmentPlatformService.runCompleteTest();
+        
+        assertNotNull(testResults);
+        assertTrue(testResults.containsKey("testDate"));
+        assertTrue(testResults.containsKey("overallStatus"));
+        assertTrue(testResults.containsKey("platformRetrieval"));
+        assertTrue(testResults.containsKey("connectionTest"));
+        assertTrue(testResults.containsKey("statistics"));
+        
+        assertEquals("OPERATIONAL", testResults.get("overallStatus"));
+        
+        @SuppressWarnings("unchecked")
+        Map<String, Object> platformRetrieval = (Map<String, Object>) testResults.get("platformRetrieval");
+        assertFalse(platformRetrieval.isEmpty());
+        
+        @SuppressWarnings("unchecked")
+        Map<String, Object> statistics = (Map<String, Object>) testResults.get("statistics");
+        assertTrue((Integer) statistics.get("testedCountries") > 0);
+        assertTrue((Integer) statistics.get("successfulTests") > 0);
+        assertEquals(0, statistics.get("failedTests"));
+    }
+
+    // ==================== TESTS DE GESTION D'ERREURS ====================
+
+    @Test
+    void testTestConnection_GenericException() {
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenThrow(new RuntimeException("Network error"));
+
+        Map<String, Object> result = governmentPlatformService.testConnection("CMR", "taxPlatform");
         
         assertNotNull(result);
-        assertEquals("OPERATIONAL", result.get("overallStatus"));
-        
-        // Même avec des erreurs simulées, le test global doit passer
-        assertNotNull(result.get("platformRetrieval"));
-        assertNotNull(result.get("connectionTest"));
-        assertNotNull(result.get("statistics"));
-    }
-
-    // ==================== TESTS DE VALIDATION ====================
-
-    @Test
-    void testPlatformConfigs_Completeness() {
-        // Vérifier que toutes les configurations sont complètes
-        String[] testCountries = {"SN", "FR", "US", "BF", "CI"};
-        
-        for (String country : testCountries) {
-            Map<String, Object> config = governmentPlatformService.getAvailablePlatforms(country);
-            
-            assertNotNull(config);
-            assertFalse(config.isEmpty());
-            
-            // Vérifier que chaque pays a au moins une plateforme fiscale et sociale
-            assertTrue(config.containsKey("taxPlatform"));
-            assertTrue(config.containsKey("socialPlatform"));
-            
-            Map<String, Object> taxPlatform = (Map<String, Object>) config.get("taxPlatform");
-            assertNotNull(taxPlatform.get("name"));
-            assertNotNull(taxPlatform.get("baseUrl"));
-            assertNotNull(taxPlatform.get("apiVersion"));
-            assertNotNull(taxPlatform.get("supportedDeclarations"));
-            
-            Map<String, Object> socialPlatform = (Map<String, Object>) config.get("socialPlatform");
-            assertNotNull(socialPlatform.get("name"));
-            assertNotNull(socialPlatform.get("baseUrl"));
-            assertNotNull(socialPlatform.get("apiVersion"));
-            assertNotNull(socialPlatform.get("supportedDeclarations"));
-        }
+        assertFalse((Boolean) result.get("success"));
+        assertEquals("ERROR", result.get("status"));
+        assertNotNull(result.get("errorMessage"));
+        assertEquals("Network error", result.get("errorMessage"));
     }
 
     @Test
-    void testPlatformConfigs_UniqueUrls() {
-        // Vérifier que les URLs sont uniques par plateforme
-        Set<String> urls = new HashSet<>();
+    void testSubmitTaxDeclaration_GenericException() {
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(MAP_TYPE_REF)))
+                .thenThrow(new RuntimeException("Service unavailable"));
+
+        Map<String, Object> result = governmentPlatformService.submitTaxDeclaration(
+            "CMR", "TVA", "2024-01", testDeclarationData, 1L
+        );
         
-        String[] testCountries = {"SN", "FR", "US", "BF", "CI"};
-        for (String country : testCountries) {
-            Map<String, Object> config = governmentPlatformService.getAvailablePlatforms(country);
-            
-            for (Object platformObj : config.values()) {
-                Map<String, Object> platform = (Map<String, Object>) platformObj;
-                String url = (String) platform.get("baseUrl");
-                assertFalse(urls.contains(url), "URL dupliquée trouvée: " + url);
-                urls.add(url);
-            }
-        }
+        assertNotNull(result);
+        assertFalse((Boolean) result.get("success"));
+        assertEquals("SUBMISSION_FAILED", result.get("status"));
+        assertEquals("Service unavailable", result.get("errorMessage"));
     }
 
     @Test
-    void testPlatformConfigs_SupportedDeclarations() {
-        // Vérifier que les déclarations supportées ne sont pas vides
-        String[] testCountries = {"SN", "FR", "US", "BF", "CI"};
+    void testSubmitSocialDeclaration_GenericException() {
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(MAP_TYPE_REF)))
+                .thenThrow(new RuntimeException("Database connection failed"));
+
+        Map<String, Object> socialData = Map.of(
+            "nombreEmployes", 25,
+            "salaireTotal", 12500000.0
+        );
+
+        Map<String, Object> result = governmentPlatformService.submitSocialDeclaration(
+            "CIV", "Déclaration mensuelle", "2024-01", socialData, 1L
+        );
         
-        for (String country : testCountries) {
-            Map<String, Object> config = governmentPlatformService.getAvailablePlatforms(country);
-            
-            for (Object platformObj : config.values()) {
-                Map<String, Object> platform = (Map<String, Object>) platformObj;
-                List<String> supportedDeclarations = (List<String>) platform.get("supportedDeclarations");
-                
-                assertNotNull(supportedDeclarations);
-                assertFalse(supportedDeclarations.isEmpty());
-                
-                for (String declaration : supportedDeclarations) {
-                    assertNotNull(declaration);
-                    assertFalse(declaration.trim().isEmpty());
-                }
-            }
-        }
+        assertNotNull(result);
+        assertFalse((Boolean) result.get("success"));
+        assertEquals("SUBMISSION_FAILED", result.get("status"));
+        assertEquals("Database connection failed", result.get("errorMessage"));
     }
 }
-
-

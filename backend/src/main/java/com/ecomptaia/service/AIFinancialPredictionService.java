@@ -3,6 +3,7 @@ package com.ecomptaia.service;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -210,7 +211,7 @@ public class AIFinancialPredictionService {
         for (Map<String, Object> prediction : predictions) {
             total = total.add((BigDecimal) prediction.get("predictedCashFlow"));
         }
-        return total.divide(new BigDecimal(predictions.size()), 2, BigDecimal.ROUND_HALF_UP);
+        return total.divide(new BigDecimal(predictions.size()), 2, RoundingMode.HALF_UP);
     }
 
     private Map<String, Object> analyzeTrend(List<Map<String, Object>> predictions) {

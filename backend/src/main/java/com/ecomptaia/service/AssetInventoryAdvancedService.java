@@ -1,7 +1,8 @@
 package com.ecomptaia.service;
 
-import com.ecomptaia.entity.*;
-import com.ecomptaia.repository.*;
+import com.ecomptaia.entity.Asset;
+import com.ecomptaia.entity.Inventory;
+import com.ecomptaia.entity.InventoryMovement;
 import com.ecomptaia.entity.JournalEntry;
 import com.ecomptaia.entity.AccountEntry;
 import com.ecomptaia.repository.JournalEntryRepository;
@@ -10,32 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class AssetInventoryAdvancedService {
-
-    @Autowired
-    private AssetRepository assetRepository;
-
-    @Autowired
-    private InventoryRepository inventoryRepository;
-
-    @Autowired
-    private InventoryMovementRepository movementRepository;
-
-    @Autowired
-    private InventoryAnalysisRepository analysisRepository;
-
-    @Autowired
-    private InventoryAnalysisDetailRepository analysisDetailRepository;
-
-    @Autowired
-    private AssetInventoryDocumentRepository documentRepository;
 
     @Autowired
     private JournalEntryRepository journalEntryRepository;
@@ -230,7 +211,7 @@ public class AssetInventoryAdvancedService {
             // Créer les lignes d'écriture selon le type de mouvement
             List<AccountEntry> accountEntries = new ArrayList<>();
 
-            if ("IN".equals(movement.getMovementType())) {
+            if ("IN".equals(movement.getMovementType().name())) {
                 // Entrée en stock
                 AccountEntry stockEntry = new AccountEntry();
                 stockEntry.setJournalEntryId(savedEntry.getId());
@@ -256,7 +237,7 @@ public class AssetInventoryAdvancedService {
                 supplierEntry.setAccountingStandard(movement.getAccountingStandard());
                 accountEntries.add(supplierEntry);
 
-            } else if ("OUT".equals(movement.getMovementType())) {
+            } else if ("OUT".equals(movement.getMovementType().name())) {
                 // Sortie de stock
                 AccountEntry costEntry = new AccountEntry();
                 costEntry.setJournalEntryId(savedEntry.getId());

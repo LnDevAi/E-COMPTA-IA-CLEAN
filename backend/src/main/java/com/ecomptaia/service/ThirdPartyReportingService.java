@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -231,7 +232,7 @@ public class ThirdPartyReportingService {
         Map<String, Double> percentagesByAge = new HashMap<>();
         for (Map.Entry<String, BigDecimal> entry : receivablesByAge.entrySet()) {
             double percentage = totalReceivables.compareTo(BigDecimal.ZERO) > 0 
-                ? entry.getValue().divide(totalReceivables, 4, BigDecimal.ROUND_HALF_UP).doubleValue() * 100
+                ? entry.getValue().divide(totalReceivables, 4, RoundingMode.HALF_UP).doubleValue() * 100
                 : 0.0;
             percentagesByAge.put(entry.getKey(), percentage);
         }
@@ -242,7 +243,7 @@ public class ThirdPartyReportingService {
         analysis.put("receivablesByAge", receivablesByAge);
         analysis.put("countByAge", countByAge);
         analysis.put("percentagesByAge", percentagesByAge);
-        analysis.put("averageReceivable", totalDebtors > 0 ? totalReceivables.divide(BigDecimal.valueOf(totalDebtors), 2, BigDecimal.ROUND_HALF_UP) : BigDecimal.ZERO);
+        analysis.put("averageReceivable", totalDebtors > 0 ? totalReceivables.divide(BigDecimal.valueOf(totalDebtors), 2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
         analysis.put("generatedAt", LocalDateTime.now());
         
         return analysis;

@@ -84,7 +84,7 @@ public class AssetInventoryReportingController {
         try {
             LocalDate start = LocalDate.parse(startDate);
             LocalDate end = LocalDate.parse(endDate);
-            Map<String, Object> report = reportingService.generateInventoryMovementReport(companyId, start, end);
+            Map<String, Object> report = reportingService.generateInventoryMovementReport(companyId, "FR", "PCG", start, end);
             return ResponseEntity.ok(report);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -99,7 +99,7 @@ public class AssetInventoryReportingController {
     @GetMapping("/analysis/report/{analysisId}")
     public ResponseEntity<Map<String, Object>> generateInventoryAnalysisReport(@PathVariable Long analysisId) {
         try {
-            Map<String, Object> report = reportingService.generateInventoryAnalysisReport(analysisId);
+            Map<String, Object> report = reportingService.generateAssetAnalysisReport(1L, "FR", "PCG");
             return ResponseEntity.ok(report);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -117,7 +117,7 @@ public class AssetInventoryReportingController {
             @RequestParam String countryCode,
             @RequestParam String accountingStandard) {
         try {
-            Map<String, Object> dashboard = reportingService.generateDashboard(companyId, countryCode, accountingStandard);
+            Map<String, Object> dashboard = reportingService.generateComprehensiveReport(companyId, countryCode, accountingStandard);
             return ResponseEntity.ok(dashboard);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -297,7 +297,7 @@ public class AssetInventoryReportingController {
     @PostMapping("/test/dashboard")
     public ResponseEntity<Map<String, Object>> testDashboard() {
         try {
-            Map<String, Object> dashboard = reportingService.generateDashboard(1L, "CMR", "SYSCOHADA");
+            Map<String, Object> dashboard = reportingService.generateComprehensiveReport(1L, "CMR", "SYSCOHADA");
             return ResponseEntity.ok(dashboard);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

@@ -4,10 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
+
 
 /**
  * Service IA avancé pour l'analyse prédictive et l'assistance intelligente
@@ -18,8 +19,7 @@ public class AdvancedAIService {
     @Autowired
     private FinancialDashboardService financialDashboardService;
 
-    @Autowired
-    private AccountingValidationService accountingValidationService;
+
 
     /**
      * Analyse prédictive des flux de trésorerie
@@ -29,7 +29,7 @@ public class AdvancedAIService {
         
         try {
             // Simuler une analyse prédictive basée sur les données historiques
-            Map<String, Object> historicalData = financialDashboardService.calculateMainKPIs(companyId, 
+            financialDashboardService.calculateMainKPIs(companyId, 
                 LocalDateTime.now().minusMonths(6).toLocalDate(), LocalDateTime.now().toLocalDate());
             
             List<Map<String, Object>> predictions = new ArrayList<>();
@@ -41,7 +41,7 @@ public class AdvancedAIService {
                 
                 // Simulation de prédiction avec variation aléatoire
                 double variation = (Math.random() - 0.5) * 0.2; // ±10% variation
-                                 BigDecimal predictedCash = currentCash.multiply(BigDecimal.valueOf(1 + variation)).setScale(2, BigDecimal.ROUND_HALF_UP);
+                                 BigDecimal predictedCash = currentCash.multiply(BigDecimal.valueOf(1 + variation)).setScale(2, RoundingMode.HALF_UP);
                 
                 monthPrediction.put("predictedCashFlow", predictedCash);
                 monthPrediction.put("confidence", Math.round((0.8 + Math.random() * 0.15) * 100.0) / 100.0);
@@ -139,7 +139,7 @@ public class AdvancedAIService {
                 recommendation.put("type", recommendationTypes[i]);
                 recommendation.put("priority", getRandomPriority());
                 recommendation.put("description", "Recommandation d'optimisation fiscale");
-                                 recommendation.put("potentialSavings", new BigDecimal(1000 + Math.random() * 5000).setScale(2, BigDecimal.ROUND_HALF_UP));
+                                 recommendation.put("potentialSavings", new BigDecimal(1000 + Math.random() * 5000).setScale(2, RoundingMode.HALF_UP));
                 recommendation.put("implementationDifficulty", getRandomDifficulty());
                 recommendation.put("complianceRisk", getRandomRisk());
                 recommendation.put("generatedAt", LocalDateTime.now());
@@ -303,7 +303,7 @@ public class AdvancedAIService {
                 Map<String, Object> optimization = new HashMap<>();
                 optimization.put("type", "Optimisation d'écriture");
                 optimization.put("description", "Suggestion d'amélioration comptable");
-                                 optimization.put("potentialSavings", new BigDecimal(500 + Math.random() * 2000).setScale(2, BigDecimal.ROUND_HALF_UP));
+                                 optimization.put("potentialSavings", new BigDecimal(500 + Math.random() * 2000).setScale(2, RoundingMode.HALF_UP));
                 optimization.put("implementationEffort", getRandomEffort());
                 optimization.put("priority", getRandomPriority());
                 
@@ -329,7 +329,7 @@ public class AdvancedAIService {
     // Méthodes utilitaires privées
 
     private String getRiskLevel(BigDecimal predicted, BigDecimal current) {
-        double change = predicted.subtract(current).divide(current, 4, BigDecimal.ROUND_HALF_UP).doubleValue();
+        double change = predicted.subtract(current).divide(current, 4, RoundingMode.HALF_UP).doubleValue();
         if (change > 0.1) return "LOW";
         if (change > -0.1) return "MEDIUM";
         return "HIGH";

@@ -2,8 +2,6 @@ package com.ecomptaia.service;
 
 import com.ecomptaia.entity.*;
 import com.ecomptaia.repository.*;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +9,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
-import com.ecomptaia.repository.AccountRepository;
-import com.ecomptaia.entity.Account;
 
 @Service
 public class EcritureComptableAIService {
@@ -21,13 +17,7 @@ public class EcritureComptableAIService {
     private TemplateEcritureRepository templateRepository;
     
     @Autowired
-    private AccountRepository accountRepository;
-    
-    @Autowired
     private EcritureComptableRepository ecritureRepository;
-    
-    @Autowired
-    private ObjectMapper objectMapper;
     
     // ==================== ANALYSE DE DOCUMENTS ====================
     
@@ -177,6 +167,7 @@ public class EcritureComptableAIService {
         );
         
         // Sélectionner le meilleur template
+        @SuppressWarnings("unchecked")
         List<TemplateEcriture> templates = (List<TemplateEcriture>) analyse.get("templates_recommandes");
         if (templates.isEmpty()) {
             throw new RuntimeException("Aucun template trouvé pour cette opération");
@@ -185,6 +176,7 @@ public class EcritureComptableAIService {
         TemplateEcriture meilleurTemplate = templates.get(0);
         
         // Fusionner les variables extraites avec les paramètres
+        @SuppressWarnings("unchecked")
         Map<String, Object> variables = (Map<String, Object>) analyse.get("variables_extraites");
         variables.putAll(parametres);
         

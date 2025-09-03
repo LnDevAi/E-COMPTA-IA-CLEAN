@@ -144,6 +144,7 @@ public class Employee {
     }
 
     public enum ContractType {
+        CDI("Contrat à durée indéterminée"),
         PERMANENT("Contrat permanent"),
         FIXED_TERM("Contrat à durée déterminée"),
         TEMPORARY("Contrat temporaire"),

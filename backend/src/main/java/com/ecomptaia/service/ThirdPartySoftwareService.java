@@ -196,7 +196,7 @@ public class ThirdPartySoftwareService {
             return Map.of(
                 "success", true,
                 "status", "CONNECTED",
-                "responseCode", response.getStatusCodeValue(),
+                "responseCode", response.getStatusCode().value(),
                 "softwareName", config.get("name"),
                 "softwareType", config.get("type"),
                 "testUrl", testUrl,
@@ -231,6 +231,7 @@ public class ThirdPartySoftwareService {
                 throw new IllegalArgumentException("Logiciel non supporté: " + softwareName);
             }
 
+            @SuppressWarnings("unchecked")
             List<String> supportedDataTypes = (List<String>) config.get("supportedDataTypes");
             if (!supportedDataTypes.contains(dataType)) {
                 throw new IllegalArgumentException("Type de données non supporté: " + dataType);
@@ -265,7 +266,7 @@ public class ThirdPartySoftwareService {
                 "success", true,
                 "syncId", syncId,
                 "status", "SYNCED",
-                "responseCode", response.getStatusCodeValue(),
+                "responseCode", response.getStatusCode().value(),
                 "softwareName", config.get("name"),
                 "dataType", dataType,
                 "syncDirection", syncDirection,
@@ -370,7 +371,7 @@ public class ThirdPartySoftwareService {
                 "success", true,
                 "integrationId", integrationId,
                 "status", "CONFIGURED",
-                "responseCode", response.getStatusCodeValue(),
+                "responseCode", response.getStatusCode().value(),
                 "softwareName", config.get("name"),
                 "integrationType", integrationType,
                 "configDate", LocalDateTime.now()

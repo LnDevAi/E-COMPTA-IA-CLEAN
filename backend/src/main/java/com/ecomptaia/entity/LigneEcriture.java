@@ -3,7 +3,6 @@ package com.ecomptaia.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 import com.ecomptaia.entity.Account;
 import com.ecomptaia.entity.CostCenter;

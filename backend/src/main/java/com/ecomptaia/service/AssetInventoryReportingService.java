@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,9 +26,6 @@ public class AssetInventoryReportingService {
 
     @Autowired
     private InventoryAnalysisRepository analysisRepository;
-
-    @Autowired
-    private JournalEntryRepository journalEntryRepository;
 
     @Autowired
     private InventoryAnalysisDetailRepository analysisDetailRepository;
@@ -61,7 +57,7 @@ public class AssetInventoryReportingService {
                 totalPurchaseValue = totalPurchaseValue.add(asset.getPurchasePrice());
                 totalCurrentValue = totalCurrentValue.add(asset.getCurrentValue());
                 // Calculer la dépréciation basée sur le taux et la valeur actuelle
-                BigDecimal depreciation = asset.getCurrentValue().multiply(asset.getDepreciationRate()).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal depreciation = asset.getCurrentValue().multiply(asset.getDepreciationRate()).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
                 totalDepreciation = totalDepreciation.add(depreciation);
                 
                 statusCount.merge(asset.getStatus().toString(), 1L, Long::sum);
@@ -116,7 +112,7 @@ public class AssetInventoryReportingService {
 
             for (Asset asset : assets) {
                 // Calculer la dépréciation annuelle basée sur le taux
-                BigDecimal annualDepreciation = asset.getCurrentValue().multiply(asset.getDepreciationRate()).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal annualDepreciation = asset.getCurrentValue().multiply(asset.getDepreciationRate()).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
                 totalDepreciation = totalDepreciation.add(annualDepreciation);
                 totalAnnualDepreciation = totalAnnualDepreciation.add(annualDepreciation);
                 
@@ -137,7 +133,7 @@ public class AssetInventoryReportingService {
                 schedule.put("purchaseDate", asset.getPurchaseDate());
                 schedule.put("purchasePrice", asset.getPurchasePrice());
                 // Calculer la dépréciation annuelle
-                BigDecimal annualDepreciation = asset.getCurrentValue().multiply(asset.getDepreciationRate()).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal annualDepreciation = asset.getCurrentValue().multiply(asset.getDepreciationRate()).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
                 schedule.put("annualDepreciation", annualDepreciation);
                 schedule.put("accumulatedDepreciation", annualDepreciation); // Simplifié pour l'exemple
                 schedule.put("remainingValue", asset.getCurrentValue());
@@ -210,53 +206,72 @@ public class AssetInventoryReportingService {
             return report;
 
         } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la génération du rapport d'inventaire: " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la génération du rapport d'état des stocks: " + e.getMessage());
         }
     }
 
     /**
      * Rapport de mouvements de stock
      */
-    public Map<String, Object> generateInventoryMovementReport(Long companyId, LocalDate startDate, LocalDate endDate) {
+    public Map<String, Object> generateInventoryMovementReport(Long companyId, String countryCode, String accountingStandard, LocalDate startDate, LocalDate endDate) {
         try {
-            List<InventoryMovement> movements = movementRepository.findMovementsByFilters(
-                companyId, null, null, null, startDate, endDate);
+            List<InventoryMovement> movements = movementRepository.findAll().stream()
+                .filter(movement -> movement.getCompanyId().equals(companyId))
+                .filter(movement -> !movement.getMovementDate().isBefore(startDate) && !movement.getMovementDate().isAfter(endDate))
+                .sorted((m1, m2) -> m2.getMovementDate().compareTo(m1.getMovementDate()))
+                .collect(Collectors.toList());
             
             Map<String, Object> report = new HashMap<>();
             report.put("reportType", "INVENTORY_MOVEMENT_REPORT");
             report.put("generatedAt", LocalDateTime.now());
-            report.put("period", startDate + " à " + endDate);
             report.put("companyId", companyId);
+            report.put("startDate", startDate);
+            report.put("endDate", endDate);
 
-            BigDecimal totalInValue = BigDecimal.ZERO;
-            BigDecimal totalOutValue = BigDecimal.ZERO;
+            // Statistiques des mouvements
             Map<String, Long> movementTypeCount = new HashMap<>();
             Map<String, BigDecimal> movementTypeValue = new HashMap<>();
+            BigDecimal totalInValue = BigDecimal.ZERO;
+            BigDecimal totalOutValue = BigDecimal.ZERO;
 
             for (InventoryMovement movement : movements) {
+                String movementType = movement.getMovementType().name();
                 BigDecimal movementValue = movement.getQuantity().multiply(movement.getUnitPrice());
                 
-                if ("IN".equals(movement.getMovementType())) {
+                movementTypeCount.merge(movementType, 1L, Long::sum);
+                movementTypeValue.merge(movementType, movementValue, BigDecimal::add);
+                
+                if ("IN".equals(movementType)) {
                     totalInValue = totalInValue.add(movementValue);
-                } else if ("OUT".equals(movement.getMovementType())) {
+                } else if ("OUT".equals(movementType)) {
                     totalOutValue = totalOutValue.add(movementValue);
                 }
-                
-                movementTypeCount.merge(movement.getMovementType().toString(), 1L, Long::sum);
-                movementTypeValue.merge(movement.getMovementType().toString(), movementValue, BigDecimal::add);
             }
 
             report.put("totalMovements", movements.size());
-            report.put("totalInValue", totalInValue);
-            report.put("totalOutValue", totalOutValue);
-            report.put("netMovement", totalInValue.subtract(totalOutValue));
             report.put("movementTypeCount", movementTypeCount);
             report.put("movementTypeValue", movementTypeValue);
+            report.put("totalInValue", totalInValue);
+            report.put("totalOutValue", totalOutValue);
+            report.put("netMovementValue", totalInValue.subtract(totalOutValue));
 
             // Mouvements par jour
-            Map<String, List<InventoryMovement>> movementsByDate = movements.stream()
-                .collect(Collectors.groupingBy(m -> m.getMovementDate().toString()));
+            Map<LocalDate, List<InventoryMovement>> movementsByDate = movements.stream()
+                .collect(Collectors.groupingBy(InventoryMovement::getMovementDate));
             report.put("movementsByDate", movementsByDate);
+
+            // Top produits par mouvement (simplifié par ID produit)
+            Map<String, Long> productMovementCount = new HashMap<>();
+            for (InventoryMovement movement : movements) {
+                String productKey = "Product_" + movement.getProductId();
+                productMovementCount.merge(productKey, 1L, Long::sum);
+            }
+            
+            List<Map.Entry<String, Long>> topProducts = productMovementCount.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(10)
+                .collect(Collectors.toList());
+            report.put("topProductsByMovement", topProducts);
 
             return report;
 
@@ -265,52 +280,60 @@ public class AssetInventoryReportingService {
         }
     }
 
-    // ==================== RAPPORTS D'ANALYSE D'INVENTAIRE ====================
+    // ==================== RAPPORTS D'ANALYSE ====================
 
     /**
-     * Rapport d'analyse d'inventaire complet
+     * Rapport d'analyse des immobilisations
      */
-    public Map<String, Object> generateInventoryAnalysisReport(Long analysisId) {
+    public Map<String, Object> generateAssetAnalysisReport(Long companyId, String countryCode, String accountingStandard) {
         try {
-            InventoryAnalysis analysis = analysisRepository.findById(analysisId)
-                .orElseThrow(() -> new RuntimeException("Analyse non trouvée"));
-
+            List<Asset> assets = assetRepository.findByCompanyIdOrderByAssetNameAsc(companyId);
+            
             Map<String, Object> report = new HashMap<>();
-            report.put("reportType", "INVENTORY_ANALYSIS_REPORT");
+            report.put("reportType", "ASSET_ANALYSIS_REPORT");
             report.put("generatedAt", LocalDateTime.now());
-            report.put("analysisId", analysisId);
-            report.put("analysisNumber", analysis.getAnalysisNumber());
+            report.put("companyId", companyId);
 
-            // Résumé de l'analyse
-            report.put("analysis", analysis);
-            report.put("summary", Map.of(
-                "totalItems", analysis.getTotalItemsAnalyzed(),
-                "itemsWithVariance", analysis.getItemsWithVariance(),
-                "totalAccountingValue", analysis.getTotalAccountingValue(),
-                "totalPhysicalValue", analysis.getTotalPhysicalValue(),
-                "totalVariance", analysis.getTotalVariance(),
-                "variancePercentage", analysis.getVariancePercentage()
-            ));
+            // Analyse par type d'immobilisation
+            Map<String, List<Asset>> assetsByType = assets.stream()
+                .collect(Collectors.groupingBy(asset -> asset.getAssetType().toString()));
+            
+            Map<String, Object> analysisByType = new HashMap<>();
+            for (Map.Entry<String, List<Asset>> entry : assetsByType.entrySet()) {
+                String type = entry.getKey();
+                List<Asset> typeAssets = entry.getValue();
+                
+                BigDecimal totalValue = typeAssets.stream()
+                    .map(Asset::getCurrentValue)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+                
+                BigDecimal totalDepreciation = typeAssets.stream()
+                    .map(asset -> asset.getCurrentValue().multiply(asset.getDepreciationRate()).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+                
+                Map<String, Object> typeAnalysis = new HashMap<>();
+                typeAnalysis.put("count", typeAssets.size());
+                typeAnalysis.put("totalValue", totalValue);
+                typeAnalysis.put("totalDepreciation", totalDepreciation);
+                typeAnalysis.put("averageValue", totalValue.divide(BigDecimal.valueOf(typeAssets.size()), 2, RoundingMode.HALF_UP));
+                
+                analysisByType.put(type, typeAnalysis);
+            }
+            
+            report.put("analysisByType", analysisByType);
 
-            // Détails des écarts
-            List<InventoryAnalysisDetail> details = analysisDetailRepository.findByAnalysisId(analysisId);
-            report.put("details", details);
-
-            // Statistiques par type d'écart
-            Map<String, Long> varianceStats = details.stream()
-                .collect(Collectors.groupingBy(
-                    InventoryAnalysisDetail::getVarianceType,
-                    Collectors.counting()
-                ));
-            report.put("varianceStats", varianceStats);
-
-            // Top 10 des plus gros écarts
-            List<InventoryAnalysisDetail> topVariances = details.stream()
-                .filter(d -> d.getValueVariance().compareTo(BigDecimal.ZERO) != 0)
-                .sorted((d1, d2) -> d2.getValueVariance().abs().compareTo(d1.getValueVariance().abs()))
-                .limit(10)
+            // Analyse de la dépréciation
+            List<Asset> assetsWithHighDepreciation = assets.stream()
+                .filter(asset -> asset.getDepreciationRate().compareTo(new BigDecimal("50")) > 0)
                 .collect(Collectors.toList());
-            report.put("topVariances", topVariances);
+            report.put("assetsWithHighDepreciation", assetsWithHighDepreciation);
+
+            // Analyse de la valeur
+            BigDecimal averageAssetValue = assets.stream()
+                .map(Asset::getCurrentValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .divide(BigDecimal.valueOf(assets.size()), 2, RoundingMode.HALF_UP);
+            report.put("averageAssetValue", averageAssetValue);
 
             return report;
 
@@ -319,93 +342,44 @@ public class AssetInventoryReportingService {
         }
     }
 
-    // ==================== TABLEAUX DE BORD ====================
+    // ==================== RAPPORTS COMBINÉS ====================
 
     /**
-     * Tableau de bord complet des immobilisations et stocks
+     * Rapport complet immobilisations et stocks
      */
-    public Map<String, Object> generateDashboard(Long companyId, String countryCode, String accountingStandard) {
+    public Map<String, Object> generateComprehensiveReport(Long companyId, String countryCode, String accountingStandard) {
         try {
-            Map<String, Object> dashboard = new HashMap<>();
-            dashboard.put("dashboardType", "ASSET_INVENTORY_DASHBOARD");
-            dashboard.put("generatedAt", LocalDateTime.now());
-            dashboard.put("companyId", companyId);
+            Map<String, Object> comprehensiveReport = new HashMap<>();
+            comprehensiveReport.put("reportType", "COMPREHENSIVE_ASSET_INVENTORY_REPORT");
+            comprehensiveReport.put("generatedAt", LocalDateTime.now());
+            comprehensiveReport.put("companyId", companyId);
+            comprehensiveReport.put("countryCode", countryCode);
+            comprehensiveReport.put("accountingStandard", accountingStandard);
 
-            // KPIs des immobilisations
-            List<Asset> assets = assetRepository.findByCompanyIdOrderByAssetNameAsc(companyId);
-            BigDecimal totalAssetValue = assets.stream()
-                .map(Asset::getCurrentValue)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal totalAssetDepreciation = assets.stream()
-                .map(asset -> asset.getCurrentValue().multiply(asset.getDepreciationRate()).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            // Sous-rapports
+            comprehensiveReport.put("assetStatus", generateAssetStatusReport(companyId, countryCode, accountingStandard));
+            comprehensiveReport.put("depreciation", generateDepreciationReport(companyId, countryCode, accountingStandard));
+            comprehensiveReport.put("inventoryStatus", generateInventoryStatusReport(companyId, countryCode, accountingStandard));
+            comprehensiveReport.put("assetAnalysis", generateAssetAnalysisReport(companyId, countryCode, accountingStandard));
 
-            dashboard.put("assetKPIs", Map.of(
-                "totalAssets", assets.size(),
-                "totalAssetValue", totalAssetValue,
-                "totalDepreciation", totalAssetDepreciation,
-                "averageAssetValue", assets.isEmpty() ? BigDecimal.ZERO : 
-                    totalAssetValue.divide(new BigDecimal(assets.size()), 2, RoundingMode.HALF_UP)
-            ));
+            // Résumé exécutif
+            Map<String, Object> executiveSummary = new HashMap<>();
+            @SuppressWarnings("unchecked")
+            Map<String, Object> assetStatus = (Map<String, Object>) comprehensiveReport.get("assetStatus");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> inventoryStatus = (Map<String, Object>) comprehensiveReport.get("inventoryStatus");
+            
+            executiveSummary.put("totalAssets", assetStatus.get("totalAssets"));
+            executiveSummary.put("totalInventoryProducts", inventoryStatus.get("totalProducts"));
+            executiveSummary.put("totalAssetValue", assetStatus.get("totalCurrentValue"));
+            executiveSummary.put("totalInventoryValue", inventoryStatus.get("totalValue"));
+            
+            comprehensiveReport.put("executiveSummary", executiveSummary);
 
-            // KPIs des stocks
-            List<Inventory> inventories = inventoryRepository.findByCompanyIdOrderByProductNameAsc(companyId);
-            BigDecimal totalInventoryValue = inventories.stream()
-                .map(inv -> inv.getQuantityOnHand().multiply(inv.getUnitPrice()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-            int totalInventoryItems = inventories.stream()
-                .mapToInt(inv -> inv.getQuantityOnHand().intValue())
-                .sum();
-
-            dashboard.put("inventoryKPIs", Map.of(
-                "totalProducts", inventories.size(),
-                "totalInventoryValue", totalInventoryValue,
-                "totalInventoryItems", totalInventoryItems,
-                "averageProductValue", inventories.isEmpty() ? BigDecimal.ZERO :
-                    totalInventoryValue.divide(new BigDecimal(inventories.size()), 2, RoundingMode.HALF_UP)
-            ));
-
-            // Alertes
-            List<Asset> criticalAssets = assets.stream()
-                .filter(asset -> {
-                    BigDecimal depreciationRate = asset.getDepreciationRate();
-                    return depreciationRate != null && depreciationRate.compareTo(new BigDecimal("80")) > 0;
-                })
-                .collect(Collectors.toList());
-
-            List<Inventory> lowStockItems = inventories.stream()
-                .filter(inv -> inv.getQuantityOnHand().compareTo(inv.getMinimumStock()) < 0)
-                .collect(Collectors.toList());
-
-            dashboard.put("alerts", Map.of(
-                "criticalAssets", criticalAssets.size(),
-                "lowStockItems", lowStockItems.size(),
-                "criticalAssetsList", criticalAssets.stream().limit(5).collect(Collectors.toList()),
-                "lowStockItemsList", lowStockItems.stream().limit(5).collect(Collectors.toList())
-            ));
-
-            // Graphiques (données pour frontend)
-            Map<String, Long> assetTypeDistribution = assets.stream()
-                .collect(Collectors.groupingBy(
-                    asset -> asset.getAssetType().toString(),
-                    Collectors.counting()
-                ));
-
-            Map<String, Long> inventoryStatusDistribution = inventories.stream()
-                .collect(Collectors.groupingBy(
-                    inv -> inv.getStatus().toString(),
-                    Collectors.counting()
-                ));
-
-            dashboard.put("charts", Map.of(
-                "assetTypeDistribution", assetTypeDistribution,
-                "inventoryStatusDistribution", inventoryStatusDistribution
-            ));
-
-            return dashboard;
+            return comprehensiveReport;
 
         } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la génération du tableau de bord: " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la génération du rapport complet: " + e.getMessage());
         }
     }
 }

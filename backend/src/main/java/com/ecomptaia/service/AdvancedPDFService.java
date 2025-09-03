@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -29,17 +30,13 @@ import java.util.*;
 @Service
 public class AdvancedPDFService {
 
-    @Autowired
-    private FinancialDashboardService financialDashboardService;
+
 
     // @Autowired
     // private OHADAPDFService ohadaPDFService;
 
     // Couleurs pour les graphiques
     private static final Color PRIMARY_COLOR = new DeviceRgb(52, 152, 219);
-    private static final Color SUCCESS_COLOR = new DeviceRgb(46, 204, 113);
-    private static final Color WARNING_COLOR = new DeviceRgb(241, 196, 15);
-    private static final Color DANGER_COLOR = new DeviceRgb(231, 76, 60);
     private static final Color INFO_COLOR = new DeviceRgb(52, 73, 94);
 
     /**
@@ -574,7 +571,7 @@ public class AdvancedPDFService {
         
         while (!current.isAfter(endDate)) {
             data.put(current.format(DateTimeFormatter.ofPattern("MMM yyyy")), 
-                new BigDecimal(50000 + Math.random() * 50000).setScale(2, BigDecimal.ROUND_HALF_UP));
+                new BigDecimal(50000 + Math.random() * 50000).setScale(2, RoundingMode.HALF_UP));
             current = current.plusMonths(1);
         }
         
@@ -583,11 +580,11 @@ public class AdvancedPDFService {
 
     private Map<String, BigDecimal> generateExpenseData(LocalDateTime startDate, LocalDateTime endDate) {
         Map<String, BigDecimal> data = new LinkedHashMap<>();
-        data.put("Personnel", new BigDecimal(25000).setScale(2, BigDecimal.ROUND_HALF_UP));
-        data.put("Loyers", new BigDecimal(8000).setScale(2, BigDecimal.ROUND_HALF_UP));
-        data.put("Fournitures", new BigDecimal(5000).setScale(2, BigDecimal.ROUND_HALF_UP));
-        data.put("Services", new BigDecimal(12000).setScale(2, BigDecimal.ROUND_HALF_UP));
-        data.put("Autres", new BigDecimal(3000).setScale(2, BigDecimal.ROUND_HALF_UP));
+        data.put("Personnel", new BigDecimal(25000).setScale(2, RoundingMode.HALF_UP));
+        data.put("Loyers", new BigDecimal(8000).setScale(2, RoundingMode.HALF_UP));
+        data.put("Fournitures", new BigDecimal(5000).setScale(2, RoundingMode.HALF_UP));
+        data.put("Services", new BigDecimal(12000).setScale(2, RoundingMode.HALF_UP));
+        data.put("Autres", new BigDecimal(3000).setScale(2, RoundingMode.HALF_UP));
         
         return data;
     }
@@ -598,9 +595,9 @@ public class AdvancedPDFService {
         
         while (!current.isAfter(endDate)) {
             Map<String, BigDecimal> flows = new HashMap<>();
-            flows.put("exploitation", new BigDecimal(30000 + Math.random() * 20000).setScale(2, BigDecimal.ROUND_HALF_UP));
-            flows.put("investissement", new BigDecimal(-15000 + Math.random() * 10000).setScale(2, BigDecimal.ROUND_HALF_UP));
-            flows.put("financement", new BigDecimal(-5000 + Math.random() * 15000).setScale(2, BigDecimal.ROUND_HALF_UP));
+            flows.put("exploitation", new BigDecimal(30000 + Math.random() * 20000).setScale(2, RoundingMode.HALF_UP));
+            flows.put("investissement", new BigDecimal(-15000 + Math.random() * 10000).setScale(2, RoundingMode.HALF_UP));
+            flows.put("financement", new BigDecimal(-5000 + Math.random() * 15000).setScale(2, RoundingMode.HALF_UP));
             
             data.put(current.format(DateTimeFormatter.ofPattern("MMM yyyy")), flows);
             current = current.plusMonths(1);

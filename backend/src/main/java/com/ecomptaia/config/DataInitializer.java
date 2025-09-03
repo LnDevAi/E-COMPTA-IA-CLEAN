@@ -53,46 +53,46 @@ public class DataInitializer implements CommandLineRunner {
     private void initializeCountries() {
         List<Country> countries = Arrays.asList(
             // Pays OHADA - Zone XOF
-            new Country("Bénin", "BJ", "XOF"),
-            new Country("Burkina Faso", "BF", "XOF"),
-            new Country("Côte d'Ivoire", "CI", "XOF"),
-            new Country("Guinée-Bissau", "GW", "XOF"),
-            new Country("Mali", "ML", "XOF"),
-            new Country("Niger", "NE", "XOF"),
-            new Country("Sénégal", "SN", "XOF"),
-            new Country("Togo", "TG", "XOF"),
+            new Country("BJ", "Bénin"),
+            new Country("BF", "Burkina Faso"),
+            new Country("CI", "Côte d'Ivoire"),
+            new Country("GW", "Guinée-Bissau"),
+            new Country("ML", "Mali"),
+            new Country("NE", "Niger"),
+            new Country("SN", "Sénégal"),
+            new Country("TG", "Togo"),
             
             // Pays OHADA - Zone XAF
-            new Country("Cameroun", "CM", "XAF"),
-            new Country("République Centrafricaine", "CF", "XAF"),
-            new Country("Congo", "CG", "XAF"),
-            new Country("Gabon", "GA", "XAF"),
-            new Country("Guinée Équatoriale", "GQ", "XAF"),
-            new Country("Tchad", "TD", "XAF"),
+            new Country("CM", "Cameroun"),
+            new Country("CF", "République Centrafricaine"),
+            new Country("CG", "Congo"),
+            new Country("GA", "Gabon"),
+            new Country("GQ", "Guinée Équatoriale"),
+            new Country("TD", "Tchad"),
             
             // Pays OHADA - Zone CDF
-            new Country("République Démocratique du Congo", "CD", "CDF"),
+            new Country("CD", "République Démocratique du Congo"),
             
             // Pays Europe
-            new Country("France", "FR", "EUR"),
-            new Country("Allemagne", "DE", "EUR"),
-            new Country("Royaume-Uni", "GB", "GBP"),
+            new Country("FR", "France"),
+            new Country("DE", "Allemagne"),
+            new Country("GB", "Royaume-Uni"),
             
             // Pays Amérique
-            new Country("États-Unis", "US", "USD"),
-            new Country("Canada", "CA", "CAD"),
-            new Country("Brésil", "BR", "BRL"),
+            new Country("US", "États-Unis"),
+            new Country("CA", "Canada"),
+            new Country("BR", "Brésil"),
             
             // Pays Asie
-            new Country("Inde", "IN", "INR"),
-            new Country("Chine", "CN", "CNY"),
-            new Country("Japon", "JP", "JPY"),
+            new Country("IN", "Inde"),
+            new Country("CN", "Chine"),
+            new Country("JP", "Japon"),
             
             // Pays Océanie
-            new Country("Australie", "AU", "AUD"),
+            new Country("AU", "Australie"),
             
             // Pays Afrique
-            new Country("Afrique du Sud", "ZA", "ZAR")
+            new Country("ZA", "Afrique du Sud")
         );
 
         countryRepository.saveAll(countries);

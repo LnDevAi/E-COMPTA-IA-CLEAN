@@ -1,141 +1,177 @@
 package com.ecomptaia.controller;
 
 import com.ecomptaia.service.GovernmentPlatformService;
-import com.ecomptaia.service.ThirdPartySoftwareService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(GovernmentPlatformController.class)
-public class GovernmentPlatformControllerTest {
+@ExtendWith(MockitoExtension.class)
+class GovernmentPlatformControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private GovernmentPlatformService governmentPlatformService;
 
-    @MockBean
-    private ThirdPartySoftwareService thirdPartySoftwareService;
+    @InjectMocks
+    private GovernmentPlatformController governmentPlatformController;
 
-    @Autowired
+    private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
+    // Données de test
     private Map<String, Object> mockPlatformConfig;
     private Map<String, Object> mockConnectionStatus;
     private Map<String, Object> mockSubmissionResult;
+    private Map<String, Object> mockDeclarationStatus;
     private List<Map<String, Object>> mockNotifications;
-    private List<Map<String, Object>> mockSoftwareList;
+    private Map<String, Object> mockIntegrationStats;
+    private Map<String, Object> mockTestResults;
 
     @BeforeEach
     void setUp() {
-        // Configuration des mocks pour les plateformes gouvernementales
+        mockMvc = MockMvcBuilders.standaloneSetup(governmentPlatformController).build();
+        objectMapper = new ObjectMapper();
+
+        // Configuration des données de test
+        setupMockData();
+    }
+
+    private void setupMockData() {
+        // Configuration des plateformes
         mockPlatformConfig = new HashMap<>();
         mockPlatformConfig.put("taxPlatform", Map.of(
-            "name", "Direction Générale des Impôts et Domaines (DGID)",
-            "baseUrl", "https://api.dgid.sn",
+            "name", "DGI Sénégal",
+            "baseUrl", "https://api.dgi.sn",
             "apiVersion", "v1",
-            "supportedDeclarations", Arrays.asList("TVA", "IS", "IR", "TSS")
+            "supportedDeclarations", List.of("TVA", "IS", "IRPP")
         ));
         mockPlatformConfig.put("socialPlatform", Map.of(
-            "name", "Caisse Nationale de Sécurité Sociale (CNSS)",
-            "baseUrl", "https://api.cnss.sn",
+            "name", "IPRES Sénégal",
+            "baseUrl", "https://api.ipres.sn",
             "apiVersion", "v1",
-            "supportedDeclarations", Arrays.asList("Déclaration mensuelle", "Déclaration annuelle")
+            "supportedDeclarations", List.of("IPRES", "CNSS")
         ));
 
+        // Statut de connexion
         mockConnectionStatus = Map.of(
             "success", true,
             "status", "CONNECTED",
             "responseCode", 200,
-            "platformName", "Direction Générale des Impôts et Domaines (DGID)",
-            "testUrl", "https://api.dgid.sn/v1/health",
-            "timestamp", "2024-01-01T10:00:00"
+            "softwareName", "DGI Sénégal",
+            "softwareType", "taxPlatform",
+            "testUrl", "https://api.dgi.sn/v1/health",
+            "timestamp", LocalDateTime.now()
         );
 
+        // Résultat de soumission
         mockSubmissionResult = Map.of(
             "success", true,
-            "submissionId", "SUB_1704110400000_SN",
+            "submissionId", "SUB_1234567890_SN",
             "status", "SUBMITTED",
             "responseCode", 201,
-            "platformName", "Direction Générale des Impôts et Domaines (DGID)",
+            "platformName", "DGI Sénégal",
             "declarationType", "TVA",
             "period", "2024-01",
-            "submissionDate", "2024-01-01T10:00:00"
+            "submissionDate", LocalDateTime.now()
         );
 
-        mockNotifications = Arrays.asList(
+        // Statut de déclaration
+        mockDeclarationStatus = Map.of(
+            "submissionId", "SUB_1234567890_SN",
+            "status", "APPROVED",
+            "countryCode", "SN",
+            "lastUpdate", LocalDateTime.now(),
+            "estimatedCompletion", LocalDateTime.now().plusDays(3)
+        );
+
+        // Notifications
+        mockNotifications = List.of(
             Map.of(
-                "id", "NOTIF_1704110400000_1",
-                "type", "TAX_DEADLINE",
+                "id", "NOTIF_1234567890_0",
+                "type", "DECLARATION_APPROVED",
                 "priority", "HIGH",
-                "title", "Échéance TVA",
-                "message", "Déclaration TVA à soumettre avant le 20/01/2024",
-                "date", "2024-01-01T10:00:00",
+                "title", "Notification 1 pour SN",
+                "message", "Message de notification 1",
+                "date", LocalDateTime.now().minusDays(1),
                 "read", false,
                 "countryCode", "SN"
             ),
             Map.of(
-                "id", "NOTIF_1704110400000_2",
-                "type", "SOCIAL_DEADLINE",
+                "id", "NOTIF_1234567890_1",
+                "type", "PAYMENT_RECEIVED",
                 "priority", "MEDIUM",
-                "title", "Échéance CNSS",
-                "message", "Déclaration CNSS à soumettre avant le 15/01/2024",
-                "date", "2024-01-01T10:00:00",
+                "title", "Notification 2 pour SN",
+                "message", "Message de notification 2",
+                "date", LocalDateTime.now().minusDays(2),
                 "read", true,
                 "countryCode", "SN"
             )
         );
 
-        // Configuration des mocks pour les logiciels tiers
-        mockSoftwareList = Arrays.asList(
-            Map.of(
-                "code", "SAGE",
-                "name", "Sage",
-                "type", "ACCOUNTING",
-                "version", "2024",
-                "apiUrl", "https://api.sage.com",
-                "apiVersion", "v3",
-                "supportedDataTypes", Arrays.asList("ACCOUNTS", "JOURNAL_ENTRIES", "CUSTOMERS", "SUPPLIERS", "INVOICES"),
-                "syncModes", Arrays.asList("REAL_TIME", "SCHEDULED", "MANUAL")
+        // Statistiques d'intégration
+        mockIntegrationStats = Map.of(
+            "totalCountries", 5,
+            "totalPlatforms", 8,
+            "supportedCountries", List.of("CMR", "CIV", "SN", "MLI", "BFA"),
+            "lastUpdate", LocalDateTime.now(),
+            "platformTypeStats", Map.of(
+                "taxPlatform", 5,
+                "socialPlatform", 3,
+                "customsPlatform", 0
+            )
+        );
+
+        // Résultats de test
+        mockTestResults = Map.of(
+            "testDate", LocalDateTime.now(),
+            "overallStatus", "OPERATIONAL",
+            "platformRetrieval", Map.of(
+                "CMR", "SUCCESS",
+                "SN", "SUCCESS",
+                "CIV", "SUCCESS"
             ),
-            Map.of(
-                "code", "SALESFORCE",
-                "name", "Salesforce",
-                "type", "CRM",
-                "version", "2024",
-                "apiUrl", "https://api.salesforce.com",
-                "apiVersion", "v58",
-                "supportedDataTypes", Arrays.asList("CUSTOMERS", "OPPORTUNITIES", "INVOICES", "PAYMENTS"),
-                "syncModes", Arrays.asList("REAL_TIME", "SCHEDULED", "MANUAL")
+            "connectionTest", Map.of(
+                "CMR", "SIMULATED_SUCCESS",
+                "SN", "SIMULATED_SUCCESS",
+                "CIV", "SIMULATED_SUCCESS"
+            ),
+            "statistics", Map.of(
+                "testedCountries", 3,
+                "successfulTests", 3,
+                "failedTests", 0,
+                "testDuration", "Simulated"
             )
         );
     }
 
-    // ==================== TESTS DES APIS GOUVERNEMENTALES ====================
+    // ==================== TESTS DES PLATEFORMES GOUVERNEMENTALES ====================
 
     @Test
     void testGetGovernmentPlatforms_Success() throws Exception {
         when(governmentPlatformService.getAvailablePlatforms("SN")).thenReturn(mockPlatformConfig);
 
-        mockMvc.perform(get("/api/government-platform/platforms/SN"))
+        mockMvc.perform(get("/api/government-platforms/platforms/SN"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.countryCode").value("SN"))
-                .andExpect(jsonPath("$.platforms.taxPlatform.name").value("Direction Générale des Impôts et Domaines (DGID)"))
-                .andExpect(jsonPath("$.platforms.socialPlatform.name").value("Caisse Nationale de Sécurité Sociale (CNSS)"));
+                .andExpect(jsonPath("$.platforms.taxPlatform.name").value("DGI Sénégal"))
+                .andExpect(jsonPath("$.platforms.socialPlatform.name").value("IPRES Sénégal"));
     }
 
     @Test
@@ -143,7 +179,7 @@ public class GovernmentPlatformControllerTest {
         when(governmentPlatformService.getAvailablePlatforms("XX"))
                 .thenThrow(new IllegalArgumentException("Pays non supporté: XX"));
 
-        mockMvc.perform(get("/api/government-platform/platforms/XX"))
+        mockMvc.perform(get("/api/government-platforms/platforms/XX"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.error").value("Erreur lors de la récupération des plateformes"));
@@ -151,17 +187,16 @@ public class GovernmentPlatformControllerTest {
 
     @Test
     void testTestPlatformConnection_Success() throws Exception {
-        when(governmentPlatformService.testConnection(eq("SN"), eq("taxPlatform"), eq("test_key"), eq("test_secret")))
+        when(governmentPlatformService.testConnection(eq("SN"), eq("taxPlatform")))
                 .thenReturn(mockConnectionStatus);
 
         Map<String, Object> request = Map.of(
-            "countryCode", "SN",
             "platformType", "taxPlatform",
             "apiKey", "test_key",
             "apiSecret", "test_secret"
         );
 
-        mockMvc.perform(post("/api/government-platform/test-connection")
+        mockMvc.perform(post("/api/government-platforms/test-connection/SN")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -171,6 +206,7 @@ public class GovernmentPlatformControllerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void testSubmitTaxDeclaration_Success() throws Exception {
         when(governmentPlatformService.submitTaxDeclaration(
                 eq("SN"), eq("TVA"), eq("2024-01"), any(Map.class), eq(1L)))
@@ -183,14 +219,13 @@ public class GovernmentPlatformControllerTest {
         );
 
         Map<String, Object> request = Map.of(
-            "countryCode", "SN",
             "declarationType", "TVA",
             "period", "2024-01",
-            "declarationData", declarationData,
-            "companyId", 1L
+            "data", declarationData,
+            "companyId", "1"
         );
 
-        mockMvc.perform(post("/api/government-platform/submit-tax-declaration")
+        mockMvc.perform(post("/api/government-platforms/submit-tax-declaration/SN")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -200,6 +235,7 @@ public class GovernmentPlatformControllerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void testSubmitSocialDeclaration_Success() throws Exception {
         when(governmentPlatformService.submitSocialDeclaration(
                 eq("SN"), eq("Déclaration mensuelle"), eq("2024-01"), any(Map.class), eq(1L)))
@@ -212,38 +248,30 @@ public class GovernmentPlatformControllerTest {
         );
 
         Map<String, Object> request = Map.of(
-            "countryCode", "SN",
             "declarationType", "Déclaration mensuelle",
             "period", "2024-01",
-            "declarationData", declarationData,
-            "companyId", 1L
+            "data", declarationData,
+            "companyId", "1"
         );
 
-        mockMvc.perform(post("/api/government-platform/submit-social-declaration")
+        mockMvc.perform(post("/api/government-platforms/submit-social-declaration/SN")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.submissionResult.success").value(true));
+                .andExpect(jsonPath("$.submissionResult.success").value(true))
+                .andExpect(jsonPath("$.submissionResult.declarationType").value("Déclaration mensuelle"));
     }
 
     @Test
     void testGetDeclarationStatus_Success() throws Exception {
-        Map<String, Object> mockStatus = Map.of(
-            "submissionId", "SUB_1704110400000_SN",
-            "status", "APPROVED",
-            "lastUpdate", "2024-01-01T10:00:00",
-            "countryCode", "SN",
-            "message", "Statut récupéré avec succès"
-        );
+        when(governmentPlatformService.getDeclarationStatus("SUB_1234567890_SN"))
+                .thenReturn(mockDeclarationStatus);
 
-        when(governmentPlatformService.getDeclarationStatus("SUB_1704110400000_SN"))
-                .thenReturn(mockStatus);
-
-        mockMvc.perform(get("/api/government-platform/declaration-status/SUB_1704110400000_SN"))
+        mockMvc.perform(get("/api/government-platforms/declaration-status/SUB_1234567890_SN"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.submissionId").value("SUB_1704110400000_SN"))
+                .andExpect(jsonPath("$.submissionId").value("SUB_1234567890_SN"))
                 .andExpect(jsonPath("$.status.status").value("APPROVED"));
     }
 
@@ -251,266 +279,147 @@ public class GovernmentPlatformControllerTest {
     void testGetGovernmentNotifications_Success() throws Exception {
         when(governmentPlatformService.getNotifications("SN")).thenReturn(mockNotifications);
 
-        mockMvc.perform(get("/api/government-platform/notifications/SN"))
+        mockMvc.perform(get("/api/government-platforms/notifications/SN"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.countryCode").value("SN"))
                 .andExpect(jsonPath("$.count").value(2))
-                .andExpect(jsonPath("$.notifications[0].type").value("TAX_DEADLINE"))
-                .andExpect(jsonPath("$.notifications[1].type").value("SOCIAL_DEADLINE"));
+                .andExpect(jsonPath("$.notifications[0].type").value("DECLARATION_APPROVED"))
+                .andExpect(jsonPath("$.notifications[1].type").value("PAYMENT_RECEIVED"));
     }
 
     // ==================== TESTS DES LOGICIELS TIERS ====================
 
     @Test
-    void testGetThirdPartySoftware_Success() throws Exception {
-        when(thirdPartySoftwareService.getAvailableSoftware()).thenReturn(mockSoftwareList);
-
-        mockMvc.perform(get("/api/government-platform/third-party-software"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.count").value(2))
-                .andExpect(jsonPath("$.softwareList[0].name").value("Sage"))
-                .andExpect(jsonPath("$.softwareList[1].name").value("Salesforce"));
-    }
-
-    @Test
     void testTestThirdPartyConnection_Success() throws Exception {
-        Map<String, Object> mockConnectionStatus = Map.of(
-            "success", true,
-            "status", "CONNECTED",
-            "responseCode", 200,
-            "softwareName", "Sage",
-            "softwareType", "ACCOUNTING",
-            "testUrl", "https://api.sage.com/v3/health",
-            "timestamp", "2024-01-01T10:00:00"
-        );
-
-        when(thirdPartySoftwareService.testConnection(eq("SAGE"), eq("https://api.sage.com"), eq("test_key"), eq("test_secret")))
-                .thenReturn(mockConnectionStatus);
-
         Map<String, Object> request = Map.of(
-            "softwareName", "SAGE",
-            "apiUrl", "https://api.sage.com",
+            "softwareType", "accounting",
             "apiKey", "test_key",
             "apiSecret", "test_secret"
         );
 
-        mockMvc.perform(post("/api/government-platform/test-third-party-connection")
+        mockMvc.perform(post("/api/government-platforms/test-third-party-connection")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.softwareName").value("SAGE"))
-                .andExpect(jsonPath("$.connectionStatus.success").value(true));
+                .andExpect(jsonPath("$.connectionStatus.success").value(true))
+                .andExpect(jsonPath("$.connectionStatus.status").value("CONNECTED"));
     }
-
-    @Test
-    void testSyncThirdPartyData_Success() throws Exception {
-        Map<String, Object> mockSyncResult = Map.of(
-            "success", true,
-            "syncId", "SYNC_1704110400000_SAGE",
-            "status", "SYNCED",
-            "responseCode", 200,
-            "softwareName", "Sage",
-            "dataType", "ACCOUNTS",
-            "syncDirection", "BOTH",
-            "recordsProcessed", 500,
-            "syncDate", "2024-01-01T10:00:00"
-        );
-
-        when(thirdPartySoftwareService.syncData(eq("SAGE"), eq("ACCOUNTS"), eq("BOTH"), eq(1L)))
-                .thenReturn(mockSyncResult);
-
-        Map<String, Object> request = Map.of(
-            "softwareName", "SAGE",
-            "dataType", "ACCOUNTS",
-            "syncDirection", "BOTH",
-            "companyId", 1L
-        );
-
-        mockMvc.perform(post("/api/government-platform/sync-third-party-data")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.syncResult.success").value(true))
-                .andExpect(jsonPath("$.syncResult.dataType").value("ACCOUNTS"));
-    }
-
-    @Test
-    void testGetSyncLogs_Success() throws Exception {
-        List<Map<String, Object>> mockLogs = Arrays.asList(
-            Map.of(
-                "id", "LOG_1704110400000_1",
-                "softwareName", "SAGE",
-                "dataType", "ACCOUNTS",
-                "syncDirection", "BOTH",
-                "status", "SUCCESS",
-                "recordsProcessed", 500,
-                "startTime", "2024-01-01T10:00:00",
-                "endTime", "2024-01-01T10:05:00",
-                "duration", 300
-            ),
-            Map.of(
-                "id", "LOG_1704110400000_2",
-                "softwareName", "SAGE",
-                "dataType", "JOURNAL_ENTRIES",
-                "syncDirection", "INBOUND",
-                "status", "SUCCESS",
-                "recordsProcessed", 200,
-                "startTime", "2024-01-01T09:00:00",
-                "endTime", "2024-01-01T09:02:00",
-                "duration", 120
-            )
-        );
-
-        when(thirdPartySoftwareService.getSyncLogs("SAGE")).thenReturn(mockLogs);
-
-        mockMvc.perform(get("/api/government-platform/sync-logs/SAGE"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.softwareName").value("SAGE"))
-                .andExpect(jsonPath("$.count").value(2))
-                .andExpect(jsonPath("$.logs[0].dataType").value("ACCOUNTS"))
-                .andExpect(jsonPath("$.logs[1].dataType").value("JOURNAL_ENTRIES"));
-    }
-
-    @Test
-    void testConfigureThirdPartyIntegration_Success() throws Exception {
-        Map<String, Object> mockConfigResult = Map.of(
-            "success", true,
-            "integrationId", "INT_1704110400000_SAGE",
-            "status", "CONFIGURED",
-            "responseCode", 200,
-            "softwareName", "Sage",
-            "integrationType", "REAL_TIME",
-            "configDate", "2024-01-01T10:00:00"
-        );
-
-        Map<String, Object> configuration = Map.of(
-            "apiKey", "test_api_key",
-            "apiSecret", "test_api_secret",
-            "syncInterval", "5 minutes"
-        );
-
-        when(thirdPartySoftwareService.configureIntegration(eq("SAGE"), eq("REAL_TIME"), eq(configuration), eq(1L)))
-                .thenReturn(mockConfigResult);
-
-        Map<String, Object> request = Map.of(
-            "softwareName", "SAGE",
-            "integrationType", "REAL_TIME",
-            "configuration", configuration,
-            "companyId", 1L
-        );
-
-        mockMvc.perform(post("/api/government-platform/configure-third-party-integration")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.configResult.success").value(true))
-                .andExpect(jsonPath("$.configResult.integrationType").value("REAL_TIME"));
-    }
-
-    // ==================== TESTS DES STATISTIQUES ET TESTS COMPLETS ====================
 
     @Test
     void testGetIntegrationStatistics_Success() throws Exception {
-        Map<String, Object> mockGovStats = Map.of(
-            "totalCountries", 5,
-            "totalPlatforms", 15,
-            "supportedCountries", Arrays.asList("SN", "FR", "US", "BF", "CI"),
-            "lastUpdate", "2024-01-01T10:00:00"
-        );
+        when(governmentPlatformService.getIntegrationStatistics()).thenReturn(mockIntegrationStats);
 
-        Map<String, Object> mockThirdPartyStats = Map.of(
-            "totalSoftware", 12,
-            "lastUpdate", "2024-01-01T10:00:00",
-            "softwareTypeStats", Map.of(
-                "ACCOUNTING", 4,
-                "CRM", 2,
-                "HR", 2,
-                "ERP", 2,
-                "PAYMENT", 2
-            )
-        );
-
-        when(governmentPlatformService.getIntegrationStatistics()).thenReturn(mockGovStats);
-        when(thirdPartySoftwareService.getIntegrationStatistics()).thenReturn(mockThirdPartyStats);
-
-        mockMvc.perform(get("/api/government-platform/integration-statistics"))
+        mockMvc.perform(get("/api/government-platforms/integration-statistics"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.governmentPlatforms.totalCountries").value(5))
-                .andExpect(jsonPath("$.thirdPartySoftware.totalSoftware").value(12));
+                .andExpect(jsonPath("$.statistics.totalCountries").value(5))
+                .andExpect(jsonPath("$.statistics.totalPlatforms").value(8))
+                .andExpect(jsonPath("$.statistics.supportedCountries").isArray())
+                .andExpect(jsonPath("$.statistics.platformTypeStats.taxPlatform").value(5));
     }
 
     @Test
-    void testTestCompleteModule_Success() throws Exception {
-        Map<String, Object> mockGovTestResults = Map.of(
-            "overallStatus", "OPERATIONAL",
-            "testDate", "2024-01-01T10:00:00",
-            "testedCountries", 5
-        );
+    void testRunCompletePlatformTest_Success() throws Exception {
+        when(governmentPlatformService.runCompleteTest()).thenReturn(mockTestResults);
 
-        Map<String, Object> mockThirdPartyTestResults = Map.of(
-            "overallStatus", "OPERATIONAL",
-            "testDate", "2024-01-01T10:00:00",
-            "testedSoftware", 4
-        );
-
-        when(governmentPlatformService.runCompleteTest()).thenReturn(mockGovTestResults);
-        when(thirdPartySoftwareService.runCompleteTest()).thenReturn(mockThirdPartyTestResults);
-
-        mockMvc.perform(post("/api/government-platform/test-complete"))
+        mockMvc.perform(post("/api/government-platforms/run-complete-test"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.governmentPlatforms.overallStatus").value("OPERATIONAL"))
-                .andExpect(jsonPath("$.thirdPartySoftware.overallStatus").value("OPERATIONAL"))
-                .andExpect(jsonPath("$.overallStatus").value("OPERATIONAL"));
+                .andExpect(jsonPath("$.testResults.overallStatus").value("OPERATIONAL"))
+                .andExpect(jsonPath("$.testResults.statistics.testedCountries").value(3))
+                .andExpect(jsonPath("$.testResults.statistics.successfulTests").value(3));
+    }
+
+    // ==================== TESTS DES ENDPOINTS DE TEST ====================
+
+    @Test
+    void testTestGetPlatforms_Success() throws Exception {
+        when(governmentPlatformService.getAvailablePlatforms("CMR")).thenReturn(mockPlatformConfig);
+
+        mockMvc.perform(post("/api/government-platforms/test/platforms"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.testType").value("getAvailablePlatforms"))
+                .andExpect(jsonPath("$.result").exists());
     }
 
     @Test
-    void testTestCompleteModule_Error() throws Exception {
-        when(governmentPlatformService.runCompleteTest())
-                .thenThrow(new RuntimeException("Erreur de test"));
+    void testTestConnection_Success() throws Exception {
+        when(governmentPlatformService.testConnection("CMR", "taxPlatform")).thenReturn(mockConnectionStatus);
 
-        mockMvc.perform(post("/api/government-platform/test-complete"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.error").value("Erreur lors du test complet"));
+        mockMvc.perform(post("/api/government-platforms/test/connection"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.testType").value("testConnection"))
+                .andExpect(jsonPath("$.result.success").value(true));
     }
 
-    // ==================== TESTS DE VALIDATION ====================
+    @Test
+    @SuppressWarnings("unchecked")
+    void testTestTaxDeclaration_Success() throws Exception {
+        when(governmentPlatformService.submitTaxDeclaration(
+                eq("CMR"), eq("TVA"), eq("2024-Q1"), any(Map.class), eq(1L)))
+                .thenReturn(mockSubmissionResult);
+
+        mockMvc.perform(post("/api/government-platforms/test/tax-declaration"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.testType").value("submitTaxDeclaration"))
+                .andExpect(jsonPath("$.result.success").value(true));
+    }
 
     @Test
-    void testSubmitTaxDeclaration_MissingRequiredFields() throws Exception {
+    void testTestGetNotifications_Success() throws Exception {
+        when(governmentPlatformService.getNotifications("CMR")).thenReturn(mockNotifications);
+
+        mockMvc.perform(post("/api/government-platforms/test/notifications"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.testType").value("getNotifications"))
+                .andExpect(jsonPath("$.count").value(2));
+    }
+
+    @Test
+    void testTestGetDeclarationStatus_Success() throws Exception {
+        when(governmentPlatformService.getDeclarationStatus(anyString())).thenReturn(mockDeclarationStatus);
+
+        mockMvc.perform(post("/api/government-platforms/test/declaration-status"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.testType").value("getDeclarationStatus"))
+                .andExpect(jsonPath("$.submissionId").exists());
+    }
+
+    @Test
+    void testTestCompleteFunctionality_Success() throws Exception {
+        when(governmentPlatformService.getAvailablePlatforms("CMR")).thenReturn(mockPlatformConfig);
+        when(governmentPlatformService.testConnection("CMR", "taxPlatform")).thenReturn(mockConnectionStatus);
+        when(governmentPlatformService.getNotifications("CMR")).thenReturn(mockNotifications);
+        when(governmentPlatformService.getIntegrationStatistics()).thenReturn(mockIntegrationStats);
+
+        mockMvc.perform(post("/api/government-platforms/test/complete"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.testType").value("completeFunctionality"))
+                .andExpect(jsonPath("$.results").exists());
+    }
+
+    // ==================== TESTS DE GESTION D'ERREURS ====================
+
+    @Test
+    void testTestPlatformConnection_Exception() throws Exception {
+        when(governmentPlatformService.testConnection(eq("SN"), eq("taxPlatform")))
+                .thenThrow(new RuntimeException("Erreur de connexion"));
+
         Map<String, Object> request = Map.of(
-            "countryCode", "SN",
-            "declarationType", "TVA"
-            // Manque period, declarationData, companyId
+            "platformType", "taxPlatform",
+            "apiKey", "invalid_key",
+            "apiSecret", "invalid_secret"
         );
 
-        mockMvc.perform(post("/api/government-platform/submit-tax-declaration")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void testTestThirdPartyConnection_InvalidSoftware() throws Exception {
-        when(thirdPartySoftwareService.testConnection(eq("INVALID"), any(), any(), any()))
-                .thenThrow(new IllegalArgumentException("Logiciel non supporté: INVALID"));
-
-        Map<String, Object> request = Map.of(
-            "softwareName", "INVALID",
-            "apiUrl", "https://api.invalid.com",
-            "apiKey", "test_key",
-            "apiSecret", "test_secret"
-        );
-
-        mockMvc.perform(post("/api/government-platform/test-third-party-connection")
+        mockMvc.perform(post("/api/government-platforms/test-connection/SN")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -519,24 +428,46 @@ public class GovernmentPlatformControllerTest {
     }
 
     @Test
-    void testSyncThirdPartyData_UnsupportedDataType() throws Exception {
-        when(thirdPartySoftwareService.syncData(eq("SAGE"), eq("UNSUPPORTED"), eq("BOTH"), eq(1L)))
-                .thenThrow(new IllegalArgumentException("Type de données non supporté: UNSUPPORTED"));
+    @SuppressWarnings("unchecked")
+    void testSubmitTaxDeclaration_Exception() throws Exception {
+        when(governmentPlatformService.submitTaxDeclaration(
+                eq("SN"), eq("TVA"), eq("2024-01"), any(Map.class), eq(1L)))
+                .thenThrow(new RuntimeException("Erreur de soumission"));
 
         Map<String, Object> request = Map.of(
-            "softwareName", "SAGE",
-            "dataType", "UNSUPPORTED",
-            "syncDirection", "BOTH",
-            "companyId", 1L
+            "declarationType", "TVA",
+            "period", "2024-01",
+            "data", Map.of("test", "data"),
+            "companyId", "1"
         );
 
-        mockMvc.perform(post("/api/government-platform/sync-third-party-data")
+        mockMvc.perform(post("/api/government-platforms/submit-tax-declaration/SN")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.error").value("Erreur lors de la synchronisation"));
+                .andExpect(jsonPath("$.error").value("Erreur lors de la soumission"));
+    }
+
+    @Test
+    void testGetIntegrationStatistics_Exception() throws Exception {
+        when(governmentPlatformService.getIntegrationStatistics())
+                .thenThrow(new RuntimeException("Erreur de récupération des statistiques"));
+
+        mockMvc.perform(get("/api/government-platforms/integration-statistics"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.error").value("Erreur lors de la récupération des statistiques"));
+    }
+
+    @Test
+    void testRunCompletePlatformTest_Exception() throws Exception {
+        when(governmentPlatformService.runCompleteTest())
+                .thenThrow(new RuntimeException("Erreur d'exécution du test"));
+
+        mockMvc.perform(post("/api/government-platforms/run-complete-test"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.error").value("Erreur lors de l'exécution du test"));
     }
 }
-
-

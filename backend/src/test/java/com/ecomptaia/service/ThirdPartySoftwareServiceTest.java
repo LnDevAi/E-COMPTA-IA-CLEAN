@@ -12,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,6 +28,10 @@ public class ThirdPartySoftwareServiceTest {
 
     @InjectMocks
     private ThirdPartySoftwareService thirdPartySoftwareService;
+
+    // Type reference pour les tests
+    private static final ParameterizedTypeReference<Map<String, Object>> MAP_TYPE_REF = 
+        new ParameterizedTypeReference<Map<String, Object>>() {};
 
     @BeforeEach
     void setUp() {
@@ -90,7 +94,7 @@ public class ThirdPartySoftwareServiceTest {
                 anyString(),
                 eq(HttpMethod.POST),
                 any(HttpEntity.class),
-                eq(Map.class)
+                eq(MAP_TYPE_REF)
         )).thenReturn(new ResponseEntity<>(new HashMap<>(), HttpStatus.OK));
 
         Map<String, Object> result = thirdPartySoftwareService.syncData("SAGE", "ACCOUNTS", "BOTH", 1L);
@@ -106,7 +110,7 @@ public class ThirdPartySoftwareServiceTest {
                 anyString(),
                 eq(HttpMethod.POST),
                 any(HttpEntity.class),
-                eq(Map.class)
+                eq(MAP_TYPE_REF)
         )).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid data type"));
 
         Map<String, Object> result = thirdPartySoftwareService.syncData("SAGE", "INVALID_TYPE", "BOTH", 1L);
@@ -135,7 +139,7 @@ public class ThirdPartySoftwareServiceTest {
                 anyString(),
                 eq(HttpMethod.POST),
                 any(HttpEntity.class),
-                eq(Map.class)
+                eq(MAP_TYPE_REF)
         )).thenReturn(new ResponseEntity<>(new HashMap<>(), HttpStatus.OK));
 
         Map<String, Object> result = thirdPartySoftwareService.configureIntegration("SAGE", "REAL_TIME", config, 1L);

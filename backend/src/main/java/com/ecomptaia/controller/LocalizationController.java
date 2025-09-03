@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.HashMap;
@@ -101,7 +102,7 @@ public class LocalizationController {
                 "fromCurrency", fromCurrency,
                 "toCurrency", toCurrency,
                 "convertedAmount", convertedAmount,
-                "exchangeRate", convertedAmount.divide(amount, 4, BigDecimal.ROUND_HALF_UP)
+                "exchangeRate", convertedAmount.divide(amount, 4, RoundingMode.HALF_UP)
             ));
         } catch (Exception e) {
             return ResponseEntity.status(500)

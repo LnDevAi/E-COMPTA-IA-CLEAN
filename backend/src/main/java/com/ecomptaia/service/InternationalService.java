@@ -143,6 +143,7 @@ public class InternationalService {
     /**
      * Obtenir les statistiques par standard comptable
      */
+    @SuppressWarnings("unchecked")
     public Map<String, Long> getStatisticsByAccountingStandard() {
         List<Object[]> stats = countryConfigRepository.getStatisticsByAccountingStandard();
         return stats.stream()
@@ -155,6 +156,7 @@ public class InternationalService {
     /**
      * Obtenir les statistiques par devise
      */
+    @SuppressWarnings("unchecked")
     public Map<String, Long> getStatisticsByCurrency() {
         List<Object[]> stats = countryConfigRepository.getStatisticsByCurrency();
         return stats.stream()
@@ -167,6 +169,7 @@ public class InternationalService {
     /**
      * Obtenir les statistiques par statut
      */
+    @SuppressWarnings("unchecked")
     public Map<String, Long> getStatisticsByStatus() {
         List<Object[]> stats = countryConfigRepository.getStatisticsByStatus();
         return stats.stream()
@@ -179,6 +182,7 @@ public class InternationalService {
     /**
      * Obtenir les statistiques par type de système
      */
+    @SuppressWarnings("unchecked")
     public Map<String, Long> getStatisticsBySystemType() {
         List<Object[]> stats = countryConfigRepository.getStatisticsBySystemType();
         return stats.stream()

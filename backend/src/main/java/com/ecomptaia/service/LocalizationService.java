@@ -3,6 +3,7 @@ package com.ecomptaia.service;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -201,7 +202,7 @@ public class LocalizationService {
             
             // Conversion via EUR (devise de référence)
             BigDecimal amountInEUR = amount.multiply(fromRate);
-            return amountInEUR.divide(toRate, 2, BigDecimal.ROUND_HALF_UP);
+            return amountInEUR.divide(toRate, 2, RoundingMode.HALF_UP);
             
         } catch (Exception e) {
             return amount;

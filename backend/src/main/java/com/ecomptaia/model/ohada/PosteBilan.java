@@ -1,6 +1,7 @@
 package com.ecomptaia.model.ohada;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Représente un poste du bilan OHADA/SYSCOHADA
@@ -46,7 +47,7 @@ public class PosteBilan {
         if (valeurExercicePrecedent.compareTo(BigDecimal.ZERO) == 0) {
             return 0.0;
         }
-        return getVariation().divide(valeurExercicePrecedent, 4, BigDecimal.ROUND_HALF_UP)
+        return getVariation().divide(valeurExercicePrecedent, 4, RoundingMode.HALF_UP)
             .multiply(new BigDecimal("100")).doubleValue();
     }
 }
