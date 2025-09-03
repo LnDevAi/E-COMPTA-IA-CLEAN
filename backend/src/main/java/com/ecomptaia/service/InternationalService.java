@@ -5,10 +5,10 @@ import com.ecomptaia.entity.ExpansionAnalysis;
 import com.ecomptaia.repository.CountryConfigRepository;
 import com.ecomptaia.repository.ExpansionAnalysisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
+
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -24,12 +24,7 @@ public class InternationalService {
     @Autowired
     private ExpansionAnalysisRepository expansionAnalysisRepository;
 
-    @Autowired
-    private RestTemplate restTemplate;
 
-    // Cache pour les configurations pays
-    private static final String CACHE_PREFIX = "country:config:";
-    private static final int CACHE_TTL = 3600; // 1 heure
 
     /**
      * Obtenir la configuration complète d'un pays
@@ -143,7 +138,6 @@ public class InternationalService {
     /**
      * Obtenir les statistiques par standard comptable
      */
-    @SuppressWarnings("unchecked")
     public Map<String, Long> getStatisticsByAccountingStandard() {
         List<Object[]> stats = countryConfigRepository.getStatisticsByAccountingStandard();
         return stats.stream()
@@ -156,7 +150,6 @@ public class InternationalService {
     /**
      * Obtenir les statistiques par devise
      */
-    @SuppressWarnings("unchecked")
     public Map<String, Long> getStatisticsByCurrency() {
         List<Object[]> stats = countryConfigRepository.getStatisticsByCurrency();
         return stats.stream()
@@ -169,7 +162,6 @@ public class InternationalService {
     /**
      * Obtenir les statistiques par statut
      */
-    @SuppressWarnings("unchecked")
     public Map<String, Long> getStatisticsByStatus() {
         List<Object[]> stats = countryConfigRepository.getStatisticsByStatus();
         return stats.stream()
@@ -182,7 +174,6 @@ public class InternationalService {
     /**
      * Obtenir les statistiques par type de système
      */
-    @SuppressWarnings("unchecked")
     public Map<String, Long> getStatisticsBySystemType() {
         List<Object[]> stats = countryConfigRepository.getStatisticsBySystemType();
         return stats.stream()

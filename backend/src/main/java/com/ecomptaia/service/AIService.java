@@ -1,9 +1,9 @@
 package com.ecomptaia.service;
 
 import com.ecomptaia.entity.AutomatedTask;
-import com.ecomptaia.entity.Tax;
+
 import com.ecomptaia.repository.AutomatedTaskRepository;
-import com.ecomptaia.repository.TaxRepository;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +20,9 @@ public class AIService {
     @Autowired
     private AutomatedTaskRepository automatedTaskRepository;
     
-    @Autowired
-    private TaxService taxService;
+
     
-    @Autowired
-    private CurrencyService currencyService;
+
     
     private final ObjectMapper objectMapper = new ObjectMapper();
     

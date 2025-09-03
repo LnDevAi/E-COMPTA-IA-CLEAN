@@ -2,7 +2,7 @@ package com.ecomptaia.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.math.BigDecimal;
+
 
 @Entity
 @Table(name = "external_integrations")

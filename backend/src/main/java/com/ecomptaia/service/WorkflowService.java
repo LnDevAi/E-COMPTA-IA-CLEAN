@@ -7,14 +7,12 @@ import com.ecomptaia.repository.WorkflowRepository;
 import com.ecomptaia.repository.WorkflowInstanceRepository;
 import com.ecomptaia.repository.WorkflowApprovalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @Transactional

@@ -27,8 +27,7 @@ public class NotificationService {
     @Autowired
     private NotificationPreferenceRepository preferenceRepository;
 
-    @Autowired
-    private EmailService emailService;
+
 
     /**
      * Créer une nouvelle notification
@@ -305,9 +304,6 @@ public class NotificationService {
      */
     private void sendEmailNotification(Notification notification) {
         try {
-            String subject = "Notification: " + notification.getTitle();
-            String body = notification.getMessage();
-            
             // Ici on utiliserait le service email existant
             // emailService.sendNotificationEmail(notification.getUserId(), subject, body);
             

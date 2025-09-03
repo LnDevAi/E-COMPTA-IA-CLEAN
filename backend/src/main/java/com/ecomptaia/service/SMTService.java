@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -283,7 +282,6 @@ public class SMTService {
         
         // Pour SMT, les passifs sont généralement les dettes (dépenses non payées)
         BigDecimal totalPassifs = BigDecimal.ZERO;
-        List<LivreDepense> depenses = livreDepenseRepository.findByExerciceIdOrderByDateDepenseDesc(exercice.getId());
         // Logique simplifiée pour les passifs SMT
         etat.setTotalPassifs(totalPassifs);
         

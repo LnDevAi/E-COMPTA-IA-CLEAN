@@ -390,12 +390,6 @@ public class HumanResourceService {
     @Scheduled(cron = "0 0 9 * * ?")
     @Async
     public CompletableFuture<Void> dailyEmployeeMonitoring() {
-        LocalDate today = LocalDate.now();
-        
-
-        
-
-        
         // Logique de notification et de mise à jour
         System.out.println("Surveillance quotidienne des employés terminée");
         
@@ -423,14 +417,6 @@ public class HumanResourceService {
     @Scheduled(cron = "0 0 8 * * MON")
     @Async
     public CompletableFuture<Void> weeklyLeaveMonitoring() {
-        LocalDate today = LocalDate.now();
-        
-
-        
-
-        
-
-        
         System.out.println("Surveillance hebdomadaire des congés terminée");
         
         return CompletableFuture.completedFuture(null);

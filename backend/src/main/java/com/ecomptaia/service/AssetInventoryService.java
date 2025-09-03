@@ -15,7 +15,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Service
 @Transactional
@@ -289,6 +289,38 @@ public class AssetInventoryService {
                 newQuantity = movement.getQuantity();
                 newTotalValue = newQuantity.multiply(inventory.getAverageCost());
                 break;
+            case RETURN:
+                // Pour les retours, traiter comme un mouvement IN
+                newQuantity = newQuantity.add(movement.getQuantity());
+                newTotalValue = newTotalValue.add(movement.getTotalAmount());
+                break;
+            case EXPIRY:
+                // Pour les expirations, traiter comme un mouvement OUT
+                if (newQuantity.compareTo(movement.getQuantity()) < 0) {
+                    throw new RuntimeException("Stock insuffisant pour expiration");
+                }
+                newQuantity = newQuantity.subtract(movement.getQuantity());
+                BigDecimal costOfExpired = calculateCostOfGoodsSold(inventory, movement.getQuantity());
+                newTotalValue = newTotalValue.subtract(costOfExpired);
+                break;
+            case DAMAGE:
+                // Pour les dommages, traiter comme un mouvement OUT
+                if (newQuantity.compareTo(movement.getQuantity()) < 0) {
+                    throw new RuntimeException("Stock insuffisant pour dommages");
+                }
+                newQuantity = newQuantity.subtract(movement.getQuantity());
+                BigDecimal costOfDamaged = calculateCostOfGoodsSold(inventory, movement.getQuantity());
+                newTotalValue = newTotalValue.subtract(costOfDamaged);
+                break;
+            case LOSS:
+                // Pour les pertes, traiter comme un mouvement OUT
+                if (newQuantity.compareTo(movement.getQuantity()) < 0) {
+                    throw new RuntimeException("Stock insuffisant pour pertes");
+                }
+                newQuantity = newQuantity.subtract(movement.getQuantity());
+                BigDecimal costOfLost = calculateCostOfGoodsSold(inventory, movement.getQuantity());
+                newTotalValue = newTotalValue.subtract(costOfLost);
+                break;
         }
 
         inventory.setQuantityOnHand(newQuantity);
@@ -504,30 +536,7 @@ public class AssetInventoryService {
             .orElseThrow(() -> new RuntimeException("Mouvement non trouvé"));
     }
 
-    /**
-     * Validation des données d'inventaire
-     */
-    private void validateInventory(Inventory inventory) {
-        if (inventory.getProductCode() == null || inventory.getProductCode().trim().isEmpty()) {
-            throw new RuntimeException("Le code produit est obligatoire");
-        }
-        
-        if (inventory.getProductName() == null || inventory.getProductName().trim().isEmpty()) {
-            throw new RuntimeException("Le nom du produit est obligatoire");
-        }
-        
-        if (inventory.getUnit() == null || inventory.getUnit().trim().isEmpty()) {
-            throw new RuntimeException("L'unité de mesure est obligatoire");
-        }
-        
-        if (inventory.getUnitPrice() == null || inventory.getUnitPrice().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("Le prix unitaire doit être positif");
-        }
-        
-        if (inventory.getCompanyId() == null) {
-            throw new RuntimeException("L'ID de l'entreprise est obligatoire");
-        }
-    }
+
 
     // ==================== MÉTHODES SIMPLIFIÉES POUR LES TESTS ====================
 

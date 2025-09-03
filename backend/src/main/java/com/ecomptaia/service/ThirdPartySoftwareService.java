@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDateTime;
@@ -231,8 +232,12 @@ public class ThirdPartySoftwareService {
                 throw new IllegalArgumentException("Logiciel non supporté: " + softwareName);
             }
 
+            Object supportedDataTypesObj = config.get("supportedDataTypes");
+            if (!(supportedDataTypesObj instanceof List)) {
+                throw new IllegalArgumentException("Format de données invalide pour supportedDataTypes");
+            }
             @SuppressWarnings("unchecked")
-            List<String> supportedDataTypes = (List<String>) config.get("supportedDataTypes");
+            List<String> supportedDataTypes = (List<String>) supportedDataTypesObj;
             if (!supportedDataTypes.contains(dataType)) {
                 throw new IllegalArgumentException("Type de données non supporté: " + dataType);
             }
@@ -256,8 +261,8 @@ public class ThirdPartySoftwareService {
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(syncPayload, headers);
 
-            ResponseEntity<Map> response = restTemplate.exchange(
-                syncUrl, HttpMethod.POST, entity, Map.class
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                syncUrl, HttpMethod.POST, entity, new ParameterizedTypeReference<Map<String, Object>>() {}
             );
 
             String syncId = "SYNC_" + System.currentTimeMillis() + "_" + softwareName.toUpperCase();
@@ -361,8 +366,8 @@ public class ThirdPartySoftwareService {
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(configPayload, headers);
 
-            ResponseEntity<Map> response = restTemplate.exchange(
-                configUrl, HttpMethod.POST, entity, Map.class
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                configUrl, HttpMethod.POST, entity, new ParameterizedTypeReference<Map<String, Object>>() {}
             );
 
             String integrationId = "INT_" + System.currentTimeMillis() + "_" + softwareName.toUpperCase();

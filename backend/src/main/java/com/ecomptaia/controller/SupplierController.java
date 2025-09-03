@@ -2,7 +2,7 @@ package com.ecomptaia.controller;
 
 import com.ecomptaia.entity.ThirdParty;
 import com.ecomptaia.repository.ThirdPartyRepository;
-import com.ecomptaia.service.ThirdPartyService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +20,7 @@ public class SupplierController {
     @Autowired
     private ThirdPartyRepository thirdPartyRepository;
 
-    @Autowired
-    private ThirdPartyService thirdPartyService;
+
 
     /**
      * Récupérer tous les fournisseurs

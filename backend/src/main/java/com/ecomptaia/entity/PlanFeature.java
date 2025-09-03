@@ -6,6 +6,7 @@ import com.ecomptaia.entity.SubscriptionPlan;
 
 @Entity
 @Table(name = "plan_features")
+@SuppressWarnings("unused")
 public class PlanFeature {
     
     @Id

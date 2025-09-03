@@ -5,7 +5,7 @@ import com.ecomptaia.entity.ReportNote;
 import com.ecomptaia.repository.FinancialReportRepository;
 import com.ecomptaia.repository.ReportNoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
+
 
 @Service
 @Transactional
@@ -145,76 +145,7 @@ public class AdvancedReportingService {
 
     // ==================== GÉNÉRATION DE NOTES ANNEXES ====================
 
-    /**
-     * Générer les notes par défaut pour un rapport complet
-     */
-    private void generateDefaultNotes(FinancialReport report) {
-        List<ReportNote> notes = new ArrayList<>();
-        
-        // Note 1: Informations générales
-        notes.add(createNote(1, "Informations générales", ReportNote.NoteCategory.GENERAL_INFORMATION, 
-                           "L'entreprise exerce ses activités dans le secteur du commerce de détail. " +
-                           "La période couverte par ce rapport s'étend du " + 
-                           report.getPeriodStart().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + 
-                           " au " + report.getPeriodEnd().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ".", 
-                           report.getId(), report.getEntrepriseId(), report.getGeneratedBy()));
-        
-        // Note 2: Politiques comptables
-        notes.add(createNote(2, "Politiques comptables", ReportNote.NoteCategory.ACCOUNTING_POLICIES, 
-                           "Les états financiers sont établis selon les normes OHADA - Système Normal. " +
-                           "La devise de présentation est le Franc CFA (XOF).", 
-                           report.getId(), report.getEntrepriseId(), report.getGeneratedBy()));
-        
-        // Note 3: Immobilisations
-        notes.add(createNote(3, "Immobilisations", ReportNote.NoteCategory.FIXED_ASSETS, 
-                           "Les immobilisations sont comptabilisées au coût d'acquisition. " +
-                           "Les amortissements sont calculés selon la méthode linéaire.", 
-                           report.getId(), report.getEntrepriseId(), report.getGeneratedBy()));
-        
-        // Note 4: Stocks
-        notes.add(createNote(4, "Stocks", ReportNote.NoteCategory.INVENTORIES, 
-                           "Les stocks sont évalués au coût d'acquisition ou de production. " +
-                           "Les dépréciations sont calculées selon la méthode du coût moyen pondéré.", 
-                           report.getId(), report.getEntrepriseId(), report.getGeneratedBy()));
-        
-        // Note 5: Créances
-        notes.add(createNote(5, "Créances", ReportNote.NoteCategory.RECEIVABLES, 
-                           "Les créances clients sont évaluées à leur valeur nominale. " +
-                           "Des dépréciations sont constituées pour les créances douteuses.", 
-                           report.getId(), report.getEntrepriseId(), report.getGeneratedBy()));
-        
-        // Note 6: Trésorerie
-        notes.add(createNote(6, "Trésorerie", ReportNote.NoteCategory.CASH_AND_EQUIVALENTS, 
-                           "La trésorerie comprend les disponibilités en banque et en caisse. " +
-                           "Les placements à court terme sont comptabilisés à leur valeur de marché.", 
-                           report.getId(), report.getEntrepriseId(), report.getGeneratedBy()));
-        
-        // Note 7: Capitaux propres
-        notes.add(createNote(7, "Capitaux propres", ReportNote.NoteCategory.EQUITY, 
-                           "Les capitaux propres comprennent le capital social, les réserves et le résultat de l'exercice.", 
-                           report.getId(), report.getEntrepriseId(), report.getGeneratedBy()));
-        
-        // Note 8: Dettes
-        notes.add(createNote(8, "Dettes", ReportNote.NoteCategory.LIABILITIES, 
-                           "Les dettes fournisseurs et autres dettes sont comptabilisées à leur valeur nominale.", 
-                           report.getId(), report.getEntrepriseId(), report.getGeneratedBy()));
-        
-        // Note 9: Chiffre d'affaires
-        notes.add(createNote(9, "Chiffre d'affaires", ReportNote.NoteCategory.REVENUE, 
-                           "Le chiffre d'affaires représente les ventes de marchandises réalisées au cours de l'exercice.", 
-                           report.getId(), report.getEntrepriseId(), report.getGeneratedBy()));
-        
-                 // Note 10: Charges d'exploitation
-         notes.add(createNote(10, "Charges d'exploitation", ReportNote.NoteCategory.OPERATING_EXPENSES, 
-                             "Les charges d'exploitation comprennent les achats de marchandises, les frais de personnel et les autres charges d'exploitation.", 
-                             report.getId(), report.getEntrepriseId(), report.getGeneratedBy()));
-        
-        // Sauvegarder toutes les notes
-        reportNoteRepository.saveAll(notes);
-        
-        // Mettre à jour le nombre de notes
-        report.setNotesCount(notes.size());
-    }
+
 
     /**
      * Générer les notes spécifiques au bilan
@@ -314,10 +245,10 @@ public class AdvancedReportingService {
         note.setAiGenerated(true);
         note.setAiConfidenceScore(new BigDecimal("0.85")); // Score de confiance simulé
         
-        // TODO: Intégrer avec l'Assistant IA pour enrichir le contenu
-        // String aiEnhancedContent = assistantIAService.enhanceNoteContent(baseContent, category);
-        // note.setNoteContent(aiEnhancedContent);
-        // note.setAiSuggestions("Suggestions IA pour améliorer cette note");
+        // Note: L'intégration avec l'Assistant IA sera implémentée dans une version future
+        // Le contenu de base est utilisé pour le moment
+        note.setNoteContent(baseContent);
+        note.setAiSuggestions("Intégration IA prévue pour enrichir automatiquement le contenu");
         
         return note;
     }

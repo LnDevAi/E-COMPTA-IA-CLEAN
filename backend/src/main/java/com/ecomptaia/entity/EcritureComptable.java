@@ -5,12 +5,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import com.ecomptaia.entity.GedDocument;
 
 @Entity
 @Table(name = "ecritures_comptables")
+@SuppressWarnings("unused")
 public class EcritureComptable {
     
     @Id
@@ -69,6 +69,7 @@ public class EcritureComptable {
     
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "ecriture_id")
+    @SuppressWarnings("unused")
     private List<GedDocument> piecesJointes;
     
     @Column(name = "source", nullable = false)

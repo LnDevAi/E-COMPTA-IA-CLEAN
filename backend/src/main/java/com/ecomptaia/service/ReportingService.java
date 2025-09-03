@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.stream.Collectors;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -209,9 +209,13 @@ public class ReportingService {
         Map<String, BigDecimal> passifCirculant = new HashMap<>();
         Map<String, BigDecimal> tresoreriePassif = new HashMap<>();
         
+        Object accountsByClassObj = trialBalance.get("accountsByClass");
+        if (!(accountsByClassObj instanceof Map)) {
+            throw new IllegalArgumentException("Format de données invalide pour accountsByClass");
+        }
         @SuppressWarnings("unchecked")
         Map<String, List<Map<String, Object>>> accountsByClass = 
-            (Map<String, List<Map<String, Object>>>) trialBalance.get("accountsByClass");
+            (Map<String, List<Map<String, Object>>>) accountsByClassObj;
         
         for (Map.Entry<String, List<Map<String, Object>>> entry : accountsByClass.entrySet()) {
             String accountClass = entry.getKey();

@@ -10,6 +10,7 @@ import com.ecomptaia.entity.Project;
 
 @Entity
 @Table(name = "lignes_ecritures")
+@SuppressWarnings("unused")
 public class LigneEcriture {
     
     @Id

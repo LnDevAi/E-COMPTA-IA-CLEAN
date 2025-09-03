@@ -1,6 +1,6 @@
 package com.ecomptaia.service;
 
-import com.ecomptaia.entity.Company;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -234,8 +234,8 @@ public class GovernmentPlatformService {
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(submissionPayload, headers);
 
-            ResponseEntity<Map> response = restTemplate.exchange(
-                submitUrl, HttpMethod.POST, entity, Map.class
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                submitUrl, HttpMethod.POST, entity, new ParameterizedTypeReference<Map<String, Object>>() {}
             );
 
             String submissionId = "SOC_" + System.currentTimeMillis() + "_" + countryCode;

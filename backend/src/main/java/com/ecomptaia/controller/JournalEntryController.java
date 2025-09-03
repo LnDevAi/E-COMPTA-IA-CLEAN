@@ -26,9 +26,20 @@ public class JournalEntryController {
     @PostMapping
     public ResponseEntity<?> createJournalEntry(@RequestBody Map<String, Object> request) {
         try {
-            // Extraction des données
-            Map<String, Object> entryData = (Map<String, Object>) request.get("entry");
-            List<Map<String, Object>> accountEntriesData = (List<Map<String, Object>>) request.get("accountEntries");
+            // Extraction des données avec vérification de type
+            Object entryDataObj = request.get("entry");
+            if (!(entryDataObj instanceof Map)) {
+                throw new IllegalArgumentException("Le champ 'entry' doit être un objet");
+            }
+            @SuppressWarnings("unchecked")
+            Map<String, Object> entryData = (Map<String, Object>) entryDataObj;
+            
+            Object accountEntriesDataObj = request.get("accountEntries");
+            if (!(accountEntriesDataObj instanceof List)) {
+                throw new IllegalArgumentException("Le champ 'accountEntries' doit être une liste");
+            }
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> accountEntriesData = (List<Map<String, Object>>) accountEntriesDataObj;
 
             // Création de l'écriture
             JournalEntry entry = new JournalEntry();

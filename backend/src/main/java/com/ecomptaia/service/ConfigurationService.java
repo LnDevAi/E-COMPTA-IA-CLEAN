@@ -353,6 +353,18 @@ public class ConfigurationService {
                 case JSON:
                     objectMapper.readTree(configuration.getConfigValue());
                     break;
+                case STRING:
+                    // Les chaînes sont toujours valides
+                    break;
+                case ENCRYPTED:
+                    // Les valeurs chiffrées sont validées par le système de chiffrement
+                    break;
+                case XML:
+                    // Validation XML basique - vérifier que c'est un XML valide
+                    if (!configuration.getConfigValue().trim().startsWith("<")) {
+                        throw new IllegalArgumentException("Valeur XML invalide");
+                    }
+                    break;
             }
         } catch (Exception e) {
             return false;

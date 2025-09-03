@@ -1,8 +1,5 @@
 package com.ecomptaia.service;
 
-import com.ecomptaia.entity.Country;
-import com.ecomptaia.repository.CountryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -12,9 +9,6 @@ import java.util.*;
  */
 @Service
 public class InternationalAccountingService {
-
-    @Autowired
-    private CountryRepository countryRepository;
 
     // Mapping des pays vers leurs systèmes comptables
     private static final Map<String, String> COUNTRY_ACCOUNTING_SYSTEMS = Map.ofEntries(

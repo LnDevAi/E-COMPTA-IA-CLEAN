@@ -25,7 +25,6 @@ public class ExchangeRateService {
     private RestTemplate restTemplate;
 
     private static final String API_BASE_URL = "https://api.exchangerate-api.com/v4/latest/";
-    private static final String API_KEY = "demo"; // Clé gratuite pour les tests
     
     // Devises principales supportées
     private static final String[] SUPPORTED_CURRENCIES = {

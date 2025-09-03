@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Service
 public class DocumentManagementService {
@@ -60,6 +60,9 @@ public class DocumentManagementService {
             
             // Générer un nom de fichier unique
             String originalFileName = file.getOriginalFilename();
+            if (originalFileName == null || originalFileName.trim().isEmpty()) {
+                throw new IllegalArgumentException("Le nom du fichier est requis");
+            }
             String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
             String fileName = documentCode + "_" + System.currentTimeMillis() + fileExtension;
             String filePath = uploadPath.resolve(fileName).toString();
@@ -438,7 +441,6 @@ public class DocumentManagementService {
         List<Object[]> typeStats = documentRepository.getDocumentTypeStats(companyId);
         Map<String, Long> typeCount = new HashMap<>();
         for (Object[] stat : typeStats) {
-            @SuppressWarnings("unchecked")
             Long count = (Long) stat[1];
             typeCount.put(stat[0].toString(), count);
         }
@@ -448,7 +450,6 @@ public class DocumentManagementService {
         List<Object[]> statusStats = documentRepository.getDocumentStatusStats(companyId);
         Map<String, Long> statusCount = new HashMap<>();
         for (Object[] stat : statusStats) {
-            @SuppressWarnings("unchecked")
             Long count = (Long) stat[1];
             statusCount.put(stat[0].toString(), count);
         }
@@ -458,7 +459,6 @@ public class DocumentManagementService {
         List<Object[]> securityStats = documentRepository.getSecurityLevelStats(companyId);
         Map<String, Long> securityCount = new HashMap<>();
         for (Object[] stat : securityStats) {
-            @SuppressWarnings("unchecked")
             Long count = (Long) stat[1];
             securityCount.put(stat[0].toString(), count);
         }
@@ -468,7 +468,6 @@ public class DocumentManagementService {
         List<Object[]> categoryStats = documentRepository.getCategoryStats(companyId);
         Map<String, Long> categoryCount = new HashMap<>();
         for (Object[] stat : categoryStats) {
-            @SuppressWarnings("unchecked")
             Long count = (Long) stat[1];
             categoryCount.put(stat[0].toString(), count);
         }

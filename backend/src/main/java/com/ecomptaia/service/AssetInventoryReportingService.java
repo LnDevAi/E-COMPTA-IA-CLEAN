@@ -24,11 +24,7 @@ public class AssetInventoryReportingService {
     @Autowired
     private InventoryMovementRepository movementRepository;
 
-    @Autowired
-    private InventoryAnalysisRepository analysisRepository;
 
-    @Autowired
-    private InventoryAnalysisDetailRepository analysisDetailRepository;
 
     // ==================== RAPPORTS D'IMMOBILISATIONS ====================
 

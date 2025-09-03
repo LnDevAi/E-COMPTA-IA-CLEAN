@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
 
 /**
  * Service pour l'audit trail - Traçabilité de toutes les actions importantes

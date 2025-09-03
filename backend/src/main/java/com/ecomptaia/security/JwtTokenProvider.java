@@ -1,12 +1,18 @@
 package com.ecomptaia.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import com.ecomptaia.security.UserPrincipal;
+
 
 import java.util.Date;
 
@@ -38,7 +44,7 @@ public class JwtTokenProvider {
                 .setSubject(Long.toString(userPrincipal.getId()))
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -46,8 +52,9 @@ public class JwtTokenProvider {
      * Extrait l'ID utilisateur depuis le token JWT
      */
     public Long getUserIdFromJWT(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(jwtSecret.getBytes())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
 
@@ -59,9 +66,9 @@ public class JwtTokenProvider {
      */
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+            Jwts.parserBuilder().setSigningKey(jwtSecret.getBytes()).build().parseClaimsJws(authToken);
             return true;
-        } catch (SignatureException ex) {
+        } catch (io.jsonwebtoken.security.SignatureException ex) {
             logger.error("Signature JWT invalide");
         } catch (MalformedJwtException ex) {
             logger.error("Token JWT invalide");

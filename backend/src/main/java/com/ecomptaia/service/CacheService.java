@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
+
 
 @Service
 public class CacheService {
@@ -17,7 +17,6 @@ public class CacheService {
     private CacheManager cacheManager;
 
     // Cache en mémoire pour les fonctionnalités avancées
-    private final Map<String, Map<String, Object>> memoryCache = new ConcurrentHashMap<>();
     private final Map<String, Map<String, Long>> ttlCache = new ConcurrentHashMap<>();
 
     // ==================== GESTION BASIQUE DU CACHE ====================
@@ -161,9 +160,13 @@ public class CacheService {
     /**
      * Récupérer un hash complet
      */
+    @SuppressWarnings("unchecked")
     public Map<Object, Object> getHash(String cacheName, String key) {
         Object value = get(cacheName, key, Object.class);
-        return value instanceof Map ? (Map<Object, Object>) value : new HashMap<>();
+        if (value instanceof Map) {
+            return (Map<Object, Object>) value;
+        }
+        return new HashMap<>();
     }
 
     /**
@@ -197,9 +200,13 @@ public class CacheService {
     /**
      * Récupérer une liste
      */
+    @SuppressWarnings("unchecked")
     public List<Object> getList(String cacheName, String key) {
         Object value = get(cacheName, key, Object.class);
-        return value instanceof List ? (List<Object>) value : new ArrayList<>();
+        if (value instanceof List) {
+            return (List<Object>) value;
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -227,9 +234,13 @@ public class CacheService {
     /**
      * Récupérer un set
      */
+    @SuppressWarnings("unchecked")
     public Set<Object> getSet(String cacheName, String key) {
         Object value = get(cacheName, key, Object.class);
-        return value instanceof Set ? (Set<Object>) value : new HashSet<>();
+        if (value instanceof Set) {
+            return (Set<Object>) value;
+        }
+        return new HashSet<>();
     }
 
     /**

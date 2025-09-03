@@ -283,9 +283,6 @@ public class SearchService {
         
         // Appliquer les filtres
         if (filters.containsKey("montantMin") && filters.containsKey("montantMax")) {
-            double min = Double.parseDouble(filters.get("montantMin").toString());
-            double max = Double.parseDouble(filters.get("montantMax").toString());
-            
             // Logique de filtrage simulée
             Map<String, Object> ecriture = new HashMap<>();
             ecriture.put("id", 1L);

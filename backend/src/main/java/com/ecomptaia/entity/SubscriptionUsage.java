@@ -7,6 +7,7 @@ import com.ecomptaia.entity.CompanySubscription;
 
 @Entity
 @Table(name = "subscription_usage")
+@SuppressWarnings("unused")
 public class SubscriptionUsage {
     
     @Id

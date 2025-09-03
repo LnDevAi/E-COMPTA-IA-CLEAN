@@ -300,25 +300,42 @@ public class AccountingValidationService {
         double score = 100.0;
         
         // Pénalités pour les erreurs
-        Map<String, Object> journalValidation = (Map<String, Object>) validationResults.get("journalValidation");
-        if (journalValidation != null && !(Boolean) journalValidation.get("isValid")) {
-            score -= 30.0;
+        Object journalValidationObj = validationResults.get("journalValidation");
+        if (journalValidationObj instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> journalValidation = (Map<String, Object>) journalValidationObj;
+            if (!(Boolean) journalValidation.get("isValid")) {
+                score -= 30.0;
+            }
         }
         
-        Map<String, Object> balanceValidation = (Map<String, Object>) validationResults.get("balanceValidation");
-        if (balanceValidation != null && !(Boolean) balanceValidation.get("isBalanced")) {
-            score -= 40.0;
+        Object balanceValidationObj = validationResults.get("balanceValidation");
+        if (balanceValidationObj instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> balanceValidation = (Map<String, Object>) balanceValidationObj;
+            if (!(Boolean) balanceValidation.get("isBalanced")) {
+                score -= 40.0;
+            }
         }
         
-        Map<String, Object> ohadaValidation = (Map<String, Object>) validationResults.get("ohadaValidation");
-        if (ohadaValidation != null && !(Boolean) ohadaValidation.get("isOHADACompliant")) {
-            score -= 20.0;
+        Object ohadaValidationObj = validationResults.get("ohadaValidation");
+        if (ohadaValidationObj instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> ohadaValidation = (Map<String, Object>) ohadaValidationObj;
+            if (!(Boolean) ohadaValidation.get("isOHADACompliant")) {
+                score -= 20.0;
+            }
         }
         
-        Map<String, Object> anomalyDetection = (Map<String, Object>) validationResults.get("anomalyDetection");
-        if (anomalyDetection != null) {
-            int anomalyCount = (Integer) anomalyDetection.get("anomalyCount");
-            score -= anomalyCount * 5.0;
+        Object anomalyDetectionObj = validationResults.get("anomalyDetection");
+        if (anomalyDetectionObj instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> anomalyDetection = (Map<String, Object>) anomalyDetectionObj;
+            Object anomalyCountObj = anomalyDetection.get("anomalyCount");
+            if (anomalyCountObj instanceof Integer) {
+                int anomalyCount = (Integer) anomalyCountObj;
+                score -= anomalyCount * 5.0;
+            }
         }
         
         return Math.max(0.0, score);

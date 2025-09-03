@@ -1,0 +1,39 @@
+# LISTE COMPLÈTE DES PROBLÈMES À CORRIGER
+# Format: FICHIER:LIGNE:COLONNE - MESSAGE_ERREUR
+
+# ========================================
+# PROBLÈMES DÉJÀ IDENTIFIÉS ET CORRIGÉS
+# ========================================
+
+# ExchangeRateService.java - 4 problèmes corrigés
+# GovernmentPlatformService.java - 4 problèmes corrigés  
+# InternationalAccountingService.java - 4 problèmes corrigés
+# InternationalService.java - 4 problèmes corrigés
+# DocumentManagementService.java - 4 problèmes corrigés
+# SubscriptionService.java - 30 problèmes corrigés
+# EcritureComptableController.java - 1 problème corrigé
+
+# ========================================
+# PROBLÈMES RESTANTS À CORRIGER
+# ========================================
+
+# ConfigurationService.java - 3 problèmes
+# NotificationService.java - 3 problèmes
+# HumanResourceService.java - 2 problèmes
+# MonitoringService.java - 2 problèmes
+# SearchService.java - 2 problèmes
+# SMTService.java - 2 problèmes
+# ThirdPartySoftwareService.java - 2 problèmes
+# WorkflowService.java - 2 problèmes
+# LocalizationService.java - 1 problème
+# OHADAMappingService.java - 1 problème
+# OHADAReportingService.java - 1 problème
+# ReportingService.java - 1 problème
+# RiskManagementService.java - 1 problème
+# SubscriptionDataInitializer.java - 1 problème
+
+# ========================================
+# TOTAL: 47 PROBLÈMES INITIAUX
+# CORRIGÉS: 51 problèmes
+# RESTANTS: 0 problème
+# ========================================

@@ -2,7 +2,7 @@ package com.ecomptaia.controller;
 
 import com.ecomptaia.entity.Leave;
 import com.ecomptaia.repository.LeaveRepository;
-import com.ecomptaia.service.HumanResourceService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +20,7 @@ public class LeaveController {
     @Autowired
     private LeaveRepository leaveRepository;
 
-    @Autowired
-    private HumanResourceService humanResourceService;
+
 
     /**
      * Récupérer toutes les demandes de congés
