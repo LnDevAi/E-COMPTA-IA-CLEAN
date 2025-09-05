@@ -11,10 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface LigneEcritureRepository extends JpaRepository<LigneEcriture, UUID> {
+public interface LigneEcritureRepository extends JpaRepository<LigneEcriture, Long> {
     
     // Recherche par écriture
     List<LigneEcriture> findByEcritureOrderByOrdreAsc(EcritureComptable ecriture);
@@ -29,11 +28,11 @@ public interface LigneEcritureRepository extends JpaRepository<LigneEcriture, UU
     
     // Recherche par centre de coût
     @Query("SELECT l FROM LigneEcriture l WHERE l.centreCout.id = :centreCoutId ORDER BY l.ecriture.dateEcriture DESC")
-    List<LigneEcriture> findByCentreCoutId(@Param("centreCoutId") UUID centreCoutId);
+    List<LigneEcriture> findByCentreCoutId(@Param("centreCoutId") Long centreCoutId);
     
     // Recherche par projet
     @Query("SELECT l FROM LigneEcriture l WHERE l.projet.id = :projetId ORDER BY l.ecriture.dateEcriture DESC")
-    List<LigneEcriture> findByProjetId(@Param("projetId") UUID projetId);
+    List<LigneEcriture> findByProjetId(@Param("projetId") Long projetId);
     
     // Recherche par montant
     @Query("SELECT l FROM LigneEcriture l WHERE l.debit = :montant OR l.credit = :montant ORDER BY l.ecriture.dateEcriture DESC")

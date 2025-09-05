@@ -68,3 +68,5 @@ public interface AssetInventoryDocumentRepository extends JpaRepository<AssetInv
 
 
 
+
+

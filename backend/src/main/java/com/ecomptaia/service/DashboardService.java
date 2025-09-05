@@ -416,6 +416,37 @@ public class DashboardService {
     // ==================== DONNÉES DE TEST ====================
 
     /**
+     * Récupérer les vraies données du dashboard depuis la base de données
+     */
+    public Map<String, Object> getRealDashboardData() {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // Utiliser les méthodes existantes mais avec des données réelles
+            Map<String, Object> financialKPIs = getFinancialKPIs(1L);
+            Map<String, Object> operationalMetrics = getOperationalMetrics(1L);
+            Map<String, Object> systemPerformance = getSystemPerformanceMetrics();
+            
+            Map<String, Object> data = new HashMap<>();
+            data.put("financialKPIs", financialKPIs);
+            data.put("operationalMetrics", operationalMetrics);
+            data.put("systemPerformance", systemPerformance);
+            
+            response.put("success", true);
+            response.put("data", data);
+            response.put("message", "Données réelles chargées avec succès");
+            response.put("timestamp", LocalDateTime.now());
+            
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("error", "Erreur lors du chargement des données: " + e.getMessage());
+            response.put("timestamp", LocalDateTime.now());
+        }
+        
+        return response;
+    }
+
+    /**
      * Données de test pour le dashboard
      */
     public Map<String, Object> getTestDashboardData() {
@@ -448,6 +479,8 @@ public class DashboardService {
         return testData;
     }
 }
+
+
 
 
 

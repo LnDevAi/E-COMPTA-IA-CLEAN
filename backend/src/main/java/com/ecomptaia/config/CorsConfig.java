@@ -2,44 +2,43 @@ package com.ecomptaia.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
 @Configuration
-public class CorsConfig {
+public class CorsConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addCorsMappings(@NonNull CorsRegistry registry) {
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://localhost:4200", "http://localhost:8080", "http://localhost:8082", "http://localhost:80")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        
-        // Autoriser les origines du frontend
         configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:4200",
-            "http://frontend:80",
-            "http://127.0.0.1:4200"
+            "http://localhost:4200", 
+            "http://localhost:8080", 
+            "http://localhost:8082",
+            "http://localhost:80"
         ));
-        
-        // Autoriser toutes les méthodes HTTP
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        
-        // Autoriser tous les headers
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        
-        // Permettre les credentials
         configuration.setAllowCredentials(true);
         
-        // Exposer les headers de réponse
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        
-        // Durée de cache pour les requêtes preflight
-        configuration.setMaxAge(3600L);
-        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        
+        source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
 }

@@ -1,72 +1,38 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/ecomptaia_db}
+    url: jdbc:postgresql://postgres:5432/ecomptaia_db
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
-    username: ${SPRING_DATASOURCE_USERNAME:ecomptaia_user}
-    password: ${SPRING_DATASOURCE_PASSWORD:ecomptaia_password}
-  
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          secret-key: ${JWT_SECRET_KEY:mySecretKeyForJWTGenerationAtLeast256BitsLongNow12345678901234567890123456789012}
   
   jpa:
     hibernate:
-      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
-    show-sql: ${SPRING_JPA_SHOW_SQL:false}
-    defer-datasource-initialization: false
+      ddl-auto: update
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: false
-        jdbc:
-          batch_size: 20
-        order_inserts: true
-        order_updates: true
+        format_sql: true
   
-  sql:
-    init:
-      mode: never
-  
-  # Configuration Email
   mail:
-    host: ${MAIL_HOST:smtp.gmail.com}
-    port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:noreply@ecomptaia.com}
-    password: ${MAIL_PASSWORD:your-app-password}
+    host: smtp.gmail.com
+    port: 587
+    username: noreply@ecomptaia.com
+    password: ${MAIL_PASSWORD:your-password}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-    default-encoding: UTF-8
-  
-  # Configuration Thymeleaf
-  thymeleaf:
-    cache: true
-    mode: HTML
-    encoding: UTF-8
-    servlet:
-      content-type: text/html
 
-# Configuration Email E-COMPTA-IA
 app:
   email:
-    support: ${APP_EMAIL_SUPPORT:support@ecomptaia.com}
-    noreply: ${APP_EMAIL_NOREPLY:noreply@ecomptaia.com}
-
-server:
-  port: ${SERVER_PORT:8080}
+    support: support@ecomptaia.com
+    noreply: noreply@ecomptaia.com
 
 logging:
   level:
-    com.ecomptaia: ${LOG_LEVEL_COM_ECOMPTAIA:INFO}
-    org.hibernate.SQL: ${LOG_LEVEL_HIBERNATE_SQL:WARN}
-    org.hibernate.type.descriptor.sql.BasicBinder: ${LOG_LEVEL_HIBERNATE_BINDER:WARN}
-    org.springframework.security: ${LOG_LEVEL_SPRING_SECURITY:WARN}
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-
+    com.ecomptaia: INFO
+    org.springframework: WARN
+    org.hibernate: WARN

@@ -7,7 +7,6 @@ import com.ecomptaia.repository.EmployeeRepository;
 import com.ecomptaia.repository.PayrollRepository;
 import com.ecomptaia.repository.LeaveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.math.BigDecimal;
 
 @Service
@@ -388,54 +386,42 @@ public class HumanResourceService {
      * Surveillance quotidienne des employés
      */
     @Scheduled(cron = "0 0 9 * * ?")
-    @Async
-    public CompletableFuture<Void> dailyEmployeeMonitoring() {
+    public void dailyEmployeeMonitoring() {
         // Logique de notification et de mise à jour
         System.out.println("Surveillance quotidienne des employés terminée");
-        
-        return CompletableFuture.completedFuture(null);
     }
 
     /**
      * Surveillance mensuelle de la paie
      */
     @Scheduled(cron = "0 0 8 1 * ?")
-    @Async
-    public CompletableFuture<Void> monthlyPayrollMonitoring() {
+    public void monthlyPayrollMonitoring() {
         // Générer les rapports de paie mensuels
         // Vérifier les paies en retard
         // Calculer les statistiques mensuelles
         
         System.out.println("Surveillance mensuelle de la paie terminée");
-        
-        return CompletableFuture.completedFuture(null);
     }
 
     /**
      * Surveillance des congés
      */
     @Scheduled(cron = "0 0 8 * * MON")
-    @Async
-    public CompletableFuture<Void> weeklyLeaveMonitoring() {
+    public void weeklyLeaveMonitoring() {
         System.out.println("Surveillance hebdomadaire des congés terminée");
-        
-        return CompletableFuture.completedFuture(null);
     }
 
     /**
      * Génération des rapports RH
      */
     @Scheduled(cron = "0 0 6 1 * ?")
-    @Async
-    public CompletableFuture<Void> monthlyHRReportGeneration() {
+    public void monthlyHRReportGeneration() {
         // Générer les rapports RH mensuels
         // Statistiques des employés
         // Statistiques de la paie
         // Statistiques des congés
         
         System.out.println("Génération des rapports RH mensuels terminée");
-        
-        return CompletableFuture.completedFuture(null);
     }
 
     // ==================== MÉTHODES SIMPLES POUR LES TESTS ====================

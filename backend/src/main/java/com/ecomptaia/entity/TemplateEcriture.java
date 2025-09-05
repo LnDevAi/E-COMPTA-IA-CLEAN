@@ -4,15 +4,14 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import java.util.UUID;
 
 @Entity
 @Table(name = "templates_ecritures")
 public class TemplateEcriture {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(name = "nom", nullable = false)
     private String nom;
@@ -78,8 +77,8 @@ public class TemplateEcriture {
     }
     
     // Getters et Setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }

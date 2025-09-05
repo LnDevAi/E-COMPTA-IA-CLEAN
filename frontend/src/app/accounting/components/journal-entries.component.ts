@@ -143,7 +143,6 @@ export class JournalEntriesComponent implements OnInit {
   displayedColumns: string[] = ['date', 'reference', 'description', 'debit', 'credit', 'status'];
 
   constructor(
-    private apiService: ApiService,
     private snackBar: MatSnackBar
   ) {}
 

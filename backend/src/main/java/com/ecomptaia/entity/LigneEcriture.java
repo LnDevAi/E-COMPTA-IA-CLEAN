@@ -3,10 +3,10 @@ package com.ecomptaia.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import com.ecomptaia.entity.Account;
 import com.ecomptaia.entity.CostCenter;
 import com.ecomptaia.entity.Project;
+import com.ecomptaia.entity.ThirdParty;
 
 @Entity
 @Table(name = "lignes_ecritures")
@@ -14,8 +14,8 @@ import com.ecomptaia.entity.Project;
 public class LigneEcriture {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ecriture_id", nullable = false)
@@ -73,8 +73,8 @@ public class LigneEcriture {
     }
     
     // Getters et Setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     
     public EcritureComptable getEcriture() { return ecriture; }
     public void setEcriture(EcritureComptable ecriture) { this.ecriture = ecriture; }

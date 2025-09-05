@@ -1,0 +1,49 @@
+﻿{
+  "dashboard": {
+    "title": "E-COMPTA-IA Business Metrics",
+    "tags": ["ecomptaia", "business", "custom"],
+    "panels": [
+      {
+        "title": "API Response Time",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_server_requests_seconds_bucket{uri=~\"/api/.*\"}[5m]))",
+            "legendFormat": "95th percentile API response"
+          }
+        ]
+      },
+      {
+        "title": "Active Users",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(rate(http_server_requests_total{uri=~\"/api/security/.*\"}[5m]))",
+            "legendFormat": "Active API calls/sec"
+          }
+        ]
+      },
+      {
+        "title": "Database Query Performance",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(hibernate_sessions_open_total[5m])",
+            "legendFormat": "Hibernate sessions/sec"
+          }
+        ]
+      },
+      {
+        "title": "Cache Performance",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "rate(cache_gets_total[5m])",
+            "legendFormat": "Cache gets/sec"
+          }
+        ]
+      }
+    ],
+    "refresh": "30s"
+  }
+}

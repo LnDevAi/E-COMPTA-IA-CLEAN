@@ -1,23 +1,52 @@
-# Utiliser l'image OpenJDK 17
-FROM openjdk:17-jdk-slim
+# Stage 1: Build avec Maven
+FROM maven:3.9.6-openjdk-17-slim AS build
 
 # Définir le répertoire de travail
 WORKDIR /app
 
-# Copier le fichier pom.xml
+# Copier les fichiers de dépendances Maven
 COPY pom.xml .
-
-# Copier le code source
 COPY src ./src
 
-# Installer Maven et construire l'application
-RUN apt-get update && apt-get install -y maven curl
+# Télécharger les dépendances (cache layer)
+RUN mvn dependency:go-offline -B
 
 # Construire l'application
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -Dmaven.test.skip=true
 
-# Exposer le port 8080
+# Stage 2: Runtime optimisé
+FROM openjdk:17-jre-slim
+
+# Créer un utilisateur non-root pour la sécurité
+RUN groupadd -r ecomptaia && useradd -r -g ecomptaia ecomptaia
+
+# Installer les outils nécessaires
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier le JAR depuis le stage de build
+COPY --from=build /app/target/ecomptaia-backend-1.0.0.jar app.jar
+
+# Créer le répertoire de logs
+RUN mkdir -p /app/logs && chown -R ecomptaia:ecomptaia /app
+
+# Changer vers l'utilisateur non-root
+USER ecomptaia
+
+# Exposer le port
 EXPOSE 8080
 
-# Commande pour démarrer l'application
-CMD ["java", "-jar", "target/ecomptaia-backend-1.0.0.jar"]
+# Configuration JVM optimisée
+ENV JAVA_OPTS="-Xms512m -Xmx1024m -XX:+UseG1GC -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/api/actuator/health || exit 1
+
+# Commande pour démarrer
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

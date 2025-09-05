@@ -11,12 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
 
 @Repository
-public interface EcritureComptableRepository extends JpaRepository<EcritureComptable, UUID> {
+public interface EcritureComptableRepository extends JpaRepository<EcritureComptable, Long> {
     
     // Recherche par entreprise
     List<EcritureComptable> findByEntrepriseOrderByDateEcritureDesc(Company entreprise);

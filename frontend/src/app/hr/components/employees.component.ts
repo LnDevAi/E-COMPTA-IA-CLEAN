@@ -143,7 +143,6 @@ export class EmployeesComponent implements OnInit {
   displayedColumns: string[] = ['name', 'position', 'department', 'salary', 'hireDate', 'status'];
 
   constructor(
-    private apiService: ApiService,
     private snackBar: MatSnackBar
   ) {}
 

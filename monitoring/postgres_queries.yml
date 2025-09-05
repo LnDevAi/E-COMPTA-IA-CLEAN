@@ -1,0 +1,339 @@
+# Requêtes PostgreSQL pour l'exportateur Prometheus
+# Métriques de performance et santé de la base de données
+
+pg_database:
+  query: "SELECT pg_database.datname, pg_database_size(pg_database.datname) as size_bytes FROM pg_database"
+  master: true
+  metrics:
+    - datname:
+        usage: "LABEL"
+        description: "Name of the database"
+    - size_bytes:
+        usage: "GAUGE"
+        description: "Size of the database in bytes"
+
+pg_stat_database:
+  query: |
+    SELECT
+      datname,
+      numbackends,
+      xact_commit,
+      xact_rollback,
+      blks_read,
+      blks_hit,
+      tup_returned,
+      tup_fetched,
+      tup_inserted,
+      tup_updated,
+      tup_deleted,
+      conflicts,
+      temp_files,
+      temp_bytes,
+      deadlocks,
+      blk_read_time,
+      blk_write_time,
+      stats_reset
+    FROM pg_stat_database
+  master: true
+  metrics:
+    - datname:
+        usage: "LABEL"
+        description: "Name of the database"
+    - numbackends:
+        usage: "GAUGE"
+        description: "Number of backends currently connected to this database"
+    - xact_commit:
+        usage: "COUNTER"
+        description: "Number of transactions in this database that have been committed"
+    - xact_rollback:
+        usage: "COUNTER"
+        description: "Number of transactions in this database that have been rolled back"
+    - blks_read:
+        usage: "COUNTER"
+        description: "Number of disk blocks read in this database"
+    - blks_hit:
+        usage: "COUNTER"
+        description: "Number of times disk blocks were found already in the buffer cache"
+    - tup_returned:
+        usage: "COUNTER"
+        description: "Number of rows returned by queries in this database"
+    - tup_fetched:
+        usage: "COUNTER"
+        description: "Number of rows fetched by queries in this database"
+    - tup_inserted:
+        usage: "COUNTER"
+        description: "Number of rows inserted by queries in this database"
+    - tup_updated:
+        usage: "COUNTER"
+        description: "Number of rows updated by queries in this database"
+    - tup_deleted:
+        usage: "COUNTER"
+        description: "Number of rows deleted by queries in this database"
+    - conflicts:
+        usage: "COUNTER"
+        description: "Number of queries canceled due to conflicts with recovery"
+    - temp_files:
+        usage: "COUNTER"
+        description: "Number of temporary files created by queries in this database"
+    - temp_bytes:
+        usage: "COUNTER"
+        description: "Total amount of data written to temporary files by queries in this database"
+    - deadlocks:
+        usage: "COUNTER"
+        description: "Number of deadlocks detected in this database"
+    - blk_read_time:
+        usage: "COUNTER"
+        description: "Time spent reading data file blocks by backends in this database"
+    - blk_write_time:
+        usage: "COUNTER"
+        description: "Time spent writing data file blocks by backends in this database"
+
+pg_stat_user_tables:
+  query: |
+    SELECT
+      schemaname,
+      tablename,
+      seq_scan,
+      seq_tup_read,
+      idx_scan,
+      idx_tup_fetch,
+      n_tup_ins,
+      n_tup_upd,
+      n_tup_del,
+      n_tup_hot_upd,
+      n_live_tup,
+      n_dead_tup,
+      n_mod_since_analyze,
+      last_vacuum,
+      last_autovacuum,
+      last_analyze,
+      last_autoanalyze,
+      vacuum_count,
+      autovacuum_count,
+      analyze_count,
+      autoanalyze_count
+    FROM pg_stat_user_tables
+  master: true
+  metrics:
+    - schemaname:
+        usage: "LABEL"
+        description: "Schema name"
+    - tablename:
+        usage: "LABEL"
+        description: "Table name"
+    - seq_scan:
+        usage: "COUNTER"
+        description: "Number of sequential scans initiated on this table"
+    - seq_tup_read:
+        usage: "COUNTER"
+        description: "Number of live rows fetched by sequential scans"
+    - idx_scan:
+        usage: "COUNTER"
+        description: "Number of index scans initiated on this table"
+    - idx_tup_fetch:
+        usage: "COUNTER"
+        description: "Number of live rows fetched by index scans"
+    - n_tup_ins:
+        usage: "COUNTER"
+        description: "Number of rows inserted"
+    - n_tup_upd:
+        usage: "COUNTER"
+        description: "Number of rows updated"
+    - n_tup_del:
+        usage: "COUNTER"
+        description: "Number of rows deleted"
+    - n_tup_hot_upd:
+        usage: "COUNTER"
+        description: "Number of rows HOT updated"
+    - n_live_tup:
+        usage: "GAUGE"
+        description: "Estimated number of live rows"
+    - n_dead_tup:
+        usage: "GAUGE"
+        description: "Estimated number of dead rows"
+    - n_mod_since_analyze:
+        usage: "GAUGE"
+        description: "Estimated number of rows modified since last analyze"
+    - vacuum_count:
+        usage: "COUNTER"
+        description: "Number of times this table has been manually vacuumed"
+    - autovacuum_count:
+        usage: "COUNTER"
+        description: "Number of times this table has been vacuumed by the autovacuum daemon"
+    - analyze_count:
+        usage: "COUNTER"
+        description: "Number of times this table has been manually analyzed"
+    - autoanalyze_count:
+        usage: "COUNTER"
+        description: "Number of times this table has been analyzed by the autovacuum daemon"
+
+pg_stat_user_indexes:
+  query: |
+    SELECT
+      schemaname,
+      tablename,
+      indexname,
+      idx_scan,
+      idx_tup_read,
+      idx_tup_fetch
+    FROM pg_stat_user_indexes
+  master: true
+  metrics:
+    - schemaname:
+        usage: "LABEL"
+        description: "Schema name"
+    - tablename:
+        usage: "LABEL"
+        description: "Table name"
+    - indexname:
+        usage: "LABEL"
+        description: "Index name"
+    - idx_scan:
+        usage: "COUNTER"
+        description: "Number of scans on this index"
+    - idx_tup_read:
+        usage: "COUNTER"
+        description: "Number of index entries returned by scans on this index"
+    - idx_tup_fetch:
+        usage: "COUNTER"
+        description: "Number of live table rows fetched by simple index scans using this index"
+
+pg_locks:
+  query: |
+    SELECT
+      locktype,
+      database,
+      relation::regclass,
+      page,
+      tuple,
+      virtualxid,
+      transactionid,
+      classid,
+      objid,
+      objsubid,
+      virtualtransaction,
+      pid,
+      mode,
+      granted
+    FROM pg_locks
+  master: true
+  metrics:
+    - locktype:
+        usage: "LABEL"
+        description: "Type of lockable object"
+    - database:
+        usage: "LABEL"
+        description: "Database name"
+    - relation:
+        usage: "LABEL"
+        description: "Relation name"
+    - mode:
+        usage: "LABEL"
+        description: "Lock mode"
+    - granted:
+        usage: "GAUGE"
+        description: "Whether the lock is granted (1) or waiting (0)"
+
+pg_stat_activity:
+  query: |
+    SELECT
+      state,
+      application_name,
+      client_addr,
+      backend_type,
+      wait_event_type,
+      wait_event
+    FROM pg_stat_activity
+    WHERE state IS NOT NULL
+  master: true
+  metrics:
+    - state:
+        usage: "LABEL"
+        description: "Current state of the backend"
+    - application_name:
+        usage: "LABEL"
+        description: "Name of the application connected to this backend"
+    - client_addr:
+        usage: "LABEL"
+        description: "IP address of the client"
+    - backend_type:
+        usage: "LABEL"
+        description: "Type of backend"
+    - wait_event_type:
+        usage: "LABEL"
+        description: "Type of wait event"
+    - wait_event:
+        usage: "LABEL"
+        description: "Wait event name"
+
+pg_settings:
+  query: |
+    SELECT
+      name,
+      setting,
+      unit,
+      context,
+      category
+    FROM pg_settings
+    WHERE name IN (
+      'max_connections',
+      'shared_buffers',
+      'effective_cache_size',
+      'maintenance_work_mem',
+      'checkpoint_completion_target',
+      'wal_buffers',
+      'default_statistics_target',
+      'random_page_cost',
+      'effective_io_concurrency',
+      'work_mem',
+      'min_wal_size',
+      'max_wal_size'
+    )
+  master: true
+  metrics:
+    - name:
+        usage: "LABEL"
+        description: "Configuration parameter name"
+    - setting:
+        usage: "GAUGE"
+        description: "Current setting of the parameter"
+    - unit:
+        usage: "LABEL"
+        description: "Unit of the parameter"
+    - context:
+        usage: "LABEL"
+        description: "Context of the parameter"
+    - category:
+        usage: "LABEL"
+        description: "Category of the parameter"
+
+pg_replication_slots:
+  query: |
+    SELECT
+      slot_name,
+      plugin,
+      slot_type,
+      active,
+      restart_lsn,
+      confirmed_flush_lsn
+    FROM pg_replication_slots
+  master: true
+  metrics:
+    - slot_name:
+        usage: "LABEL"
+        description: "Name of the replication slot"
+    - plugin:
+        usage: "LABEL"
+        description: "Name of the output plugin"
+    - slot_type:
+        usage: "LABEL"
+        description: "Type of the replication slot"
+    - active:
+        usage: "GAUGE"
+        description: "Whether the slot is active (1) or not (0)"
+    - restart_lsn:
+        usage: "GAUGE"
+        description: "LSN from which to restart replication"
+    - confirmed_flush_lsn:
+        usage: "GAUGE"
+        description: "LSN that has been flushed to disk"

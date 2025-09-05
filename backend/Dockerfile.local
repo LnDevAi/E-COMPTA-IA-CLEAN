@@ -1,0 +1,54 @@
+# Dockerfile optimisé pour build local sans réseau
+FROM openjdk:17-jdk-slim AS build
+
+# Variables d'environnement
+ENV MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
+
+# Installation des dépendances système
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copie des fichiers de configuration Maven
+COPY pom.xml /app/
+WORKDIR /app
+
+# Téléchargement des dépendances (si possible)
+RUN mvn dependency:go-offline -B || echo "Dependencies will be downloaded during build"
+
+# Copie du code source
+COPY src /app/src
+
+# Build de l'application
+RUN mvn clean package -DskipTests -B
+
+# Stage de production
+FROM openjdk:17-jre-slim
+
+# Création d'un utilisateur non-root
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Installation des dépendances système minimales
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copie du JAR depuis le stage de build
+COPY --from=build /app/target/*.jar app.jar
+
+# Configuration des permissions
+RUN chown -R appuser:appuser /app.jar
+USER appuser
+
+# Configuration de la JVM
+ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport"
+
+# Exposition du port
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/api/health || exit 1
+
+# Point d'entrée
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

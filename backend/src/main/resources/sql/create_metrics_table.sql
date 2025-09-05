@@ -40,3 +40,5 @@ VALUES ('test.table.created', 'GAUGE', 1.0, 'SYSTEM', 'database', NOW(), 'NORMAL
 
 
 
+
+

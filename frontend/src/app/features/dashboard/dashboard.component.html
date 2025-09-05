@@ -1,0 +1,343 @@
+<!-- Header du Dashboard -->
+<div class="dashboard-header">
+  <div class="header-content">
+    <h1 class="dashboard-title">
+      <mat-icon>dashboard</mat-icon>
+      Tableau de Bord E-COMPTA-IA
+    </h1>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="refreshData()" [disabled]="loading">
+        <mat-icon>refresh</mat-icon>
+        Actualiser
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Contenu principal -->
+<div class="dashboard-content">
+  
+  <!-- Indicateur de chargement -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des données du dashboard...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-card class="error-card">
+      <mat-card-content>
+        <div class="error-content">
+          <mat-icon color="warn">error</mat-icon>
+          <div class="error-text">
+            <h3>Erreur de chargement</h3>
+            <p>{{ error }}</p>
+            <button mat-raised-button color="primary" (click)="refreshData()">
+              <mat-icon>refresh</mat-icon>
+              Réessayer
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Contenu du dashboard -->
+  <div *ngIf="!loading && !error" class="dashboard-main">
+    
+    <!-- Onglets -->
+    <mat-tab-group [(selectedIndex)]="activeTab" (selectedIndexChange)="onTabChange($event)">
+      
+      <!-- Onglet Financier -->
+      <mat-tab label="Financier">
+        <div class="tab-content">
+          
+          <!-- KPIs Financiers -->
+          <div *ngIf="financialKPIs" class="kpis-grid">
+            <mat-card class="kpi-card revenue">
+              <mat-card-content>
+                <div class="kpi-content">
+                  <div class="kpi-icon">
+                    <mat-icon>trending_up</mat-icon>
+                  </div>
+                  <div class="kpi-data">
+                    <h3>Chiffre d'Affaires</h3>
+                    <p class="kpi-value">{{ formatNumber(financialKPIs.revenue || 0) }} {{ financialKPIs.currency || 'XOF' }}</p>
+                    <div class="kpi-growth" [ngClass]="getIndicatorColor(financialKPIs.revenueGrowth || 0, 'growth')">
+                      <mat-icon>{{ getIndicatorIcon(financialKPIs.revenueGrowth || 0, 'growth') }}</mat-icon>
+                      <span>{{ formatPercentage(financialKPIs.revenueGrowth || 0) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="kpi-card expenses">
+              <mat-card-content>
+                <div class="kpi-content">
+                  <div class="kpi-icon">
+                    <mat-icon>trending_down</mat-icon>
+                  </div>
+                  <div class="kpi-data">
+                    <h3>Dépenses</h3>
+                    <p class="kpi-value">{{ formatNumber(financialKPIs.expenses || 0) }} {{ financialKPIs.currency || 'XOF' }}</p>
+                    <div class="kpi-growth" [ngClass]="getIndicatorColor(financialKPIs.expenseGrowth || 0, 'growth')">
+                      <mat-icon>{{ getIndicatorIcon(financialKPIs.expenseGrowth || 0, 'growth') }}</mat-icon>
+                      <span>{{ formatPercentage(financialKPIs.expenseGrowth || 0) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="kpi-card profit">
+              <mat-card-content>
+                <div class="kpi-content">
+                  <div class="kpi-icon">
+                    <mat-icon>account_balance</mat-icon>
+                  </div>
+                  <div class="kpi-data">
+                    <h3>Résultat Net</h3>
+                    <p class="kpi-value">{{ formatNumber(financialKPIs.netResult || 0) }} {{ financialKPIs.currency || 'XOF' }}</p>
+                    <div class="kpi-growth" [ngClass]="getIndicatorColor(financialKPIs.profitability || 0, 'growth')">
+                      <mat-icon>{{ getIndicatorIcon(financialKPIs.profitability || 0, 'growth') }}</mat-icon>
+                      <span>{{ formatPercentage(financialKPIs.profitability || 0) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="kpi-card cashflow">
+              <mat-card-content>
+                <div class="kpi-content">
+                  <div class="kpi-icon">
+                    <mat-icon>account_balance_wallet</mat-icon>
+                  </div>
+                  <div class="kpi-data">
+                    <h3>Trésorerie</h3>
+                    <p class="kpi-value">{{ formatNumber(financialKPIs.cashFlow || 0) }} {{ financialKPIs.currency || 'XOF' }}</p>
+                    <div class="kpi-growth" [ngClass]="getIndicatorColor(financialKPIs.liquidity || 0, 'rate')">
+                      <mat-icon>{{ getIndicatorIcon(financialKPIs.liquidity || 0, 'rate') }}</mat-icon>
+                      <span>{{ formatPercentage(financialKPIs.liquidity || 0) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <!-- Graphiques Financiers -->
+          <div *ngIf="dashboardData?.charts" class="charts-section">
+            <h2>Graphiques de Performance</h2>
+            <div class="charts-grid">
+              <mat-card class="chart-card">
+                <mat-card-header>
+                  <mat-card-title>{{ dashboardData?.charts?.revenue?.title || 'Graphique des Revenus' }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="chart-placeholder">
+                    <mat-icon>show_chart</mat-icon>
+                    <p>Graphique des revenus</p>
+                    <small>Type: {{ dashboardData?.charts?.revenue?.type || 'line' }}</small>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="chart-card">
+                <mat-card-header>
+                  <mat-card-title>{{ dashboardData?.charts?.expenses?.title || 'Graphique des Dépenses' }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="chart-placeholder">
+                    <mat-icon>bar_chart</mat-icon>
+                    <p>Graphique des dépenses</p>
+                    <small>Type: {{ dashboardData?.charts?.expenses?.type || 'bar' }}</small>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+
+        </div>
+      </mat-tab>
+
+      <!-- Onglet Opérationnel -->
+      <mat-tab label="Opérationnel">
+        <div class="tab-content">
+          
+          <!-- Métriques Opérationnelles -->
+          <div *ngIf="operationalMetrics" class="metrics-grid">
+            <mat-card class="metric-card">
+              <mat-card-header>
+                <mat-card-title>Écritures Comptables</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="metric-content">
+                  <div class="metric-value">{{ formatNumber(operationalMetrics.totalEntries || 0) }}</div>
+                  <div class="metric-details">
+                    <p>Validées: {{ formatNumber(operationalMetrics.validatedEntries || 0) }}</p>
+                    <p>En attente: {{ formatNumber(operationalMetrics.pendingEntries || 0) }}</p>
+                    <div class="metric-rate" [ngClass]="getIndicatorColor(operationalMetrics.validationRate || 0, 'rate')">
+                      <mat-icon>{{ getIndicatorIcon(operationalMetrics.validationRate || 0, 'rate') }}</mat-icon>
+                      <span>{{ formatPercentage(operationalMetrics.validationRate || 0) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="metric-card">
+              <mat-card-header>
+                <mat-card-title>Rapprochements</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="metric-content">
+                  <div class="metric-value">{{ formatNumber(operationalMetrics.totalReconciliations || 0) }}</div>
+                  <div class="metric-details">
+                    <p>Terminés: {{ formatNumber(operationalMetrics.completedReconciliations || 0) }}</p>
+                    <p>En cours: {{ formatNumber(operationalMetrics.pendingReconciliations || 0) }}</p>
+                    <div class="metric-rate" [ngClass]="getIndicatorColor(operationalMetrics.reconciliationRate || 0, 'rate')">
+                      <mat-icon>{{ getIndicatorIcon(operationalMetrics.reconciliationRate || 0, 'rate') }}</mat-icon>
+                      <span>{{ formatPercentage(operationalMetrics.reconciliationRate || 0) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="metric-card">
+              <mat-card-header>
+                <mat-card-title>Documents</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="metric-content">
+                  <div class="metric-value">{{ formatNumber(operationalMetrics.totalDocuments || 0) }}</div>
+                  <div class="metric-details">
+                    <p>Traités: {{ formatNumber(operationalMetrics.processedDocuments || 0) }}</p>
+                    <p>En attente: {{ formatNumber(operationalMetrics.pendingDocuments || 0) }}</p>
+                    <div class="metric-rate" [ngClass]="getIndicatorColor(operationalMetrics.processingRate || 0, 'rate')">
+                      <mat-icon>{{ getIndicatorIcon(operationalMetrics.processingRate || 0, 'rate') }}</mat-icon>
+                      <span>{{ formatPercentage(operationalMetrics.processingRate || 0) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="metric-card">
+              <mat-card-header>
+                <mat-card-title>Utilisateurs</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="metric-content">
+                  <div class="metric-value">{{ formatNumber(operationalMetrics.activeUsers || 0) }}</div>
+                  <div class="metric-details">
+                    <p>Total: {{ formatNumber(operationalMetrics.totalUsers || 0) }}</p>
+                    <p>Activité: {{ formatPercentage(operationalMetrics.userActivity || 0) }}</p>
+                    <div class="metric-rate" [ngClass]="getIndicatorColor(operationalMetrics.userActivity || 0, 'rate')">
+                      <mat-icon>{{ getIndicatorIcon(operationalMetrics.userActivity || 0, 'rate') }}</mat-icon>
+                      <span>{{ formatPercentage(operationalMetrics.userActivity || 0) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+        </div>
+      </mat-tab>
+
+      <!-- Onglet Performance -->
+      <mat-tab label="Performance">
+        <div class="tab-content">
+          
+          <!-- Métriques de Performance Système -->
+          <div *ngIf="systemPerformance" class="performance-grid">
+            <mat-card class="performance-card">
+              <mat-card-header>
+                <mat-card-title>Performance Système</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="performance-content">
+                  <div class="performance-item">
+                    <mat-icon>memory</mat-icon>
+                    <div class="performance-data">
+                      <span>CPU</span>
+                      <div class="performance-bar">
+                        <div class="performance-fill" [style.width.%]="systemPerformance.cpuUsage || 0" 
+                             [ngClass]="getIndicatorColor(systemPerformance.cpuUsage || 0, 'usage')"></div>
+                      </div>
+                      <span>{{ formatPercentage(systemPerformance.cpuUsage || 0) }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="performance-item">
+                    <mat-icon>storage</mat-icon>
+                    <div class="performance-data">
+                      <span>Mémoire</span>
+                      <div class="performance-bar">
+                        <div class="performance-fill" [style.width.%]="systemPerformance.memoryUsage || 0" 
+                             [ngClass]="getIndicatorColor(systemPerformance.memoryUsage || 0, 'usage')"></div>
+                      </div>
+                      <span>{{ formatPercentage(systemPerformance.memoryUsage || 0) }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="performance-item">
+                    <mat-icon>hard_drive</mat-icon>
+                    <div class="performance-data">
+                      <span>Disque</span>
+                      <div class="performance-bar">
+                        <div class="performance-fill" [style.width.%]="systemPerformance.diskUsage || 0" 
+                             [ngClass]="getIndicatorColor(systemPerformance.diskUsage || 0, 'usage')"></div>
+                      </div>
+                      <span>{{ formatPercentage(systemPerformance.diskUsage || 0) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="performance-card">
+              <mat-card-header>
+                <mat-card-title>Disponibilité</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="performance-content">
+                  <div class="performance-item">
+                    <mat-icon>schedule</mat-icon>
+                    <div class="performance-data">
+                      <span>Uptime</span>
+                      <span class="performance-value">{{ formatPercentage(systemPerformance.uptime || 0) }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="performance-item">
+                    <mat-icon>speed</mat-icon>
+                    <div class="performance-data">
+                      <span>Temps de réponse</span>
+                      <span class="performance-value">{{ systemPerformance.responseTime || 0 }}ms</span>
+                    </div>
+                  </div>
+                  
+                  <div class="performance-item">
+                    <mat-icon>trending_up</mat-icon>
+                    <div class="performance-data">
+                      <span>Débit</span>
+                      <span class="performance-value">{{ formatNumber(systemPerformance.throughput || 0) }}/s</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </div>
+
+</div>

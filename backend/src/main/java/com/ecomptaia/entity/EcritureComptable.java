@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import com.ecomptaia.entity.GedDocument;
 
 @Entity
@@ -14,8 +13,8 @@ import com.ecomptaia.entity.GedDocument;
 public class EcritureComptable {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(name = "numero_piece", nullable = false, unique = true)
     private String numeroPiece;
@@ -69,7 +68,6 @@ public class EcritureComptable {
     
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "ecriture_id")
-    @SuppressWarnings("unused")
     private List<GedDocument> piecesJointes;
     
     @Column(name = "source", nullable = false)
@@ -116,8 +114,8 @@ public class EcritureComptable {
     }
     
     // Getters et Setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     
     public String getNumeroPiece() { return numeroPiece; }
     public void setNumeroPiece(String numeroPiece) { this.numeroPiece = numeroPiece; }

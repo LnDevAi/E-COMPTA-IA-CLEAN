@@ -5,8 +5,6 @@ import com.ecomptaia.entity.Audit;
 import com.ecomptaia.repository.ComplianceRequirementRepository;
 import com.ecomptaia.repository.AuditRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @Transactional
@@ -379,9 +376,9 @@ public class ComplianceAuditService {
     /**
      * Surveillance quotidienne de la conformité
      */
-    @Scheduled(cron = "0 0 9 * * ?") // Tous les jours à 9h00
-    @Async
-    public CompletableFuture<Void> dailyComplianceMonitoring() {
+    // @Scheduled(cron = "0 0 9 * * ?") // Tous les jours à 9h00 - Désactivé temporairement
+    // @Async
+    public void dailyComplianceMonitoring() {
         try {
             // Logique de surveillance quotidienne
             List<ComplianceRequirement> overdueRequirements = complianceRequirementRepository
@@ -391,20 +388,17 @@ public class ComplianceAuditService {
                 // Envoyer des alertes pour les exigences en retard
                 System.out.println("Alertes de conformité: " + overdueRequirements.size() + " exigences en retard");
             }
-
-            return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
             System.err.println("Erreur lors de la surveillance quotidienne: " + e.getMessage());
-            return CompletableFuture.completedFuture(null);
         }
     }
 
     /**
      * Surveillance hebdomadaire des audits
      */
-    @Scheduled(cron = "0 0 10 * * MON") // Tous les lundis à 10h00
-    @Async
-    public CompletableFuture<Void> weeklyAuditMonitoring() {
+    // @Scheduled(cron = "0 0 10 * * MON") // Tous les lundis à 10h00 - Désactivé temporairement
+    // @Async
+    public void weeklyAuditMonitoring() {
         try {
             // Logique de surveillance hebdomadaire
             List<Audit> overdueAudits = auditRepository.findOverdueAudits(1L, LocalDateTime.now());
@@ -413,31 +407,25 @@ public class ComplianceAuditService {
                 // Envoyer des alertes pour les audits en retard
                 System.out.println("Alertes d'audit: " + overdueAudits.size() + " audits en retard");
             }
-
-            return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
             System.err.println("Erreur lors de la surveillance hebdomadaire: " + e.getMessage());
-            return CompletableFuture.completedFuture(null);
         }
     }
 
     /**
      * Génération de rapports mensuels
      */
-    @Scheduled(cron = "0 0 8 1 * ?") // Le 1er de chaque mois à 8h00
-    @Async
-    public CompletableFuture<Void> monthlyReportGeneration() {
+    // @Scheduled(cron = "0 0 8 1 * ?") // Le 1er de chaque mois à 8h00 - Désactivé temporairement
+    // @Async
+    public void monthlyReportGeneration() {
         try {
             // Logique de génération de rapports mensuels
             Map<String, Object> complianceStats = getComplianceStatistics(1L);
             Map<String, Object> auditStats = getAuditStatistics(1L);
 
             System.out.println("Rapport mensuel généré - Conformité: " + complianceStats.size() + " stats, Audits: " + auditStats.size() + " stats");
-
-            return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
             System.err.println("Erreur lors de la génération du rapport mensuel: " + e.getMessage());
-            return CompletableFuture.completedFuture(null);
         }
     }
 
@@ -469,6 +457,7 @@ public class ComplianceAuditService {
         }
     }
 }
+
 
 
 

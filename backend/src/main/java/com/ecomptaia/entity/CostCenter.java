@@ -2,15 +2,14 @@ package com.ecomptaia.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "cost_centers")
 public class CostCenter {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(name = "code", nullable = false, unique = true)
     private String code;
@@ -42,8 +41,8 @@ public class CostCenter {
     }
     
     // Getters et Setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     
     public String getCode() { return code; }
     public void setCode(String code) { this.code = code; }
@@ -76,6 +75,8 @@ public class CostCenter {
         return code + " - " + name;
     }
 }
+
+
 
 
 

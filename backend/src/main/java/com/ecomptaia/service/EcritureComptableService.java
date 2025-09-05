@@ -34,12 +34,6 @@ public class EcritureComptableService {
     @Autowired
     private FinancialPeriodRepository periodRepository;
     
-
-    
-
-    
-
-    
     @Autowired
     private ObjectMapper objectMapper;
     
@@ -77,7 +71,7 @@ public class EcritureComptableService {
     /**
      * Mettre à jour une écriture comptable
      */
-    public EcritureComptable updateEcriture(UUID id, EcritureComptable ecriture) {
+    public EcritureComptable updateEcriture(Long id, EcritureComptable ecriture) {
         EcritureComptable ecritureExistante = ecritureRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Écriture non trouvée"));
         
@@ -121,7 +115,7 @@ public class EcritureComptableService {
     /**
      * Supprimer une écriture comptable
      */
-    public void deleteEcriture(UUID id) {
+    public void deleteEcriture(Long id) {
         EcritureComptable ecriture = ecritureRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Écriture non trouvée"));
         
@@ -140,7 +134,7 @@ public class EcritureComptableService {
     /**
      * Obtenir une écriture par ID
      */
-    public EcritureComptable getEcritureById(UUID id) {
+    public EcritureComptable getEcritureById(Long id) {
         return ecritureRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Écriture non trouvée"));
     }
@@ -164,7 +158,7 @@ public class EcritureComptableService {
     /**
      * Valider une écriture comptable
      */
-    public EcritureComptable validerEcriture(UUID id) {
+    public EcritureComptable validerEcriture(Long id) {
         EcritureComptable ecriture = getEcritureById(id);
         
         // Validation complète
@@ -179,7 +173,7 @@ public class EcritureComptableService {
     /**
      * Annuler la validation d'une écriture
      */
-    public EcritureComptable annulerValidation(UUID id) {
+    public EcritureComptable annulerValidation(Long id) {
         EcritureComptable ecriture = getEcritureById(id);
         
         // Vérifier que l'écriture est validée
@@ -196,7 +190,7 @@ public class EcritureComptableService {
     /**
      * Clôturer une écriture
      */
-    public EcritureComptable cloturerEcriture(UUID id) {
+    public EcritureComptable cloturerEcriture(Long id) {
         EcritureComptable ecriture = getEcritureById(id);
         
         // Vérifier que l'écriture est validée

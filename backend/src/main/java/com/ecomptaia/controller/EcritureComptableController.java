@@ -1,12 +1,22 @@
 package com.ecomptaia.controller;
 
-import com.ecomptaia.entity.*;
-import com.ecomptaia.service.*;
+import com.ecomptaia.entity.EcritureComptable;
+import com.ecomptaia.entity.Company;
+import com.ecomptaia.entity.FinancialPeriod;
+import com.ecomptaia.entity.User;
+import com.ecomptaia.entity.LigneEcriture;
+import com.ecomptaia.entity.TemplateEcriture;
+import com.ecomptaia.service.EcritureComptableService;
+import com.ecomptaia.service.EcritureComptableAIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import com.ecomptaia.repository.TemplateEcritureRepository;
@@ -220,7 +230,7 @@ public class EcritureComptableController {
      * Obtenir une écriture par ID
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getEcriture(@PathVariable UUID id) {
+    public ResponseEntity<Map<String, Object>> getEcriture(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
             EcritureComptable ecriture = ecritureService.getEcritureById(id);
@@ -238,7 +248,7 @@ public class EcritureComptableController {
      * Mettre à jour une écriture
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updateEcriture(@PathVariable UUID id, @RequestBody EcritureComptable ecriture) {
+    public ResponseEntity<Map<String, Object>> updateEcriture(@PathVariable Long id, @RequestBody EcritureComptable ecriture) {
         Map<String, Object> response = new HashMap<>();
         try {
             EcritureComptable ecritureMiseAJour = ecritureService.updateEcriture(id, ecriture);
@@ -257,7 +267,7 @@ public class EcritureComptableController {
      * Supprimer une écriture
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteEcriture(@PathVariable UUID id) {
+    public ResponseEntity<Map<String, Object>> deleteEcriture(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
             ecritureService.deleteEcriture(id);
@@ -296,7 +306,7 @@ public class EcritureComptableController {
      * Valider une écriture
      */
     @PostMapping("/{id}/valider")
-    public ResponseEntity<Map<String, Object>> validerEcriture(@PathVariable UUID id) {
+    public ResponseEntity<Map<String, Object>> validerEcriture(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
             EcritureComptable ecriture = ecritureService.validerEcriture(id);
@@ -315,7 +325,7 @@ public class EcritureComptableController {
      * Annuler la validation d'une écriture
      */
     @PostMapping("/{id}/annuler-validation")
-    public ResponseEntity<Map<String, Object>> annulerValidation(@PathVariable UUID id) {
+    public ResponseEntity<Map<String, Object>> annulerValidation(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
             EcritureComptable ecriture = ecritureService.annulerValidation(id);
@@ -334,7 +344,7 @@ public class EcritureComptableController {
      * Clôturer une écriture
      */
     @PostMapping("/{id}/cloturer")
-    public ResponseEntity<Map<String, Object>> cloturerEcriture(@PathVariable UUID id) {
+    public ResponseEntity<Map<String, Object>> cloturerEcriture(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
             EcritureComptable ecriture = ecritureService.cloturerEcriture(id);
@@ -465,7 +475,7 @@ public class EcritureComptableController {
      * Valider une écriture avec l'IA
      */
     @PostMapping("/{id}/ia/valider")
-    public ResponseEntity<Map<String, Object>> validerEcritureIA(@PathVariable UUID id) {
+    public ResponseEntity<Map<String, Object>> validerEcritureIA(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
             EcritureComptable ecriture = ecritureService.getEcritureById(id);
@@ -484,7 +494,7 @@ public class EcritureComptableController {
      * Suggérer des améliorations
      */
     @GetMapping("/{id}/ia/suggestions")
-    public ResponseEntity<Map<String, Object>> getSuggestionsIA(@PathVariable UUID id) {
+    public ResponseEntity<Map<String, Object>> getSuggestionsIA(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
             EcritureComptable ecriture = ecritureService.getEcritureById(id);

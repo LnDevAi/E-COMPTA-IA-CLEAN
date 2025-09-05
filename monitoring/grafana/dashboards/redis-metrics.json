@@ -1,0 +1,49 @@
+﻿{
+  "dashboard": {
+    "title": "Redis Metrics",
+    "tags": ["redis", "ecomptaia", "cache"],
+    "panels": [
+      {
+        "title": "Connected Clients",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "redis_connected_clients",
+            "legendFormat": "Connected Clients"
+          }
+        ]
+      },
+      {
+        "title": "Memory Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "redis_memory_used_bytes",
+            "legendFormat": "Memory Used"
+          }
+        ]
+      },
+      {
+        "title": "Commands Processed",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(redis_commands_processed_total[5m])",
+            "legendFormat": "Commands/sec"
+          }
+        ]
+      },
+      {
+        "title": "Keyspace Hits",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "redis_keyspace_hits_total",
+            "legendFormat": "Keyspace Hits"
+          }
+        ]
+      }
+    ],
+    "refresh": "30s"
+  }
+}

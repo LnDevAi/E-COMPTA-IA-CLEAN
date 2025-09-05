@@ -16,6 +16,41 @@ public class DashboardController {
     @Autowired
     private DashboardService dashboardService;
 
+    /**
+     * Endpoint de test pour le dashboard
+     */
+    @GetMapping("/test")
+    public ResponseEntity<Map<String, Object>> testDashboard() {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Map<String, Object> testData = dashboardService.getTestDashboardData();
+            response.put("success", true);
+            response.put("message", "Dashboard test réussi");
+            response.put("data", testData);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Erreur lors du test : " + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    /**
+     * Récupérer les vraies données du dashboard
+     */
+    @GetMapping("/data")
+    public ResponseEntity<Map<String, Object>> getDashboardData() {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Map<String, Object> realData = dashboardService.getRealDashboardData();
+            return ResponseEntity.ok(realData);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Erreur lors du chargement des données : " + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
     // ==================== DASHBOARD FINANCIER ====================
 
     /**
@@ -254,24 +289,4 @@ public class DashboardController {
         }
     }
 
-    // ==================== ENDPOINTS DE TEST ====================
-
-    /**
-     * Test du dashboard
-     */
-    @GetMapping("/test")
-    public ResponseEntity<Map<String, Object>> testDashboard() {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            Map<String, Object> testData = dashboardService.getTestDashboardData();
-            response.put("success", true);
-            response.put("message", "Dashboard test réussi");
-            response.put("data", testData);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Erreur lors du test : " + e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        }
-    }
 }

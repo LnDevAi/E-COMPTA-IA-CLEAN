@@ -143,7 +143,6 @@ export class CustomersComponent implements OnInit {
   displayedColumns: string[] = ['name', 'email', 'phone', 'address', 'totalRevenue', 'status'];
 
   constructor(
-    private apiService: ApiService,
     private snackBar: MatSnackBar
   ) {}
 

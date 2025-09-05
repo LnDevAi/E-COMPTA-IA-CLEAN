@@ -50,7 +50,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByNameContainingIgnoreCase(@Param("name") String name);
 
     // Recherche des utilisateurs par entreprise (via l'ID de l'entreprise)
-    @Query("SELECT u FROM User u WHERE u.id IN (SELECT DISTINCT u.id FROM User u JOIN u.employeeCode e WHERE e.companyId = :companyId)")
+    @Query("SELECT u FROM User u WHERE u.companyId = :companyId")
     List<User> findByCompanyId(@Param("companyId") Long companyId);
 
     // Recherche des utilisateurs connectés récemment
@@ -71,12 +71,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Vérifier si un email existe
     boolean existsByEmail(String email);
 
-    // Recherche des utilisateurs par rôle (via une relation avec une table de rôles)
-    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName")
-    List<User> findByRoleName(@Param("roleName") String roleName);
+    // Recherche des utilisateurs par rôle (simplifié - à implémenter plus tard)
+    // @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName")
+    // List<User> findByRoleName(@Param("roleName") String roleName);
 
-    // Recherche des utilisateurs par permissions
-    @Query("SELECT u FROM User u JOIN u.permissions p WHERE p.name = :permissionName")
-    List<User> findByPermissionName(@Param("permissionName") String permissionName);
+    // Recherche des utilisateurs par permissions (simplifié - à implémenter plus tard)
+    // @Query("SELECT u FROM User u JOIN u.permissions p WHERE p.name = :permissionName")
+    // List<User> findByPermissionName(@Param("permissionName") String permissionName);
 }
 

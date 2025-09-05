@@ -8,11 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.math.BigDecimal;
 
 @Repository
-public interface TemplateEcritureRepository extends JpaRepository<TemplateEcriture, UUID> {
+public interface TemplateEcritureRepository extends JpaRepository<TemplateEcriture, Long> {
     
     // Recherche par code
     Optional<TemplateEcriture> findByCode(String code);

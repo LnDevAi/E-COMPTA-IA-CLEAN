@@ -33,12 +33,14 @@ public class DataInitializer implements CommandLineRunner {
 
         // Créer un utilisateur admin par défaut s'il n'existe pas
         if (!userRepository.existsByEmail("admin@ecomptaia.com")) {
-            User adminUser = new User(
-                "Admin",
-                "User",
-                "admin@ecomptaia.com",
-                passwordEncoder.encode("admin123")
-            );
+            User adminUser = new User();
+            adminUser.setUsername("admin");
+            adminUser.setFirstName("Admin");
+            adminUser.setLastName("User");
+            adminUser.setEmail("admin@ecomptaia.com");
+            adminUser.setPassword(passwordEncoder.encode("admin123"));
+            adminUser.setAdmin(true);
+            adminUser.setActive(true);
             userRepository.save(adminUser);
             System.out.println("✅ Utilisateur admin créé: admin@ecomptaia.com / admin123");
         } else {

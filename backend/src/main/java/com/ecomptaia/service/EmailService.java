@@ -21,10 +21,10 @@ import java.util.Map;
 @Service
 public class EmailService {
 
-    @Autowired
+    @Autowired(required = false)
     private JavaMailSender mailSender;
 
-    @Autowired
+    @Autowired(required = false)
     private TemplateEngine templateEngine;
 
     @Value("${spring.mail.username}")
@@ -244,6 +244,11 @@ public class EmailService {
      * Méthode générique pour envoyer un email avec template
      */
     private boolean envoyerEmailTemplate(String toEmail, String sujet, String templateName, Map<String, Object> variables) {
+        if (mailSender == null) {
+            System.out.println("Email non envoyé - Configuration email non disponible: " + sujet + " à " + toEmail);
+            return false;
+        }
+        
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -258,11 +263,15 @@ public class EmailService {
             variables.put("appName", "E-COMPTA-IA");
             variables.put("appUrl", "https://app.ecomptaia.com");
             
-            Context context = new Context();
-            context.setVariables(variables);
-            
-            String htmlContent = templateEngine.process("emails/" + templateName, context);
-            helper.setText(htmlContent, true);
+            if (templateEngine != null) {
+                Context context = new Context();
+                context.setVariables(variables);
+                String htmlContent = templateEngine.process("emails/" + templateName, context);
+                helper.setText(htmlContent, true);
+            } else {
+                // Fallback sans template
+                helper.setText("Email: " + sujet + "\n\nContenu: " + variables.toString(), false);
+            }
             
             mailSender.send(message);
             return true;
@@ -277,6 +286,11 @@ public class EmailService {
      * Envoyer un email simple sans template
      */
     public boolean envoyerEmailSimple(String toEmail, String sujet, String contenu) {
+        if (mailSender == null) {
+            System.out.println("Email simple non envoyé - Configuration email non disponible: " + sujet + " à " + toEmail);
+            return false;
+        }
+        
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/api/hr")
+@RequestMapping("/api/hr/management")
 @CrossOrigin(origins = "*")
 public class HumanResourceController {
 
@@ -426,7 +426,7 @@ public class HumanResourceController {
     /**
      * Récupérer tous les employés (pour les tests)
      */
-    @GetMapping("/employees")
+    @GetMapping("/all-employees")
     public ResponseEntity<Map<String, Object>> getAllEmployees() {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -445,7 +445,7 @@ public class HumanResourceController {
     /**
      * Récupérer tous les congés (pour les tests)
      */
-    @GetMapping("/leaves")
+    @GetMapping("/all-leaves")
     public ResponseEntity<Map<String, Object>> getAllLeaves() {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -464,7 +464,7 @@ public class HumanResourceController {
     /**
      * Récupérer toutes les paies (pour les tests)
      */
-    @GetMapping("/payrolls")
+    @GetMapping("/all-payrolls")
     public ResponseEntity<Map<String, Object>> getAllPayrolls() {
         Map<String, Object> response = new HashMap<>();
         try {
