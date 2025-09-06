@@ -21,7 +21,7 @@ COPY . .
 RUN npm run build -- --configuration=production
 
 # Stage 2: Serveur web optimisé
-FROM nginx:1.25-alpine
+FROM nginx:1.27-alpine
 
 # Créer un utilisateur non-root
 RUN addgroup -g 1001 -S nginx && \
