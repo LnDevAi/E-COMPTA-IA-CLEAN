@@ -179,14 +179,14 @@ export class JournalEntriesComponent implements OnInit {
     this.error = null;
 
     this.apiService.getJournalEntries().subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.entries = response.data || [];
         this.isLoading = false;
         this.snackBar.open('Écritures comptables chargées avec succès', 'Fermer', {
           duration: 3000
         });
       },
-      error: (error) => {
+      error: (_: any) => {
         this.error = 'Impossible de charger les écritures comptables. Vérifiez la connexion au backend.';
         this.isLoading = false;
         this.snackBar.open('Erreur de connexion au backend', 'Fermer', {

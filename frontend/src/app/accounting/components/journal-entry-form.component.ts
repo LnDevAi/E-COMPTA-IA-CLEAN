@@ -68,7 +68,7 @@ import { ApiService } from '../../../core/services/api.service';
 })
 export class JournalEntryFormComponent {
   submitting = false;
-  form = this.fb.group({
+  form: any;
     entryNumber: ['', Validators.required],
     entryDate: ['', Validators.required],
     description: ['', Validators.required],
@@ -81,17 +81,30 @@ export class JournalEntryFormComponent {
     accountingStandard: ['OHADA']
   });
 
-  constructor(private fb: FormBuilder, private api: ApiService, private snackBar: MatSnackBar) {}
+  constructor(private fb: FormBuilder, private api: ApiService, private snackBar: MatSnackBar) {
+    this.form = this.fb.group({
+      entryNumber: ['', Validators.required],
+      entryDate: ['', Validators.required],
+      description: ['', Validators.required],
+      journalType: ['VENTES', Validators.required],
+      currency: ['XOF', Validators.required],
+      totalDebit: ['0', Validators.required],
+      totalCredit: ['0', Validators.required],
+      companyId: [1],
+      countryCode: ['CI'],
+      accountingStandard: ['OHADA']
+    });
+  }
 
   submit(): void {
     if (this.form.invalid) return;
     this.submitting = true;
     this.api.post(`/api/accounting/journal-entries`, this.form.value).subscribe({
-      next: () => {
+      next: (_: any) => {
         this.snackBar.open('Écriture créée', 'Fermer', { duration: 3000 });
         this.submitting = false;
       },
-      error: () => {
+      error: (_: any) => {
         this.snackBar.open('Erreur création écriture', 'Fermer', { duration: 4000, panelClass: ['error-snackbar'] });
         this.submitting = false;
       }

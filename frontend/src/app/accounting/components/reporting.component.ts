@@ -55,11 +55,11 @@ export class ReportingComponent implements OnInit {
     const companyId = 1;
     const asOfDate = new Date().toISOString().slice(0, 10);
     this.api.getTrialBalance(companyId, asOfDate).subscribe({
-      next: data => {
+      next: (data: any) => {
         this.trialBalance = data;
         this.snackBar.open('Balance chargée', 'Fermer', { duration: 3000 });
       },
-      error: () => this.snackBar.open('Erreur chargement balance', 'Fermer', { duration: 4000, panelClass: ['error-snackbar'] })
+      error: (_: any) => this.snackBar.open('Erreur chargement balance', 'Fermer', { duration: 4000, panelClass: ['error-snackbar'] })
     });
   }
 
@@ -67,11 +67,11 @@ export class ReportingComponent implements OnInit {
     const companyId = 1;
     const asOfDate = new Date().toISOString().slice(0, 10);
     this.api.getGeneralLedger(companyId, asOfDate).subscribe({
-      next: data => {
+      next: (data: any) => {
         this.generalLedger = data;
         this.snackBar.open('Grand Livre chargé', 'Fermer', { duration: 3000 });
       },
-      error: () => this.snackBar.open('Erreur chargement Grand Livre', 'Fermer', { duration: 4000, panelClass: ['error-snackbar'] })
+      error: (_: any) => this.snackBar.open('Erreur chargement Grand Livre', 'Fermer', { duration: 4000, panelClass: ['error-snackbar'] })
     });
   }
 }
