@@ -37,8 +37,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 RUN mkdir -p /var/cache/nginx /var/log/nginx /var/run && \
     chown -R nginx:nginx /var/cache/nginx /var/log/nginx /var/run /usr/share/nginx/html
 
-# Utiliser l'utilisateur non-root fourni par l'image
-USER nginx
+# Laisser l'utilisateur root par défaut pour autoriser l'écoute sur le port 80
 
 # Exposer le port 80
 EXPOSE 80
