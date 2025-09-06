@@ -10,8 +10,9 @@ RUN apk add --no-cache git curl
 # Copier les fichiers de dépendances
 COPY package*.json ./
 
-# Installer les dépendances avec optimisations
-RUN npm ci --only=production --legacy-peer-deps && \
+# Installer les dépendances (inclure devDependencies pour ng)
+ENV NG_CLI_ANALYTICS=ci
+RUN npm ci --legacy-peer-deps && \
     npm cache clean --force
 
 # Copier le code source
