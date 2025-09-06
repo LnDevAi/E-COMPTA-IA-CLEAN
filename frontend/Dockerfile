@@ -23,9 +23,8 @@ RUN npm run build -- --configuration=production
 # Stage 2: Serveur web optimisé
 FROM nginx:1.27-alpine
 
-# Créer un utilisateur non-root
-RUN addgroup -g 1001 -S nginx && \
-    adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
+# Installer curl pour le healthcheck
+RUN apk add --no-cache curl
 
 # Copier les fichiers construits depuis le stage précédent
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
@@ -37,7 +36,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 RUN mkdir -p /var/cache/nginx /var/log/nginx /var/run && \
     chown -R nginx:nginx /var/cache/nginx /var/log/nginx /var/run /usr/share/nginx/html
 
-# Changer vers l'utilisateur non-root
+# Utiliser l'utilisateur non-root fourni par l'image
 USER nginx
 
 # Exposer le port 80
