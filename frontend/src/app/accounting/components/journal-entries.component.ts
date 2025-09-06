@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ApiService } from '../../../core/services/api.service';
+import { ApiService } from '../../core/services/api.service';
 
 @Component({
   selector: 'app-journal-entries',

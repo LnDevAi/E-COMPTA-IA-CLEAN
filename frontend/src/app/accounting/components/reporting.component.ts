@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ApiService } from '../../../core/services/api.service';
+import { ApiService } from '../../core/services/api.service';
 
 @Component({
   selector: 'app-accounting-reporting',

@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ApiService } from '../../../core/services/api.service';
+import { ApiService } from '../../core/services/api.service';
 
 @Component({
   selector: 'app-journal-entry-form',
@@ -69,17 +69,6 @@ import { ApiService } from '../../../core/services/api.service';
 export class JournalEntryFormComponent {
   submitting = false;
   form: any;
-    entryNumber: ['', Validators.required],
-    entryDate: ['', Validators.required],
-    description: ['', Validators.required],
-    journalType: ['VENTES', Validators.required],
-    currency: ['XOF', Validators.required],
-    totalDebit: ['0', Validators.required],
-    totalCredit: ['0', Validators.required],
-    companyId: [1],
-    countryCode: ['CI'],
-    accountingStandard: ['OHADA']
-  });
 
   constructor(private fb: FormBuilder, private api: ApiService, private snackBar: MatSnackBar) {
     this.form = this.fb.group({
