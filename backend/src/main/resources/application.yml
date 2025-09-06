@@ -1,7 +1,4 @@
 spring:
-  profiles:
-    active: simple
-  
   # Configuration de la base de données
   datasource:
     url: jdbc:h2:mem:testdb;INIT=runscript from 'classpath:data-test.sql'
