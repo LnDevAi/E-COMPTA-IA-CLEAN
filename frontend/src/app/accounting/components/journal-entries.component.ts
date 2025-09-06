@@ -5,20 +5,31 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ApiService } from '../../core/services/api';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ApiService } from '../../../core/services/api.service';
 
 @Component({
   selector: 'app-journal-entries',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatButtonModule, MatIconModule, MatSnackBarModule],
   template: `
     <div class="page-container">
       <div class="page-header">
         <h1 class="page-title">Écritures comptables</h1>
-        <button mat-raised-button color="primary" (click)="loadEntries()">
-          <mat-icon>refresh</mat-icon>
-          Actualiser
-        </button>
+        <div>
+          <button mat-raised-button color="primary" (click)="loadEntries()">
+            <mat-icon>refresh</mat-icon>
+            Actualiser
+          </button>
+          <a mat-raised-button color="accent" href="#/accounting/journal-entries/new">
+            <mat-icon>add</mat-icon>
+            Nouvelle écriture
+          </a>
+          <a mat-raised-button color="primary" href="#/accounting/reporting">
+            <mat-icon>insights</mat-icon>
+            Reporting
+          </a>
+        </div>
       </div>
       
       <!-- Loading -->
@@ -48,14 +59,14 @@ import { ApiService } from '../../core/services/api';
         <mat-card>
           <mat-card-content>
             <table mat-table [dataSource]="entries" class="entries-table">
-              <ng-container matColumnDef="date">
+              <ng-container matColumnDef="entryDate">
                 <th mat-header-cell *matHeaderCellDef>Date</th>
-                <td mat-cell *matCellDef="let entry">{{ entry.date | date:'dd/MM/yyyy' }}</td>
+                <td mat-cell *matCellDef="let entry">{{ entry.entryDate | date:'dd/MM/yyyy' }}</td>
               </ng-container>
 
-              <ng-container matColumnDef="reference">
+              <ng-container matColumnDef="entryNumber">
                 <th mat-header-cell *matHeaderCellDef>Référence</th>
-                <td mat-cell *matCellDef="let entry">{{ entry.reference }}</td>
+                <td mat-cell *matCellDef="let entry">{{ entry.entryNumber }}</td>
               </ng-container>
 
               <ng-container matColumnDef="description">
@@ -63,20 +74,32 @@ import { ApiService } from '../../core/services/api';
                 <td mat-cell *matCellDef="let entry">{{ entry.description }}</td>
               </ng-container>
 
-              <ng-container matColumnDef="debit">
+              <ng-container matColumnDef="totalDebit">
                 <th mat-header-cell *matHeaderCellDef>Débit</th>
-                <td mat-cell *matCellDef="let entry">{{ entry.debit | number:'1.0-0' }} FCFA</td>
+                <td mat-cell *matCellDef="let entry">{{ entry.totalDebit | number:'1.0-0' }} FCFA</td>
               </ng-container>
 
-              <ng-container matColumnDef="credit">
+              <ng-container matColumnDef="totalCredit">
                 <th mat-header-cell *matHeaderCellDef>Crédit</th>
-                <td mat-cell *matCellDef="let entry">{{ entry.credit | number:'1.0-0' }} FCFA</td>
+                <td mat-cell *matCellDef="let entry">{{ entry.totalCredit | number:'1.0-0' }} FCFA</td>
               </ng-container>
 
               <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef>Statut</th>
                 <td mat-cell *matCellDef="let entry">
-                  <span [class]="'status-' + entry.status.toLowerCase()">{{ entry.status }}</span>
+                  <span [class]="'status-' + (entry.status || '').toLowerCase()">{{ entry.status }}</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let entry">
+                  <button mat-icon-button color="primary" (click)="validate(entry)">
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="remove(entry)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
                 </td>
               </ng-container>
 
@@ -140,10 +163,11 @@ export class JournalEntriesComponent implements OnInit {
   entries: any[] = [];
   isLoading = true;
   error: string | null = null;
-  displayedColumns: string[] = ['date', 'reference', 'description', 'debit', 'credit', 'status'];
+  displayedColumns: string[] = ['entryDate', 'entryNumber', 'description', 'totalDebit', 'totalCredit', 'status', 'actions'];
 
   constructor(
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
@@ -156,7 +180,6 @@ export class JournalEntriesComponent implements OnInit {
 
     this.apiService.getJournalEntries().subscribe({
       next: (response) => {
-        console.log('Journal entries response:', response);
         this.entries = response.data || [];
         this.isLoading = false;
         this.snackBar.open('Écritures comptables chargées avec succès', 'Fermer', {
@@ -164,7 +187,6 @@ export class JournalEntriesComponent implements OnInit {
         });
       },
       error: (error) => {
-        console.error('Journal entries error:', error);
         this.error = 'Impossible de charger les écritures comptables. Vérifiez la connexion au backend.';
         this.isLoading = false;
         this.snackBar.open('Erreur de connexion au backend', 'Fermer', {
@@ -172,6 +194,28 @@ export class JournalEntriesComponent implements OnInit {
           panelClass: ['error-snackbar']
         });
       }
+    });
+  }
+
+  validate(entry: any): void {
+    const id = entry.id;
+    this.apiService.post(`/api/accounting/journal-entries/${id}/validate`, {}).subscribe({
+      next: () => {
+        this.snackBar.open('Écriture validée', 'Fermer', { duration: 3000 });
+        this.loadEntries();
+      },
+      error: () => this.snackBar.open('Erreur validation', 'Fermer', { duration: 4000, panelClass: ['error-snackbar'] })
+    });
+  }
+
+  remove(entry: any): void {
+    const id = entry.id;
+    this.apiService.delete(`/api/accounting/journal-entries/${id}`).subscribe({
+      next: () => {
+        this.snackBar.open('Écriture supprimée', 'Fermer', { duration: 3000 });
+        this.loadEntries();
+      },
+      error: () => this.snackBar.open('Erreur suppression', 'Fermer', { duration: 4000, panelClass: ['error-snackbar'] })
     });
   }
 }
