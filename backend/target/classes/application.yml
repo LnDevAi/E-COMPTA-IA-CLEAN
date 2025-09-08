@@ -1,7 +1,4 @@
 spring:
-  profiles:
-    active: simple
-  
   # Configuration de la base de données
   datasource:
     url: jdbc:h2:mem:testdb;INIT=runscript from 'classpath:data-test.sql'
@@ -54,8 +51,6 @@ spring:
 server:
   port: 8080
   address: 0.0.0.0
-  servlet:
-    # context-path: /api  # Supprimé pour éviter la redondance
   tomcat:
     remoteip:
       remote-ip-header: x-forwarded-for
