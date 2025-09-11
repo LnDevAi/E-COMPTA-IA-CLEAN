@@ -1,0 +1,274 @@
+<div class="document-explorer">
+  <!-- En-tête -->
+  <div class="header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>
+          <mat-icon>folder_open</mat-icon>
+          Gestion Électronique de Documents
+        </h1>
+        <p class="subtitle">Explorateur de documents - {{ totalItems }} document(s)</p>
+      </div>
+      
+      <div class="actions-section">
+        <button mat-raised-button color="primary" (click)="uploadDocument()">
+          <mat-icon>upload</mat-icon>
+          Uploader
+        </button>
+        
+        <button mat-button [disabled]="selectedDocuments.length === 0" (click)="downloadSelected()">
+          <mat-icon>download</mat-icon>
+          Télécharger ({{ selectedDocuments.length }})
+        </button>
+        
+        <button mat-button color="warn" [disabled]="selectedDocuments.length === 0" (click)="deleteSelected()">
+          <mat-icon>delete</mat-icon>
+          Supprimer ({{ selectedDocuments.length }})
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filters-section">
+    <div class="filters-content">
+      <!-- Recherche -->
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Rechercher</mat-label>
+        <input matInput 
+               [(ngModel)]="searchTerm" 
+               (input)="applyFilters()"
+               placeholder="Titre, description, code, tags...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <!-- Filtres -->
+      <mat-form-field appearance="outline">
+        <mat-label>Type de document</mat-label>
+        <mat-select [(ngModel)]="filter.documentType" (selectionChange)="applyFilters()">
+          <mat-option value="">Tous les types</mat-option>
+          <mat-option *ngFor="let type of documentTypes" [value]="type">
+            {{ type }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Statut</mat-label>
+        <mat-select [(ngModel)]="filter.status" (selectionChange)="applyFilters()">
+          <mat-option value="">Tous les statuts</mat-option>
+          <mat-option *ngFor="let status of documentStatuses" [value]="status">
+            {{ status }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Niveau de sécurité</mat-label>
+        <mat-select [(ngModel)]="filter.securityLevel" (selectionChange)="applyFilters()">
+          <mat-option value="">Tous les niveaux</mat-option>
+          <mat-option *ngFor="let level of securityLevels" [value]="level">
+            {{ level }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-button (click)="clearFilters()">
+        <mat-icon>clear</mat-icon>
+        Effacer les filtres
+      </button>
+    </div>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="content">
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Chargement des documents...</p>
+    </div>
+
+    <!-- Erreur -->
+    <div *ngIf="error && !loading" class="error-container">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-button (click)="loadDocuments()">
+        <mat-icon>refresh</mat-icon>
+        Réessayer
+      </button>
+    </div>
+
+    <!-- Tableau des documents -->
+    <div *ngIf="!loading && !error" class="table-container">
+      <table mat-table [dataSource]="getCurrentPageDocuments()" matSort (matSortChange)="onSortChange($event)" class="documents-table">
+        
+        <!-- Colonne de sélection -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox 
+              [checked]="isAllSelected()"
+              [indeterminate]="isIndeterminate()"
+              (change)="masterToggle()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let document">
+            <mat-checkbox 
+              [checked]="isSelected(document)"
+              (change)="toggleSelection(document)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Colonne titre -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Titre</th>
+          <td mat-cell *matCellDef="let document">
+            <div class="document-title">
+              <mat-icon [color]="getStatusColor(document.status)">
+                {{ getDocumentTypeIcon(document.documentType) }}
+              </mat-icon>
+              <div class="title-content">
+                <span class="title-text">{{ document.title }}</span>
+                <span class="document-code">{{ document.documentCode }}</span>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Colonne type de document -->
+        <ng-container matColumnDef="documentType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+          <td mat-cell *matCellDef="let document">
+            <mat-chip [color]="'primary'" selected>
+              {{ document.documentType }}
+            </mat-chip>
+          </td>
+        </ng-container>
+
+        <!-- Colonne statut -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+          <td mat-cell *matCellDef="let document">
+            <mat-chip [color]="getStatusColor(document.status)" selected>
+              {{ document.status }}
+            </mat-chip>
+          </td>
+        </ng-container>
+
+        <!-- Colonne niveau de sécurité -->
+        <ng-container matColumnDef="securityLevel">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Sécurité</th>
+          <td mat-cell *matCellDef="let document">
+            <mat-chip [color]="getSecurityLevelColor(document.securityLevel)" selected>
+              {{ document.securityLevel }}
+            </mat-chip>
+          </td>
+        </ng-container>
+
+        <!-- Colonne catégorie -->
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Catégorie</th>
+          <td mat-cell *matCellDef="let document">
+            <span *ngIf="document.category; else noCategory">{{ document.category }}</span>
+            <ng-template #noCategory>
+              <span class="no-data">-</span>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <!-- Colonne taille de fichier -->
+        <ng-container matColumnDef="fileSize">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Taille</th>
+          <td mat-cell *matCellDef="let document">
+            {{ formatFileSize(document.fileSize) }}
+          </td>
+        </ng-container>
+
+        <!-- Colonne date de création -->
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Créé le</th>
+          <td mat-cell *matCellDef="let document">
+            {{ formatDate(document.createdAt) }}
+          </td>
+        </ng-container>
+
+        <!-- Colonne créateur -->
+        <ng-container matColumnDef="createdBy">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Créé par</th>
+          <td mat-cell *matCellDef="let document">
+            <span *ngIf="document.createdBy; else noCreator">Utilisateur {{ document.createdBy }}</span>
+            <ng-template #noCreator>
+              <span class="no-data">-</span>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <!-- Colonne actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let document">
+            <button mat-icon-button [matMenuTriggerFor]="documentMenu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            
+            <mat-menu #documentMenu="matMenu">
+              <button mat-menu-item (click)="viewDocument(document)">
+                <mat-icon>visibility</mat-icon>
+                <span>Visualiser</span>
+              </button>
+              <button mat-menu-item (click)="downloadDocument(document)">
+                <mat-icon>download</mat-icon>
+                <span>Télécharger</span>
+              </button>
+              <button mat-menu-item (click)="editDocument(document)">
+                <mat-icon>edit</mat-icon>
+                <span>Modifier</span>
+              </button>
+              <mat-divider></mat-divider>
+              <button mat-menu-item (click)="deleteDocument(document)" class="delete-action">
+                <mat-icon>delete</mat-icon>
+                <span>Supprimer</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <!-- Message si aucun document -->
+      <div *ngIf="filteredDocuments.length === 0" class="no-data-container">
+        <mat-icon>folder_open</mat-icon>
+        <h3>Aucun document trouvé</h3>
+        <p *ngIf="searchTerm || filter.documentType || filter.status || filter.securityLevel">
+          Aucun document ne correspond aux critères de recherche.
+        </p>
+        <p *ngIf="!searchTerm && !filter.documentType && !filter.status && !filter.securityLevel">
+          Aucun document n'a encore été uploadé.
+        </p>
+        <button mat-raised-button color="primary" (click)="uploadDocument()">
+          <mat-icon>upload</mat-icon>
+          Uploader le premier document
+        </button>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <mat-paginator 
+      *ngIf="!loading && !error && filteredDocuments.length > 0"
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>
+
+
+
+
+
+

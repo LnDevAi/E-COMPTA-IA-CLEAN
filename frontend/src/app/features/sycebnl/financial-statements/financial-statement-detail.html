@@ -1,0 +1,274 @@
+<div class="financial-statement-detail-container">
+  <!-- En-tête -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="title-section">
+        <button mat-icon-button (click)="goBack()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="title-info">
+          <h1>
+            <mat-icon [style.color]="getFinancialStatementTypeColor(financialStatement?.typeEtat || '')">
+              {{ getFinancialStatementTypeIcon(financialStatement?.typeEtat || '') }}
+            </mat-icon>
+            {{ financialStatement?.typeEtat }}
+          </h1>
+          <p class="subtitle">{{ financialStatement?.typeSysteme }} - {{ formatDate(financialStatement?.dateArrete || '') }}</p>
+        </div>
+      </div>
+      
+      <div class="actions-section">
+        <button mat-icon-button [matMenuTriggerFor]="exportMenu">
+          <mat-icon>download</mat-icon>
+        </button>
+        <mat-menu #exportMenu="matMenu">
+          <button mat-menu-item (click)="exportStatement('PDF')">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Export PDF
+          </button>
+          <button mat-menu-item (click)="exportStatement('EXCEL')">
+            <mat-icon>table_chart</mat-icon>
+            Export Excel
+          </button>
+          <button mat-menu-item (click)="exportStatement('CSV')">
+            <mat-icon>description</mat-icon>
+            Export CSV
+          </button>
+        </mat-menu>
+
+        <button mat-raised-button 
+                color="primary" 
+                (click)="validateStatement()"
+                [disabled]="financialStatement?.statut === 'VALIDE'">
+          <mat-icon>check_circle</mat-icon>
+          Valider
+        </button>
+
+        <button mat-icon-button [matMenuTriggerFor]="actionsMenu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #actionsMenu="matMenu">
+          <button mat-menu-item (click)="editStatement()">
+            <mat-icon>edit</mat-icon>
+            Modifier
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <!-- Informations générales -->
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-card-title>Informations Générales</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Type d'État</label>
+          <div class="info-value">
+            <mat-icon [style.color]="getFinancialStatementTypeColor(financialStatement?.typeEtat || '')">
+              {{ getFinancialStatementTypeIcon(financialStatement?.typeEtat || '') }}
+            </mat-icon>
+            {{ financialStatement?.typeEtat }}
+          </div>
+        </div>
+
+        <div class="info-item">
+          <label>Système Comptable</label>
+          <div class="info-value">
+            <mat-chip [style.background-color]="getSystemTypeColor(financialStatement?.typeSysteme || '') + '20'" 
+                      [style.color]="getSystemTypeColor(financialStatement?.typeSysteme || '')">
+              {{ financialStatement?.typeSysteme }}
+            </mat-chip>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <label>Date d'Arrêté</label>
+          <div class="info-value">{{ formatDate(financialStatement?.dateArrete || '') }}</div>
+        </div>
+
+        <div class="info-item">
+          <label>Statut</label>
+          <div class="info-value">
+            <mat-icon [style.color]="getStatusColor(financialStatement?.statut || '')">
+              {{ getStatusIcon(financialStatement?.statut || '') }}
+            </mat-icon>
+            {{ financialStatement?.statut }}
+          </div>
+        </div>
+
+        <div class="info-item">
+          <label>Généré par</label>
+          <div class="info-value">{{ financialStatement?.generePar || '-' }}</div>
+        </div>
+
+        <div class="info-item">
+          <label>Validé par</label>
+          <div class="info-value">{{ financialStatement?.validePar || '-' }}</div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Totaux et équilibres -->
+  <mat-card class="totals-card" *ngIf="financialStatement">
+    <mat-card-header>
+      <mat-card-title>Totaux et Équilibres</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="totals-grid">
+        <div class="total-item" *ngIf="financialStatement.totalActif">
+          <label>Total Actif</label>
+          <div class="total-value">{{ formatAmount(financialStatement.totalActif) }}</div>
+        </div>
+
+        <div class="total-item" *ngIf="financialStatement.totalPassif">
+          <label>Total Passif</label>
+          <div class="total-value">{{ formatAmount(financialStatement.totalPassif) }}</div>
+        </div>
+
+        <div class="total-item" *ngIf="financialStatement.totalProduits">
+          <label>Total Produits</label>
+          <div class="total-value">{{ formatAmount(financialStatement.totalProduits) }}</div>
+        </div>
+
+        <div class="total-item" *ngIf="financialStatement.totalCharges">
+          <label>Total Charges</label>
+          <div class="total-value">{{ formatAmount(financialStatement.totalCharges) }}</div>
+        </div>
+
+        <div class="total-item" *ngIf="financialStatement.resultatNet">
+          <label>Résultat Net</label>
+          <div class="total-value" [style.color]="financialStatement.resultatNet >= 0 ? 'green' : 'red'">
+            {{ formatAmount(financialStatement.resultatNet) }}
+          </div>
+        </div>
+
+        <div class="total-item">
+          <label>Équilibre</label>
+          <div class="total-value">
+            <mat-icon [style.color]="getEquilibreColor(financialStatement.equilibre)">
+              {{ getEquilibreIcon(financialStatement.equilibre) }}
+            </mat-icon>
+            {{ financialStatement.equilibre ? 'Équilibré' : 'Non équilibré' }}
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Contenu de l'état financier -->
+  <mat-card class="content-card">
+    <mat-card-content>
+      <mat-tab-group>
+        <!-- Onglet Données -->
+        <mat-tab label="Données Détaillées">
+          <div class="tab-content">
+            <div class="table-container" *ngIf="getStatementDataArray().length > 0">
+              <table mat-table [dataSource]="getStatementDataArray()" class="statement-table">
+                <ng-container matColumnDef="code">
+                  <th mat-header-cell *matHeaderCellDef>Code</th>
+                  <td mat-cell *matCellDef="let row">{{ row.code }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="libelle">
+                  <th mat-header-cell *matHeaderCellDef>Libellé</th>
+                  <td mat-cell *matCellDef="let row">{{ row.libelle }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="montant">
+                  <th mat-header-cell *matHeaderCellDef>Montant</th>
+                  <td mat-cell *matCellDef="let row" class="amount-cell">
+                    {{ formatAmount(row.montant) }}
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+
+            <div class="no-data-message" *ngIf="getStatementDataArray().length === 0">
+              <mat-icon>inbox</mat-icon>
+              <h3>Aucune donnée disponible</h3>
+              <p>Les données détaillées de cet état financier ne sont pas encore disponibles.</p>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Onglet Notes Annexes -->
+        <mat-tab label="Notes Annexes">
+          <div class="tab-content">
+            <div class="notes-container" *ngIf="notesAnnexes.length > 0">
+              <div class="note-item" *ngFor="let note of notesAnnexes">
+                <div class="note-header">
+                  <h3>{{ note.numeroNote }} - {{ note.titreNote }}</h3>
+                </div>
+                <div class="note-content">
+                  <p>{{ note.contenuNote }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="no-data-message" *ngIf="notesAnnexes.length === 0">
+              <mat-icon>description</mat-icon>
+              <h3>Aucune note annexe</h3>
+              <p>Les notes annexes de cet état financier ne sont pas encore disponibles.</p>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Onglet Métadonnées -->
+        <mat-tab label="Métadonnées">
+          <div class="tab-content">
+            <div class="metadata-container">
+              <div class="metadata-item">
+                <label>ID</label>
+                <div class="metadata-value">{{ financialStatement?.id }}</div>
+              </div>
+
+              <div class="metadata-item">
+                <label>Exercice ID</label>
+                <div class="metadata-value">{{ financialStatement?.exerciceId }}</div>
+              </div>
+
+              <div class="metadata-item">
+                <label>Entité ID</label>
+                <div class="metadata-value">{{ financialStatement?.entiteId }}</div>
+              </div>
+
+              <div class="metadata-item">
+                <label>Date de Création</label>
+                <div class="metadata-value">{{ formatDate(financialStatement?.dateCreation || '') }}</div>
+              </div>
+
+              <div class="metadata-item">
+                <label>Date de Modification</label>
+                <div class="metadata-value">{{ formatDate(financialStatement?.dateModification || '') }}</div>
+              </div>
+
+              <div class="metadata-item">
+                <label>Date de Validation</label>
+                <div class="metadata-value">{{ formatDate(financialStatement?.dateValidation || '') }}</div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Indicateur de chargement -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement de l'état financier...</p>
+  </div>
+</div>
+
+
+
+
+
+

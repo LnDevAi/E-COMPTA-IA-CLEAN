@@ -1,0 +1,387 @@
+<div class="workflow-manager">
+  <!-- En-tête -->
+  <div class="header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>
+          <mat-icon>account_tree</mat-icon>
+          Gestion des Workflows d'Approbation
+        </h1>
+        <p class="subtitle">Suivi et gestion des processus d'approbation de documents</p>
+      </div>
+      
+      <div class="actions-section">
+        <button mat-raised-button color="primary" (click)="createWorkflow()">
+          <mat-icon>add</mat-icon>
+          Nouveau Workflow
+        </button>
+        
+        <button mat-button [disabled]="!canApprove" (click)="approveSelected()">
+          <mat-icon>check</mat-icon>
+          Approuver ({{ selectedInstances.length }})
+        </button>
+        
+        <button mat-button color="warn" [disabled]="!canCancel" (click)="cancelSelected()">
+          <mat-icon>cancel</mat-icon>
+          Annuler ({{ selectedInstances.length }})
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Onglets -->
+  <mat-tab-group [(selectedIndex)]="activeTab" class="workflow-tabs">
+    
+    <!-- Onglet Instances de Workflow -->
+    <mat-tab label="Instances en cours">
+      <div class="tab-content">
+        
+        <!-- Filtres -->
+        <div class="filters-section">
+          <div class="filters-content">
+            <!-- Recherche -->
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-label>Rechercher</mat-label>
+              <input matInput 
+                     [(ngModel)]="filter.searchTerm" 
+                     (input)="applyFilters()"
+                     placeholder="Document, workflow...">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+
+            <!-- Filtres -->
+            <mat-form-field appearance="outline">
+              <mat-label>Statut</mat-label>
+              <mat-select [(ngModel)]="filter.status" (selectionChange)="applyFilters()">
+                <mat-option value="">Tous les statuts</mat-option>
+                <mat-option *ngFor="let status of workflowStatuses" [value]="status">
+                  {{ status }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Type de document</mat-label>
+              <mat-select [(ngModel)]="filter.documentType" (selectionChange)="applyFilters()">
+                <mat-option value="">Tous les types</mat-option>
+                <mat-option *ngFor="let type of documentTypes" [value]="type">
+                  {{ type }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-button (click)="clearFilters()">
+              <mat-icon>clear</mat-icon>
+              Effacer les filtres
+            </button>
+          </div>
+        </div>
+
+        <!-- Contenu principal -->
+        <div class="content">
+          <!-- Loading -->
+          <div *ngIf="loading" class="loading-container">
+            <mat-spinner></mat-spinner>
+            <p>Chargement des workflows...</p>
+          </div>
+
+          <!-- Erreur -->
+          <div *ngIf="error && !loading" class="error-container">
+            <mat-icon color="warn">error</mat-icon>
+            <p>{{ error }}</p>
+            <button mat-button (click)="loadWorkflowInstances()">
+              <mat-icon>refresh</mat-icon>
+              Réessayer
+            </button>
+          </div>
+
+          <!-- Tableau des instances -->
+          <div *ngIf="!loading && !error" class="table-container">
+            <table mat-table [dataSource]="getCurrentPageInstances()" matSort (matSortChange)="onSortChange($event)" class="workflow-table">
+              
+              <!-- Colonne de sélection -->
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox 
+                    [checked]="isAllSelected()"
+                    [indeterminate]="isIndeterminate()"
+                    (change)="masterToggle()">
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let instance">
+                  <mat-checkbox 
+                    [checked]="isSelected(instance)"
+                    (change)="toggleSelection(instance)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <!-- Colonne document -->
+              <ng-container matColumnDef="document">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Document</th>
+                <td mat-cell *matCellDef="let instance">
+                  <div class="document-info">
+                    <mat-icon [color]="getStatusColor(instance.status)">
+                      {{ documentService.getDocumentTypeIcon(instance.document.documentType) }}
+                    </mat-icon>
+                    <div class="document-details">
+                      <span class="document-title">{{ instance.document.title }}</span>
+                      <span class="document-code">{{ instance.document.documentCode }}</span>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Colonne workflow -->
+              <ng-container matColumnDef="workflow">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Workflow</th>
+                <td mat-cell *matCellDef="let instance">
+                  <span class="workflow-name">{{ getWorkflowName(instance.workflowId) }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Colonne étape actuelle -->
+              <ng-container matColumnDef="currentStep">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Étape</th>
+                <td mat-cell *matCellDef="let instance">
+                  <div class="step-info">
+                    <span class="step-number">{{ instance.currentStep }} / {{ instance.totalSteps }}</span>
+                    <span class="step-name">{{ instance.steps[instance.currentStep - 1]?.name }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Colonne progression -->
+              <ng-container matColumnDef="progress">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Progression</th>
+                <td mat-cell *matCellDef="let instance">
+                  <div class="progress-container">
+                    <div class="progress-bar">
+                      <div class="progress-fill" [style.width.%]="instance.progress"></div>
+                    </div>
+                    <span class="progress-text">{{ formatProgress(instance.progress) }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Colonne statut -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+                <td mat-cell *matCellDef="let instance">
+                  <mat-chip [color]="getStatusColor(instance.status)" selected>
+                    {{ instance.status }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Colonne date de début -->
+              <ng-container matColumnDef="startedAt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Démarré le</th>
+                <td mat-cell *matCellDef="let instance">
+                  {{ formatDate(instance.startedAt) }}
+                </td>
+              </ng-container>
+
+              <!-- Colonne démarré par -->
+              <ng-container matColumnDef="startedBy">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Démarré par</th>
+                <td mat-cell *matCellDef="let instance">
+                  Utilisateur {{ instance.startedBy }}
+                </td>
+              </ng-container>
+
+              <!-- Colonne actions -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let instance">
+                  <button mat-icon-button [matMenuTriggerFor]="instanceMenu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  
+                  <mat-menu #instanceMenu="matMenu">
+                    <button mat-menu-item (click)="viewWorkflow(instance)">
+                      <mat-icon>visibility</mat-icon>
+                      <span>Voir le workflow</span>
+                    </button>
+                    <button mat-menu-item (click)="approveStep(instance, instance.steps[instance.currentStep - 1])" 
+                            *ngIf="instance.status === 'in_progress'">
+                      <mat-icon>check</mat-icon>
+                      <span>Approuver l'étape</span>
+                    </button>
+                    <button mat-menu-item (click)="rejectStep(instance, instance.steps[instance.currentStep - 1])"
+                            *ngIf="instance.status === 'in_progress'">
+                      <mat-icon>close</mat-icon>
+                      <span>Rejeter l'étape</span>
+                    </button>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item (click)="cancelWorkflow(instance)" 
+                            *ngIf="instance.status !== 'completed' && instance.status !== 'cancelled'"
+                            class="cancel-action">
+                      <mat-icon>cancel</mat-icon>
+                      <span>Annuler le workflow</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <!-- Message si aucune instance -->
+            <div *ngIf="filteredInstances.length === 0" class="no-data-container">
+              <mat-icon>account_tree</mat-icon>
+              <h3>Aucun workflow trouvé</h3>
+              <p *ngIf="filter.searchTerm || filter.status || filter.documentType">
+                Aucun workflow ne correspond aux critères de recherche.
+              </p>
+              <p *ngIf="!filter.searchTerm && !filter.status && !filter.documentType">
+                Aucun workflow n'est actuellement en cours.
+              </p>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <mat-paginator 
+            *ngIf="!loading && !error && filteredInstances.length > 0"
+            [length]="totalItems"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex"
+            [pageSizeOptions]="[10, 25, 50, 100]"
+            (page)="onPageChange($event)"
+            showFirstLastButtons>
+          </mat-paginator>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Modèles de Workflow -->
+    <mat-tab label="Modèles de Workflow">
+      <div class="tab-content">
+        <div class="workflow-templates">
+          <div class="template-grid">
+            <mat-card *ngFor="let workflow of workflows" class="workflow-card">
+              <mat-card-header>
+                <mat-card-title>{{ workflow.name }}</mat-card-title>
+                <mat-card-subtitle>{{ workflow.description }}</mat-card-subtitle>
+              </mat-card-header>
+              
+              <mat-card-content>
+                <div class="workflow-info">
+                  <div class="info-item">
+                    <mat-icon>description</mat-icon>
+                    <span>{{ workflow.documentType }}</span>
+                  </div>
+                  <div class="info-item">
+                    <mat-icon>account_tree</mat-icon>
+                    <span>{{ workflow.steps.length }} étapes</span>
+                  </div>
+                  <div class="info-item">
+                    <mat-icon>schedule</mat-icon>
+                    <span>{{ getTotalEstimatedDays(workflow) }} jours</span>
+                  </div>
+                </div>
+                
+                <div class="workflow-steps">
+                  <h4>Étapes du workflow :</h4>
+                  <mat-stepper orientation="vertical" [linear]="false">
+                    <mat-step *ngFor="let step of workflow.steps; let i = index">
+                      <ng-template matStepLabel>
+                        <div class="step-label">
+                          <span class="step-number">{{ i + 1 }}</span>
+                          <span class="step-name">{{ step.name }}</span>
+                          <mat-chip [color]="step.isRequired ? 'primary' : 'accent'" selected>
+                            {{ step.isRequired ? 'Obligatoire' : 'Optionnel' }}
+                          </mat-chip>
+                        </div>
+                      </ng-template>
+                      <div class="step-content">
+                        <p>{{ step.description }}</p>
+                        <div class="step-details">
+                          <span><strong>Rôle :</strong> {{ step.approverRole }}</span>
+                          <span><strong>Durée estimée :</strong> {{ step.estimatedDays }} jour(s)</span>
+                        </div>
+                      </div>
+                    </mat-step>
+                  </mat-stepper>
+                </div>
+              </mat-card-content>
+              
+              <mat-card-actions>
+                <button mat-button (click)="editWorkflow(workflow)">
+                  <mat-icon>edit</mat-icon>
+                  Modifier
+                </button>
+                <button mat-button (click)="duplicateWorkflow(workflow)">
+                  <mat-icon>content_copy</mat-icon>
+                  Dupliquer
+                </button>
+                <button mat-button color="warn" (click)="deleteWorkflow(workflow)">
+                  <mat-icon>delete</mat-icon>
+                  Supprimer
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Statistiques -->
+    <mat-tab label="Statistiques">
+      <div class="tab-content">
+        <div class="workflow-stats">
+          <div class="stats-grid">
+            <mat-card class="stat-card">
+              <mat-card-content>
+                <div class="stat-content">
+                  <mat-icon>account_tree</mat-icon>
+                  <div class="stat-info">
+                    <h3>{{ workflowInstances.length }}</h3>
+                    <p>Workflows actifs</p>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            
+            <mat-card class="stat-card">
+              <mat-card-content>
+                <div class="stat-content">
+                  <mat-icon>schedule</mat-icon>
+                  <div class="stat-info">
+                    <h3>{{ getAverageProcessingTime() }}</h3>
+                    <p>Jours moyens</p>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            
+            <mat-card class="stat-card">
+              <mat-card-content>
+                <div class="stat-content">
+                  <mat-icon>check_circle</mat-icon>
+                  <div class="stat-info">
+                    <h3>{{ getCompletedWorkflows() }}</h3>
+                    <p>Workflows terminés</p>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            
+            <mat-card class="stat-card">
+              <mat-card-content>
+                <div class="stat-content">
+                  <mat-icon>error</mat-icon>
+                  <div class="stat-info">
+                    <h3>{{ getRejectedWorkflows() }}</h3>
+                    <p>Workflows rejetés</p>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

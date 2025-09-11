@@ -1,0 +1,216 @@
+<div class="document-viewer" #viewerContainer [class.fullscreen]="viewerState.isFullscreen">
+  
+  <!-- Barre d'outils -->
+  <div class="toolbar" *ngIf="showToolbar">
+    <div class="toolbar-left">
+      <button mat-icon-button (click)="onClose()" matTooltip="Fermer">
+        <mat-icon>close</mat-icon>
+      </button>
+      
+      <mat-divider vertical></mat-divider>
+      
+      <!-- Navigation PDF -->
+      <div class="navigation-controls" *ngIf="canNavigate">
+        <button mat-icon-button (click)="previousPage()" [disabled]="viewerState.currentPage <= 1" matTooltip="Page précédente">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        
+        <span class="page-info">{{ pageInfo }}</span>
+        
+        <button mat-icon-button (click)="nextPage()" [disabled]="viewerState.currentPage >= viewerState.totalPages" matTooltip="Page suivante">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="toolbar-center">
+      <span class="document-title">{{ document.title }}</span>
+    </div>
+
+    <div class="toolbar-right">
+      <!-- Zoom -->
+      <div class="zoom-controls" *ngIf="canZoom">
+        <button mat-icon-button (click)="zoomOut()" matTooltip="Zoom arrière">
+          <mat-icon>zoom_out</mat-icon>
+        </button>
+        
+        <span class="zoom-info">{{ zoomInfo }}</span>
+        
+        <button mat-icon-button (click)="zoomIn()" matTooltip="Zoom avant">
+          <mat-icon>zoom_in</mat-icon>
+        </button>
+        
+        <button mat-icon-button (click)="resetZoom()" matTooltip="Zoom normal">
+          <mat-icon>fit_screen</mat-icon>
+        </button>
+      </div>
+
+      <!-- Rotation -->
+      <div class="rotation-controls" *ngIf="canRotate">
+        <button mat-icon-button (click)="rotateLeft()" matTooltip="Rotation gauche">
+          <mat-icon>rotate_left</mat-icon>
+        </button>
+        
+        <button mat-icon-button (click)="rotateRight()" matTooltip="Rotation droite">
+          <mat-icon>rotate_right</mat-icon>
+        </button>
+      </div>
+
+      <mat-divider vertical></mat-divider>
+
+      <!-- Actions -->
+      <button mat-icon-button (click)="onPrint()" *ngIf="canPrint" matTooltip="Imprimer">
+        <mat-icon>print</mat-icon>
+      </button>
+      
+      <button mat-icon-button (click)="onDownload()" matTooltip="Télécharger">
+        <mat-icon>download</mat-icon>
+      </button>
+      
+      <button mat-icon-button (click)="onEdit()" matTooltip="Modifier">
+        <mat-icon>edit</mat-icon>
+      </button>
+      
+      <button mat-icon-button (click)="toggleFullscreen()" matTooltip="Plein écran">
+        <mat-icon>{{ viewerState.isFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="viewer-content">
+    
+    <!-- Loading -->
+    <div class="loading-container" *ngIf="viewerState.isLoading">
+      <mat-spinner></mat-spinner>
+      <p>Chargement du document...</p>
+    </div>
+
+    <!-- Erreur -->
+    <div class="error-container" *ngIf="viewerState.error && !viewerState.isLoading">
+      <mat-icon color="warn">error</mat-icon>
+      <h3>Erreur de chargement</h3>
+      <p>{{ viewerState.error }}</p>
+      <button mat-raised-button color="primary" (click)="loadDocument()">
+        <mat-icon>refresh</mat-icon>
+        Réessayer
+      </button>
+    </div>
+
+    <!-- Visualiseur PDF -->
+    <div class="pdf-viewer" *ngIf="documentType === 'pdf' && !viewerState.isLoading && !viewerState.error">
+      <object #pdfViewer 
+              [data]="documentUrl" 
+              type="application/pdf" 
+              class="pdf-object">
+        <p>Votre navigateur ne supporte pas l'affichage des PDF.</p>
+        <a [href]="documentUrl" target="_blank">Ouvrir le PDF dans un nouvel onglet</a>
+      </object>
+    </div>
+
+    <!-- Visualiseur d'image -->
+    <div class="image-viewer" *ngIf="documentType === 'image' && !viewerState.isLoading && !viewerState.error">
+      <img #imageViewer 
+           [src]="documentUrl" 
+           [alt]="document.title"
+           [style.transform]="'rotate(' + viewerState.rotation + 'deg) scale(' + (viewerState.zoom / 100) + ')'"
+           class="document-image">
+    </div>
+
+    <!-- Visualiseur de texte -->
+    <div class="text-viewer" *ngIf="documentType === 'text' && !viewerState.isLoading && !viewerState.error">
+      <div class="text-content">
+        <pre>{{ documentContent }}</pre>
+      </div>
+    </div>
+
+    <!-- Format non supporté -->
+    <div class="unsupported-container" *ngIf="documentType === 'unsupported' && !viewerState.isLoading && !viewerState.error">
+      <mat-icon>insert_drive_file</mat-icon>
+      <h3>Format non supporté</h3>
+      <p>Ce type de fichier ne peut pas être visualisé dans le navigateur.</p>
+      <button mat-raised-button color="primary" (click)="onDownload()">
+        <mat-icon>download</mat-icon>
+        Télécharger le fichier
+      </button>
+    </div>
+  </div>
+
+  <!-- Métadonnées -->
+  <div class="metadata-panel" *ngIf="showMetadata && !viewerState.isFullscreen">
+    <div class="metadata-header">
+      <h4>Informations du document</h4>
+      <button mat-icon-button (click)="showMetadata = false">
+        <mat-icon>expand_less</mat-icon>
+      </button>
+    </div>
+    
+    <div class="metadata-content">
+      <div class="metadata-item">
+        <span class="label">Titre :</span>
+        <span class="value">{{ document.title }}</span>
+      </div>
+      
+      <div class="metadata-item">
+        <span class="label">Code :</span>
+        <span class="value">{{ document.documentCode }}</span>
+      </div>
+      
+      <div class="metadata-item">
+        <span class="label">Type :</span>
+        <mat-chip [color]="'primary'" selected>
+          {{ document.documentType }}
+        </mat-chip>
+      </div>
+      
+      <div class="metadata-item">
+        <span class="label">Statut :</span>
+        <mat-chip [color]="getStatusColor()" selected>
+          {{ document.status }}
+        </mat-chip>
+      </div>
+      
+      <div class="metadata-item">
+        <span class="label">Sécurité :</span>
+        <mat-chip [color]="getSecurityLevelColor()" selected>
+          {{ document.securityLevel }}
+        </mat-chip>
+      </div>
+      
+      <div class="metadata-item" *ngIf="document.category">
+        <span class="label">Catégorie :</span>
+        <span class="value">{{ document.category }}</span>
+      </div>
+      
+      <div class="metadata-item">
+        <span class="label">Taille :</span>
+        <span class="value">{{ formatFileSize(document.fileSize) }}</span>
+      </div>
+      
+      <div class="metadata-item">
+        <span class="label">Créé le :</span>
+        <span class="value">{{ formatDate(document.createdAt) }}</span>
+      </div>
+      
+      <div class="metadata-item" *ngIf="document.description">
+        <span class="label">Description :</span>
+        <span class="value">{{ document.description }}</span>
+      </div>
+      
+      <div class="metadata-item" *ngIf="document.tags">
+        <span class="label">Tags :</span>
+        <div class="tags">
+          <mat-chip *ngFor="let tag of document.tags.split(',')" [color]="'accent'" selected>
+            {{ tag.trim() }}
+          </mat-chip>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

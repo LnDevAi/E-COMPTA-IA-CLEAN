@@ -1,0 +1,51 @@
+# =====================================================
+# E-COMPTA-IA - CONFIGURATION GRAFANA DATASOURCES
+# =====================================================
+
+# Configuration des sources de données Grafana
+# Ce fichier sera utilisé par Grafana pour configurer automatiquement les sources de données
+
+# Source de données Prometheus
+# - name: Prometheus
+#   type: prometheus
+#   access: proxy
+#   url: http://prometheus:9090
+#   isDefault: true
+#   editable: true
+#   jsonData:
+#     timeInterval: "30s"
+#     queryTimeout: "60s"
+#     httpMethod: "POST"
+#   secureJsonData: {}
+
+# Source de données PostgreSQL
+# - name: PostgreSQL
+#   type: postgres
+#   access: proxy
+#   url: postgres:5432
+#   database: ecomptaia_db
+#   user: ecomptaia_user
+#   secureJsonData:
+#     password: ecomptaia_password
+#   jsonData:
+#     sslmode: disable
+#     maxOpenConns: 100
+#     maxIdleConns: 100
+#     maxIdleConnsAuto: true
+#     connMaxLifetime: 14400
+#     postgresVersion: 1500
+#     timescaledb: false
+
+# Source de données Redis
+# - name: Redis
+#   type: redis-datasource
+#   access: proxy
+#   url: redis:6379
+#   jsonData:
+#     client: standalone
+#     poolSize: 5
+#     timeout: 5
+#     pingInterval: 0
+#     pipelineWindow: 0
+#   secureJsonData:
+#     password: ecomptaia_redis_password

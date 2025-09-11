@@ -1,0 +1,443 @@
+<div class="approval-workflow-container">
+  
+  <!-- En-tête -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="header-info">
+        <h1>Workflow d'approbation</h1>
+        <p class="subtitle">Gestion des demandes d'approbation et workflows personnalisés</p>
+      </div>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="exportRequests()" [disabled]="isLoading">
+          <mat-icon>download</mat-icon>
+          Exporter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <mat-tab-group>
+    
+    <!-- Onglet Demandes d'approbation -->
+    <mat-tab label="Demandes d'approbation">
+      <div class="tab-content">
+        
+        <!-- Formulaire de demande -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>add_task</mat-icon>
+              Créer une demande d'approbation
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <form [formGroup]="requestForm" class="request-form">
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Titre de la demande</mat-label>
+                  <input matInput formControlName="title" placeholder="Ex: Achat de matériel informatique">
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Type de demande</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option *ngFor="let type of requestTypes" [value]="type.value">
+                      {{ type.label }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Montant (optionnel)</mat-label>
+                  <input matInput type="number" formControlName="amount" placeholder="0">
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Priorité</mat-label>
+                  <mat-select formControlName="priority">
+                    <mat-option *ngFor="let priority of priorities" [value]="priority.value">
+                      {{ priority.label }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Description</mat-label>
+                  <textarea matInput formControlName="description" rows="3" 
+                            placeholder="Décrivez votre demande en détail"></textarea>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Template de workflow</mat-label>
+                  <mat-select formControlName="template">
+                    <mat-option *ngFor="let template of workflowTemplates" [value]="template.id">
+                      {{ template.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              
+              <div class="form-actions">
+                <button mat-raised-button color="primary" (click)="createRequest()">
+                  <mat-icon>add</mat-icon>
+                  Créer la demande
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Liste des demandes -->
+        <mat-card class="requests-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>list</mat-icon>
+              Demandes d'approbation
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="table-container">
+              <table mat-table [dataSource]="requestsDataSource" class="requests-table">
+                
+                <ng-container matColumnDef="title">
+                  <th mat-header-cell *matHeaderCellDef>Titre</th>
+                  <td mat-cell *matCellDef="let request">
+                    <div class="request-title">
+                      <strong>{{ request.title }}</strong>
+                      <div class="request-progress">
+                        <mat-progress-bar mode="determinate" 
+                                          [value]="getProgressPercentage(request)">
+                        </mat-progress-bar>
+                        <span class="progress-text">{{ getApprovalProgress(request) }}</span>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let request">
+                    {{ getTypeLabel(request.type) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="requester">
+                  <th mat-header-cell *matHeaderCellDef>Demandeur</th>
+                  <td mat-cell *matCellDef="let request">
+                    {{ request.requester }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef>Montant</th>
+                  <td mat-cell *matCellDef="let request">
+                    {{ request.amount ? formatCurrency(request.amount) : '-' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Statut</th>
+                  <td mat-cell *matCellDef="let request">
+                    <mat-chip [style.background-color]="getStatusColor(request.status)">
+                      {{ getStatusLabel(request.status) }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="priority">
+                  <th mat-header-cell *matHeaderCellDef>Priorité</th>
+                  <td mat-cell *matCellDef="let request">
+                    <mat-chip [style.background-color]="getPriorityColor(request.priority)">
+                      {{ getPriorityLabel(request.priority) }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="requestDate">
+                  <th mat-header-cell *matHeaderCellDef>Date de demande</th>
+                  <td mat-cell *matCellDef="let request">
+                    {{ formatDate(request.requestDate) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let request">
+                    <button mat-button (click)="viewRequestDetails(request)">
+                      <mat-icon>visibility</mat-icon>
+                      Voir
+                    </button>
+                    <button mat-button (click)="approveRequest(request)" 
+                            *ngIf="canApprove(request) && request.status === 'pending'"
+                            color="primary">
+                      <mat-icon>check</mat-icon>
+                      Approuver
+                    </button>
+                    <button mat-button (click)="rejectRequest(request)" 
+                            *ngIf="canApprove(request) && request.status === 'pending'"
+                            color="warn">
+                      <mat-icon>close</mat-icon>
+                      Rejeter
+                    </button>
+                    <button mat-button (click)="cancelRequest(request)" 
+                            *ngIf="request.status === 'pending'">
+                      <mat-icon>cancel</mat-icon>
+                      Annuler
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="requestsColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: requestsColumns;"></tr>
+              </table>
+            </div>
+
+            <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Templates de workflow -->
+    <mat-tab label="Templates de workflow">
+      <div class="tab-content">
+        
+        <!-- Formulaire de template -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>account_tree</mat-icon>
+              Créer un template de workflow
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <form [formGroup]="templateForm" class="template-form">
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Nom du template</mat-label>
+                  <input matInput formControlName="name" placeholder="Ex: Achat standard">
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Type</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option *ngFor="let type of requestTypes" [value]="type.value">
+                      {{ type.label }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                
+                <div class="checkbox-field">
+                  <mat-checkbox formControlName="isActive">
+                    Template actif
+                  </mat-checkbox>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Description</mat-label>
+                  <textarea matInput formControlName="description" rows="2" 
+                            placeholder="Description du template"></textarea>
+                </mat-form-field>
+              </div>
+              
+              <div class="form-actions">
+                <button mat-raised-button color="primary" (click)="createTemplate()">
+                  <mat-icon>add</mat-icon>
+                  Créer le template
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Liste des templates -->
+        <mat-card class="templates-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>list</mat-icon>
+              Templates de workflow
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="templates-list">
+              <mat-expansion-panel *ngFor="let template of workflowTemplates" class="template-panel">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="template-header">
+                      <span class="template-name">{{ template.name }}</span>
+                      <mat-chip [style.background-color]="template.isActive ? '#4caf50' : '#f44336'">
+                        {{ template.isActive ? 'Actif' : 'Inactif' }}
+                      </mat-chip>
+                    </div>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                
+                <div class="template-content">
+                  <p class="template-description">{{ template.description }}</p>
+                  
+                  <div class="workflow-steps">
+                    <h4>Étapes du workflow:</h4>
+                    <mat-stepper orientation="vertical" *ngIf="template.steps.length > 0">
+                      <mat-step *ngFor="let step of template.steps; let i = index" 
+                                [label]="step.name">
+                        <div class="step-content">
+                          <p><strong>Rôle:</strong> {{ step.approverRole }}</p>
+                          <p><strong>Obligatoire:</strong> {{ step.isRequired ? 'Oui' : 'Non' }}</p>
+                          <p><strong>Ordre:</strong> {{ step.order }}</p>
+                        </div>
+                        <div class="step-actions">
+                          <button mat-button (click)="removeStepFromTemplate(template, step.id)" 
+                                  color="warn">
+                            <mat-icon>delete</mat-icon>
+                            Supprimer
+                          </button>
+                        </div>
+                      </mat-step>
+                    </mat-stepper>
+                    
+                    <div class="add-step-section">
+                      <button mat-raised-button (click)="addStepToTemplate(template)">
+                        <mat-icon>add</mat-icon>
+                        Ajouter une étape
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Détails de demande -->
+    <mat-tab label="Détails" *ngIf="selectedRequest">
+      <div class="tab-content">
+        
+        <mat-card class="details-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>description</mat-icon>
+              {{ selectedRequest.title }}
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="request-details">
+              <div class="detail-section">
+                <h4>Informations générales</h4>
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <label>Type:</label>
+                    <span>{{ getTypeLabel(selectedRequest.type) }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <label>Demandeur:</label>
+                    <span>{{ selectedRequest.requester }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <label>Date de demande:</label>
+                    <span>{{ formatDate(selectedRequest.requestDate) }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <label>Montant:</label>
+                    <span>{{ selectedRequest.amount ? formatCurrency(selectedRequest.amount) : 'N/A' }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <label>Priorité:</label>
+                    <mat-chip [style.background-color]="getPriorityColor(selectedRequest.priority)">
+                      {{ getPriorityLabel(selectedRequest.priority) }}
+                    </mat-chip>
+                  </div>
+                  <div class="detail-item">
+                    <label>Statut:</label>
+                    <mat-chip [style.background-color]="getStatusColor(selectedRequest.status)">
+                      {{ getStatusLabel(selectedRequest.status) }}
+                    </mat-chip>
+                  </div>
+                </div>
+              </div>
+
+              <div class="detail-section">
+                <h4>Description</h4>
+                <p>{{ selectedRequest.description }}</p>
+              </div>
+
+              <div class="detail-section">
+                <h4>Progression d'approbation</h4>
+                <mat-stepper orientation="vertical">
+                  <mat-step *ngFor="let approver of selectedRequest.approvers; let i = index" 
+                            [label]="approver.name + ' (' + approver.role + ')'"
+                            [state]="approver.status === 'approved' ? 'done' : 
+                                     approver.status === 'rejected' ? 'error' : 
+                                     i + 1 === selectedRequest.currentStep ? 'edit' : 'number'">
+                    <div class="approver-content">
+                      <p><strong>Statut:</strong> {{ getStatusLabel(approver.status) }}</p>
+                      <p *ngIf="approver.approvalDate">
+                        <strong>Date d'approbation:</strong> {{ formatDate(approver.approvalDate) }}
+                      </p>
+                      <p *ngIf="approver.comments">
+                        <strong>Commentaires:</strong> {{ approver.comments }}
+                      </p>
+                    </div>
+                  </mat-step>
+                </mat-stepper>
+              </div>
+
+              <div class="detail-section">
+                <h4>Commentaires</h4>
+                <div class="comments-list">
+                  <div *ngFor="let comment of selectedRequest.comments" class="comment-item">
+                    <div class="comment-header">
+                      <strong>{{ comment.author }}</strong>
+                      <span class="comment-date">{{ formatDate(comment.date) }}</span>
+                    </div>
+                    <div class="comment-content">{{ comment.content }}</div>
+                  </div>
+                </div>
+                
+                <form [formGroup]="commentForm" class="comment-form">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Ajouter un commentaire</mat-label>
+                    <textarea matInput formControlName="content" rows="2"></textarea>
+                  </mat-form-field>
+                  <button mat-raised-button (click)="addComment(selectedRequest)">
+                    <mat-icon>add</mat-icon>
+                    Ajouter
+                  </button>
+                </form>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+
+  <!-- Loading spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des workflows...</p>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+

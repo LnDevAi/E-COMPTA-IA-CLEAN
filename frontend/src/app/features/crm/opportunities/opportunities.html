@@ -1,0 +1,331 @@
+<div class="opportunities-container">
+  <!-- En-tête -->
+  <div class="opportunities-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="page-title">
+          <mat-icon>trending_up</mat-icon>
+          Gestion des Opportunités
+        </h1>
+        <p class="page-subtitle">
+          Suivez vos opportunités de vente et maximisez vos revenus
+        </p>
+      </div>
+      
+      <div class="header-actions">
+        <button mat-raised-button 
+                color="primary" 
+                (click)="addOpportunity()"
+                class="add-button">
+          <mat-icon>add</mat-icon>
+          Nouvelle Opportunité
+        </button>
+        
+        <button mat-icon-button 
+                [matMenuTriggerFor]="actionsMenu"
+                matTooltip="Actions">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        
+        <mat-menu #actionsMenu="matMenu">
+          <button mat-menu-item (click)="exportOpportunities()">
+            <mat-icon>download</mat-icon>
+            <span>Exporter</span>
+          </button>
+          <button mat-menu-item (click)="deleteSelectedOpportunities()" 
+                  [disabled]="selectedOpportunities.size === 0">
+            <mat-icon>delete</mat-icon>
+            <span>Supprimer sélection</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panneau de filtres -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>filter_list</mat-icon>
+        Filtres
+        <button mat-icon-button 
+                (click)="toggleFilterPanel()" 
+                class="toggle-button">
+          <mat-icon>{{ filterExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content *ngIf="filterExpanded">
+      <form [formGroup]="filterForm" class="filters-form">
+        <div class="filters-grid">
+          <!-- Recherche -->
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Rechercher</mat-label>
+            <input matInput 
+                   formControlName="search" 
+                   placeholder="Titre, client, contact...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <!-- Étape -->
+          <mat-form-field appearance="outline">
+            <mat-label>Étape</mat-label>
+            <mat-select formControlName="stage">
+              <mat-option value="">Toutes les étapes</mat-option>
+              <mat-option *ngFor="let stage of stages" [value]="stage.value">
+                {{ stage.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Priorité -->
+          <mat-form-field appearance="outline">
+            <mat-label>Priorité</mat-label>
+            <mat-select formControlName="priority">
+              <mat-option value="">Toutes les priorités</mat-option>
+              <mat-option *ngFor="let priority of priorities" [value]="priority.value">
+                {{ priority.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Source -->
+          <mat-form-field appearance="outline">
+            <mat-label>Source</mat-label>
+            <mat-select formControlName="source">
+              <mat-option value="">Toutes les sources</mat-option>
+              <mat-option *ngFor="let source of sources" [value]="source">
+                {{ source }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Assigné à -->
+          <mat-form-field appearance="outline">
+            <mat-label>Assigné à</mat-label>
+            <mat-select formControlName="assignedTo">
+              <mat-option value="">Tous les utilisateurs</mat-option>
+              <mat-option *ngFor="let user of assignedUsers" [value]="user">
+                {{ user }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="filters-actions">
+          <button mat-button 
+                  type="button" 
+                  (click)="clearFilters()"
+                  class="clear-button">
+            <mat-icon>clear</mat-icon>
+            Effacer les filtres
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tableau des opportunités -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-header">
+        <div class="table-info">
+          <span class="results-count">
+            {{ filteredOpportunities.data.length }} opportunité{{ filteredOpportunities.data.length > 1 ? 's' : '' }}
+          </span>
+          <span *ngIf="selectedOpportunities.size > 0" class="selected-count">
+            ({{ selectedOpportunities.size }} sélectionnée{{ selectedOpportunities.size > 1 ? 's' : '' }})
+          </span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="filteredOpportunities" class="opportunities-table">
+          
+          <!-- Colonne de sélection -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox 
+                [checked]="selectAll"
+                [indeterminate]="selectedOpportunities.size > 0 && !selectAll"
+                (change)="toggleSelectAll()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let opportunity">
+              <mat-checkbox 
+                [checked]="selectedOpportunities.has(opportunity.id)"
+                (change)="toggleOpportunitySelection(opportunity.id)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Titre -->
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Titre</th>
+            <td mat-cell *matCellDef="let opportunity">
+              <div class="title-cell">
+                <div class="opportunity-title">{{ opportunity.title }}</div>
+                <div class="opportunity-description">{{ opportunity.description }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Client -->
+          <ng-container matColumnDef="clientName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Client</th>
+            <td mat-cell *matCellDef="let opportunity">
+              <div class="client-cell">
+                <div class="client-name">{{ opportunity.clientName }}</div>
+                <div class="contact-person">{{ opportunity.contactPerson }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Contact -->
+          <ng-container matColumnDef="contactPerson">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
+            <td mat-cell *matCellDef="let opportunity">
+              <span class="contact-name">{{ opportunity.contactPerson }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Valeur -->
+          <ng-container matColumnDef="value">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Valeur</th>
+            <td mat-cell *matCellDef="let opportunity">
+              <span class="value-amount">{{ formatCurrency(opportunity.value) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Probabilité -->
+          <ng-container matColumnDef="probability">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Probabilité</th>
+            <td mat-cell *matCellDef="let opportunity">
+              <div class="probability-cell">
+                <span class="probability-value">{{ formatPercentage(opportunity.probability) }}</span>
+                <mat-progress-bar 
+                  mode="determinate" 
+                  [value]="opportunity.probability"
+                  class="probability-bar">
+                </mat-progress-bar>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Valeur attendue -->
+          <ng-container matColumnDef="expectedValue">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Valeur attendue</th>
+            <td mat-cell *matCellDef="let opportunity">
+              <span class="expected-value">{{ formatCurrency(opportunity.expectedValue) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Étape -->
+          <ng-container matColumnDef="stage">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Étape</th>
+            <td mat-cell *matCellDef="let opportunity">
+              <mat-chip [class]="'stage-chip stage-' + opportunity.stage">
+                <mat-icon class="stage-icon">{{ getStageIcon(opportunity.stage) }}</mat-icon>
+                {{ opportunity.stage | titlecase }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Priorité -->
+          <ng-container matColumnDef="priority">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Priorité</th>
+            <td mat-cell *matCellDef="let opportunity">
+              <mat-chip [class]="'priority-chip priority-' + opportunity.priority">
+                <mat-icon class="priority-icon">{{ getPriorityIcon(opportunity.priority) }}</mat-icon>
+                {{ opportunity.priority | titlecase }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Date de clôture attendue -->
+          <ng-container matColumnDef="expectedCloseDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Clôture attendue</th>
+            <td mat-cell *matCellDef="let opportunity">
+              <span class="date-cell">{{ formatDate(opportunity.expectedCloseDate) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Assigné à -->
+          <ng-container matColumnDef="assignedTo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Assigné à</th>
+            <td mat-cell *matCellDef="let opportunity">
+              <span class="assigned-user">{{ opportunity.assignedTo }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let opportunity">
+              <button mat-icon-button 
+                      [matMenuTriggerFor]="opportunityMenu"
+                      matTooltip="Actions">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              
+              <mat-menu #opportunityMenu="matMenu">
+                <button mat-menu-item (click)="viewOpportunity(opportunity)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>Voir</span>
+                </button>
+                <button mat-menu-item (click)="editOpportunity(opportunity)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Modifier</span>
+                </button>
+                <button mat-menu-item (click)="closeOpportunity(opportunity)">
+                  <mat-icon>check_circle</mat-icon>
+                  <span>Clôturer</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteOpportunity(opportunity)" class="delete-action">
+                  <mat-icon>delete</mat-icon>
+                  <span>Supprimer</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+              class="opportunity-row"
+              [class.selected]="selectedOpportunities.has(row.id)">
+          </tr>
+        </table>
+
+        <!-- Message si aucun résultat -->
+        <div *ngIf="filteredOpportunities.data.length === 0" class="no-results">
+          <mat-icon class="no-results-icon">search_off</mat-icon>
+          <h3>Aucune opportunité trouvée</h3>
+          <p>Essayez de modifier vos critères de recherche</p>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <mat-paginator [pageSize]="pageSize"
+                     [pageSizeOptions]="pageSizeOptions"
+                     [showFirstLastButtons]="true"
+                     [hidePageSize]="false">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des opportunités...</p>
+  </div>
+</div>
+
+
+
+
+
+
+
+

@@ -1,0 +1,318 @@
+<div class="prospects-container">
+  <!-- En-tête -->
+  <div class="prospects-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="page-title">
+          <mat-icon>person_add</mat-icon>
+          Gestion des Prospects
+        </h1>
+        <p class="page-subtitle">
+          Gérez vos leads et convertissez-les en clients
+        </p>
+      </div>
+      
+      <div class="header-actions">
+        <button mat-raised-button 
+                color="primary" 
+                (click)="addProspect()"
+                class="add-button">
+          <mat-icon>add</mat-icon>
+          Nouveau Prospect
+        </button>
+        
+        <button mat-icon-button 
+                [matMenuTriggerFor]="actionsMenu"
+                matTooltip="Actions">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        
+        <mat-menu #actionsMenu="matMenu">
+          <button mat-menu-item (click)="exportProspects()">
+            <mat-icon>download</mat-icon>
+            <span>Exporter</span>
+          </button>
+          <button mat-menu-item (click)="deleteSelectedProspects()" 
+                  [disabled]="selectedProspects.size === 0">
+            <mat-icon>delete</mat-icon>
+            <span>Supprimer sélection</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panneau de filtres -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>filter_list</mat-icon>
+        Filtres
+        <button mat-icon-button 
+                (click)="toggleFilterPanel()" 
+                class="toggle-button">
+          <mat-icon>{{ filterExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content *ngIf="filterExpanded">
+      <form [formGroup]="filterForm" class="filters-form">
+        <div class="filters-grid">
+          <!-- Recherche -->
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Rechercher</mat-label>
+            <input matInput 
+                   formControlName="search" 
+                   placeholder="Nom, contact, email, téléphone...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <!-- Statut -->
+          <mat-form-field appearance="outline">
+            <mat-label>Statut</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="">Tous les statuts</mat-option>
+              <mat-option *ngFor="let status of statuses" [value]="status.value">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Priorité -->
+          <mat-form-field appearance="outline">
+            <mat-label>Priorité</mat-label>
+            <mat-select formControlName="priority">
+              <mat-option value="">Toutes les priorités</mat-option>
+              <mat-option *ngFor="let priority of priorities" [value]="priority.value">
+                {{ priority.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Industrie -->
+          <mat-form-field appearance="outline">
+            <mat-label>Industrie</mat-label>
+            <mat-select formControlName="industry">
+              <mat-option value="">Toutes les industries</mat-option>
+              <mat-option *ngFor="let industry of industries" [value]="industry">
+                {{ industry }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Source -->
+          <mat-form-field appearance="outline">
+            <mat-label>Source</mat-label>
+            <mat-select formControlName="source">
+              <mat-option value="">Toutes les sources</mat-option>
+              <mat-option *ngFor="let source of sources" [value]="source">
+                {{ source }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Assigné à -->
+          <mat-form-field appearance="outline">
+            <mat-label>Assigné à</mat-label>
+            <mat-select formControlName="assignedTo">
+              <mat-option value="">Tous les utilisateurs</mat-option>
+              <mat-option *ngFor="let user of assignedUsers" [value]="user">
+                {{ user }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="filters-actions">
+          <button mat-button 
+                  type="button" 
+                  (click)="clearFilters()"
+                  class="clear-button">
+            <mat-icon>clear</mat-icon>
+            Effacer les filtres
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tableau des prospects -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-header">
+        <div class="table-info">
+          <span class="results-count">
+            {{ filteredProspects.data.length }} prospect{{ filteredProspects.data.length > 1 ? 's' : '' }}
+          </span>
+          <span *ngIf="selectedProspects.size > 0" class="selected-count">
+            ({{ selectedProspects.size }} sélectionné{{ selectedProspects.size > 1 ? 's' : '' }})
+          </span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="filteredProspects" class="prospects-table">
+          
+          <!-- Colonne de sélection -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox 
+                [checked]="selectAll"
+                [indeterminate]="selectedProspects.size > 0 && !selectAll"
+                (change)="toggleSelectAll()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let prospect">
+              <mat-checkbox 
+                [checked]="selectedProspects.has(prospect.id)"
+                (change)="toggleProspectSelection(prospect.id)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Nom de l'entreprise -->
+          <ng-container matColumnDef="thirdParty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Prospect</th>
+            <td mat-cell *matCellDef="let prospect">
+              <div class="prospect-cell">
+                <div class="prospect-name">{{ prospect.thirdParty?.name }}</div>
+                <div class="prospect-email">{{ prospect.thirdParty?.email }}</div>
+                <div class="prospect-phone">{{ prospect.thirdParty?.phone }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Segment client -->
+          <ng-container matColumnDef="customerSegment">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Segment</th>
+            <td mat-cell *matCellDef="let prospect">
+              <mat-chip [class]="'segment-chip segment-' + prospect.customerSegment">
+                <mat-icon class="segment-icon">{{ getSegmentIcon(prospect.customerSegment) }}</mat-icon>
+                {{ getSegmentLabel(prospect.customerSegment) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Source du lead -->
+          <ng-container matColumnDef="leadSource">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Source</th>
+            <td mat-cell *matCellDef="let prospect">
+              <span class="lead-source">{{ prospect.source }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Téléphone -->
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef>Téléphone</th>
+            <td mat-cell *matCellDef="let prospect">
+              <a [href]="'tel:' + prospect.phone" class="phone-link">
+                {{ prospect.phone }}
+              </a>
+            </td>
+          </ng-container>
+
+          <!-- Statut -->
+          <ng-container matColumnDef="leadStatus">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+            <td mat-cell *matCellDef="let prospect">
+              <mat-chip [class]="'status-chip status-' + prospect.leadStatus">
+                <mat-icon class="status-icon">{{ getStatusIcon(prospect.leadStatus) }}</mat-icon>
+                {{ getStatusLabel(prospect.leadStatus) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Revenus totaux -->
+          <ng-container matColumnDef="totalRevenueGenerated">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Revenus</th>
+            <td mat-cell *matCellDef="let prospect">
+              <span class="revenue-amount">{{ formatCurrency(prospect.totalRevenueGenerated) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Score du lead -->
+          <ng-container matColumnDef="leadScore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Score</th>
+            <td mat-cell *matCellDef="let prospect">
+              <div class="score-cell">
+                <span class="score-value">{{ prospect.leadScore || 0 }}</span>
+                <mat-progress-bar 
+                  mode="determinate" 
+                  [value]="prospect.leadScore || 0"
+                  class="score-bar">
+                </mat-progress-bar>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Assigné à -->
+          <ng-container matColumnDef="assignedTo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Assigné à</th>
+            <td mat-cell *matCellDef="let prospect">
+              <span class="assigned-user">{{ prospect.assignedUser?.username || 'Non assigné' }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let prospect">
+              <button mat-icon-button 
+                      [matMenuTriggerFor]="prospectMenu"
+                      matTooltip="Actions">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              
+              <mat-menu #prospectMenu="matMenu">
+                <button mat-menu-item (click)="viewProspect(prospect)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>Voir</span>
+                </button>
+                <button mat-menu-item (click)="editProspect(prospect)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Modifier</span>
+                </button>
+                <button mat-menu-item (click)="convertToClient(prospect)">
+                  <mat-icon>person_add</mat-icon>
+                  <span>Convertir en client</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteProspect(prospect)" class="delete-action">
+                  <mat-icon>delete</mat-icon>
+                  <span>Supprimer</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+              class="prospect-row"
+              [class.selected]="selectedProspects.has(row.id)">
+          </tr>
+        </table>
+
+        <!-- Message si aucun résultat -->
+        <div *ngIf="filteredProspects.data.length === 0" class="no-results">
+          <mat-icon class="no-results-icon">search_off</mat-icon>
+          <h3>Aucun prospect trouvé</h3>
+          <p>Essayez de modifier vos critères de recherche</p>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <mat-paginator [pageSize]="pageSize"
+                     [pageSizeOptions]="pageSizeOptions"
+                     [showFirstLastButtons]="true"
+                     [hidePageSize]="false">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des prospects...</p>
+  </div>
+</div>

@@ -1,0 +1,515 @@
+.journal-entries-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// En-tête
+.journal-entries-header {
+  margin-bottom: 24px;
+  
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    
+    .title-section {
+      flex: 1;
+      
+      .page-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 8px 0;
+        font-size: 2rem;
+        font-weight: 600;
+        color: #1976d2;
+        
+        mat-icon {
+          font-size: 2rem;
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+      
+      .page-subtitle {
+        margin: 0;
+        color: #666;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      
+      .add-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        font-weight: 500;
+        
+        mat-icon {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+// Panneau de filtres
+.filters-card {
+  margin-bottom: 24px;
+  
+  mat-card-header {
+    padding-bottom: 0;
+    
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.25rem;
+      font-weight: 500;
+      
+      mat-icon {
+        color: #666;
+      }
+      
+      .toggle-button {
+        margin-left: auto;
+      }
+    }
+  }
+  
+  .filters-form {
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+      
+      .search-field {
+        grid-column: 1 / -1;
+        max-width: 400px;
+      }
+    }
+    
+    .filters-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      
+      .clear-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #666;
+        
+        mat-icon {
+          font-size: 1.2rem;
+          width: 1.2rem;
+          height: 1.2rem;
+        }
+      }
+    }
+  }
+}
+
+// Tableau
+.table-card {
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    
+    .table-info {
+      .results-count {
+        font-weight: 500;
+        color: #333;
+      }
+      
+      .selected-count {
+        color: #1976d2;
+        font-weight: 500;
+        margin-left: 8px;
+      }
+    }
+  }
+  
+  .table-container {
+    overflow-x: auto;
+    
+    .journal-entries-table {
+      width: 100%;
+      
+      .mat-column-select {
+        width: 50px;
+        text-align: center;
+      }
+      
+      .mat-column-entryNumber {
+        width: 120px;
+      }
+      
+      .mat-column-entryDate {
+        width: 100px;
+      }
+      
+      .mat-column-description {
+        min-width: 200px;
+      }
+      
+      .mat-column-journalType {
+        width: 120px;
+      }
+      
+      .mat-column-status {
+        width: 120px;
+      }
+      
+      .mat-column-totalDebit,
+      .mat-column-totalCredit {
+        width: 120px;
+        text-align: right;
+      }
+      
+      .mat-column-isBalanced {
+        width: 120px;
+      }
+      
+      .mat-column-createdBy {
+        width: 150px;
+      }
+      
+      .mat-column-actions {
+        width: 60px;
+        text-align: center;
+      }
+      
+      .journal-entry-row {
+        &.selected {
+          background-color: #e3f2fd;
+        }
+        
+        &:hover {
+          background-color: #f5f5f5;
+        }
+      }
+    }
+  }
+}
+
+// Cellules personnalisées
+.entry-number {
+  .number {
+    font-weight: 500;
+    color: #1976d2;
+  }
+  
+  .reference {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 2px;
+  }
+}
+
+.description-cell {
+  .description {
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  
+  .document-number {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 2px;
+  }
+}
+
+.date-cell {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.875rem;
+}
+
+.debit-amount {
+  color: #d32f2f;
+  font-weight: 500;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.credit-amount {
+  color: #388e3c;
+  font-weight: 500;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.created-by {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+// Chips personnalisés
+.type-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  
+  .type-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  &.type-ACHATS {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+  
+  &.type-VENTES {
+    background-color: #e8f5e8;
+    color: #388e3c;
+  }
+  
+  &.type-BANQUE {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+  }
+  
+  &.type-CAISSE {
+    background-color: #fff3e0;
+    color: #f57c00;
+  }
+  
+  &.type-OD {
+    background-color: #f5f5f5;
+    color: #616161;
+  }
+  
+  &.type-CLOTURE {
+    background-color: #ffebee;
+    color: #d32f2f;
+  }
+}
+
+.status-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  
+  .status-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  &.status-BROUILLON {
+    background-color: #f5f5f5;
+    color: #616161;
+  }
+  
+  &.status-VALIDÉ {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+  
+  &.status-COMPTABILISÉ {
+    background-color: #e8f5e8;
+    color: #388e3c;
+  }
+  
+  &.status-ANNULE {
+    background-color: #ffebee;
+    color: #d32f2f;
+  }
+}
+
+.balance-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  
+  .balance-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  &.balance-green {
+    background-color: #e8f5e8;
+    color: #388e3c;
+  }
+  
+  &.balance-red {
+    background-color: #ffebee;
+    color: #d32f2f;
+  }
+}
+
+// Message aucun résultat
+.no-results {
+  text-align: center;
+  padding: 48px 24px;
+  color: #666;
+  
+  .no-results-icon {
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    color: #ccc;
+    margin-bottom: 16px;
+  }
+  
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+// Indicateur de chargement
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  
+  p {
+    margin-top: 16px;
+    color: #666;
+    font-size: 1rem;
+  }
+}
+
+// Actions de menu
+.delete-action {
+  color: #d32f2f !important;
+  
+  mat-icon {
+    color: #d32f2f !important;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .journal-entries-container {
+    padding: 16px;
+  }
+  
+  .journal-entries-header {
+    .header-content {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+      
+      .header-actions {
+        justify-content: flex-end;
+      }
+    }
+  }
+  
+  .filters-form {
+    .filters-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  }
+  
+  .table-container {
+    .journal-entries-table {
+      .mat-column-description {
+        min-width: 150px;
+      }
+      
+      .mat-column-totalDebit,
+      .mat-column-totalCredit {
+        width: 100px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .journal-entries-container {
+    padding: 12px;
+  }
+  
+  .journal-entries-header {
+    .header-content {
+      .title-section {
+        .page-title {
+          font-size: 1.5rem;
+          
+          mat-icon {
+            font-size: 1.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+          }
+        }
+      }
+    }
+  }
+  
+  .table-container {
+    .journal-entries-table {
+      .mat-column-entryNumber {
+        width: 100px;
+      }
+      
+      .mat-column-entryDate {
+        width: 80px;
+      }
+      
+      .mat-column-journalType {
+        width: 100px;
+      }
+      
+      .mat-column-status {
+        width: 100px;
+      }
+      
+      .mat-column-totalDebit,
+      .mat-column-totalCredit {
+        width: 80px;
+      }
+      
+      .mat-column-isBalanced {
+        width: 100px;
+      }
+      
+      .mat-column-createdBy {
+        width: 120px;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+

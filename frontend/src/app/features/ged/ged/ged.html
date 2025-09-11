@@ -1,0 +1,90 @@
+<div class="ged-container">
+  <div class="ged-header">
+    <h1>
+      <mat-icon>folder_open</mat-icon>
+      Gestion Électronique de Documents (GED)
+    </h1>
+    <p class="subtitle">Système de gestion documentaire intégré</p>
+  </div>
+
+  <mat-tab-group class="ged-tabs" animationDuration="300ms">
+    <!-- Onglet Explorateur -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>folder_open</mat-icon>
+        Explorateur
+      </ng-template>
+      <div class="tab-content">
+        <app-document-explorer></app-document-explorer>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Upload -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>cloud_upload</mat-icon>
+        Upload
+      </ng-template>
+      <div class="tab-content">
+        <div class="upload-placeholder">
+          <mat-icon>cloud_upload</mat-icon>
+          <h3>Upload de Documents</h3>
+          <p>Fonctionnalité d'upload en cours de développement</p>
+          <button mat-raised-button color="primary" (click)="openUploadDialog()">
+            <mat-icon>upload</mat-icon>
+            Uploader des documents
+          </button>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Statistiques -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>analytics</mat-icon>
+        Statistiques
+      </ng-template>
+      <div class="tab-content">
+        <div class="stats-placeholder">
+          <mat-icon>analytics</mat-icon>
+          <h3>Statistiques GED</h3>
+          <p>Tableaux de bord et statistiques en cours de développement</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Workflows -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>account_tree</mat-icon>
+        Workflows
+      </ng-template>
+      <div class="tab-content">
+        <div class="workflow-placeholder">
+          <mat-icon>account_tree</mat-icon>
+          <h3>Gestion des Workflows</h3>
+          <p>Système de workflows d'approbation avancé</p>
+          <button mat-raised-button color="primary" (click)="openWorkflowManager()">
+            <mat-icon>account_tree</mat-icon>
+            Ouvrir le gestionnaire de workflows
+          </button>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Configuration -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>settings</mat-icon>
+        Configuration
+      </ng-template>
+      <div class="tab-content">
+        <div class="config-placeholder">
+          <mat-icon>settings</mat-icon>
+          <h3>Configuration GED</h3>
+          <p>Paramètres et configuration du système GED en cours de développement</p>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

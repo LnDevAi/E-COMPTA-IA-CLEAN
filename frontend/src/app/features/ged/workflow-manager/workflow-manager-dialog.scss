@@ -1,0 +1,37 @@
+// Styles pour le dialog du gestionnaire de workflows
+.workflow-manager-dialog {
+  .mat-mdc-dialog-container {
+    padding: 0;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .mat-mdc-dialog-content {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .mat-mdc-dialog-actions {
+    display: none; // Pas d'actions par défaut
+  }
+}
+
+// Responsive pour les dialogs
+@media (max-width: 768px) {
+  .workflow-manager-dialog {
+    .mat-mdc-dialog-container {
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: 100vw !important;
+      max-height: 100vh !important;
+      border-radius: 0;
+    }
+  }
+}
+
+
+
+
+
+

@@ -1,0 +1,267 @@
+.chart-of-accounts-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .header-section {
+    margin-bottom: 24px;
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      .header-info {
+        h1 {
+          margin: 0;
+          color: #333;
+          font-size: 24px;
+          font-weight: 500;
+        }
+
+        .subtitle {
+          margin: 4px 0 0 0;
+          color: #666;
+          font-size: 14px;
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
+      }
+    }
+  }
+
+  .filters-card,
+  .bulk-actions-card,
+  .table-card {
+    margin-bottom: 24px;
+
+    .mat-card-header {
+      .mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #333;
+        font-size: 18px;
+        font-weight: 500;
+
+        .table-actions {
+          margin-left: auto;
+          display: flex;
+          gap: 8px;
+        }
+      }
+    }
+
+    .search-form {
+      .form-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr auto;
+        gap: 16px;
+        align-items: center;
+
+        .search-field {
+          min-width: 200px;
+        }
+      }
+    }
+
+    .bulk-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+
+      .selection-info {
+        font-weight: 500;
+        color: #1976d2;
+      }
+
+      .bulk-buttons {
+        display: flex;
+        gap: 8px;
+      }
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 16px;
+
+      .accounts-table {
+        width: 100%;
+
+        .mat-header-cell {
+          font-weight: 600;
+          color: #333;
+        }
+
+        .account-row {
+          &:hover {
+            background-color: #f8f9fa;
+          }
+        }
+
+        .account-code {
+          font-family: 'Courier New', monospace;
+          font-weight: 500;
+          color: #1976d2;
+        }
+
+        .account-name {
+          font-weight: 500;
+          color: #333;
+          margin-bottom: 2px;
+        }
+
+        .account-description {
+          font-size: 12px;
+          color: #666;
+        }
+
+        .parent-code {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          color: #666;
+        }
+
+        .balance-amount {
+          font-weight: 500;
+
+          &.positive {
+            color: #2e7d32;
+          }
+
+          &.negative {
+            color: #d32f2f;
+          }
+        }
+
+        .action-buttons {
+          display: flex;
+          gap: 4px;
+        }
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    text-align: center;
+
+    mat-spinner {
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: #666;
+      margin: 0;
+    }
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    text-align: center;
+
+    .empty-icon {
+      font-size: 48px;
+      color: #ccc;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      color: #333;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      color: #666;
+      margin: 0;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 1200px) {
+  .chart-of-accounts-container {
+    .filters-card {
+      .search-form {
+        .form-row {
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-of-accounts-container {
+    padding: 16px;
+
+    .header-section {
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+
+        .header-actions {
+          justify-content: center;
+        }
+      }
+    }
+
+    .filters-card {
+      .search-form {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+
+    .bulk-actions-card {
+      .bulk-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+
+        .bulk-buttons {
+          justify-content: center;
+        }
+      }
+    }
+
+    .table-card {
+      .table-container {
+        .accounts-table {
+          font-size: 12px;
+
+          .action-buttons {
+            flex-direction: column;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+

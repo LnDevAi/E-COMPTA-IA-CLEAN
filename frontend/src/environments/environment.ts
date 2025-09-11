@@ -4,3 +4,4 @@ export const environment = {
   appName: 'E-COMPTA-IA',
   appVersion: '1.0.0'
 };
+

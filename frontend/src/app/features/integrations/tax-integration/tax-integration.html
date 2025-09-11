@@ -1,0 +1,503 @@
+<div class="tax-integration-container">
+  
+  <!-- En-tête -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="header-info">
+        <h1>Intégration fiscale</h1>
+        <p class="subtitle">Gestion des déclarations fiscales et calculs de taxes</p>
+      </div>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="generateTaxReport()" [disabled]="isLoading">
+          <mat-icon>assessment</mat-icon>
+          Rapport fiscal
+        </button>
+        <button mat-raised-button (click)="exportDeclarations()">
+          <mat-icon>download</mat-icon>
+          Exporter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <mat-tab-group>
+    
+    <!-- Onglet Déclarations fiscales -->
+    <mat-tab label="Déclarations fiscales">
+      <div class="tab-content">
+        
+        <!-- Formulaire de déclaration -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>description</mat-icon>
+              Créer une déclaration fiscale
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <form [formGroup]="declarationForm" class="declaration-form">
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Période</mat-label>
+                  <mat-select formControlName="period">
+                    <mat-option *ngFor="let period of periods" [value]="period">
+                      {{ period }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Type de déclaration</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option *ngFor="let type of declarationTypes" [value]="type.value">
+                      {{ type.label }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Date d'échéance</mat-label>
+                  <input matInput [matDatepicker]="duePicker" formControlName="dueDate">
+                  <mat-datepicker-toggle matSuffix [for]="duePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #duePicker></mat-datepicker>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Montant</mat-label>
+                  <input matInput type="number" formControlName="amount" placeholder="0">
+                </mat-form-field>
+              </div>
+              
+              <div class="form-actions">
+                <button mat-raised-button color="primary" (click)="addDeclaration()">
+                  <mat-icon>add</mat-icon>
+                  Créer la déclaration
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Liste des déclarations -->
+        <mat-card class="declarations-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>list</mat-icon>
+              Déclarations fiscales
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="table-container">
+              <table mat-table [dataSource]="declarationsDataSource" class="declarations-table">
+                
+                <ng-container matColumnDef="period">
+                  <th mat-header-cell *matHeaderCellDef>Période</th>
+                  <td mat-cell *matCellDef="let declaration">
+                    {{ declaration.period }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let declaration">
+                    {{ getTypeLabel(declaration.type) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Statut</th>
+                  <td mat-cell *matCellDef="let declaration">
+                    <mat-chip [style.background-color]="getStatusColor(declaration.status)">
+                      {{ getStatusLabel(declaration.status) }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dueDate">
+                  <th mat-header-cell *matHeaderCellDef>Échéance</th>
+                  <td mat-cell *matCellDef="let declaration">
+                    <span [style.color]="isOverdue(declaration) ? '#f44336' : '#333'">
+                      {{ formatDate(declaration.dueDate) }}
+                      <span *ngIf="!isOverdue(declaration)" class="days-until">
+                        ({{ getDaysUntilDue(declaration) }} jours)
+                      </span>
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef>Montant</th>
+                  <td mat-cell *matCellDef="let declaration">
+                    {{ formatCurrency(declaration.amount) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="penalty">
+                  <th mat-header-cell *matHeaderCellDef>Pénalité</th>
+                  <td mat-cell *matCellDef="let declaration">
+                    {{ declaration.penalty ? formatCurrency(declaration.penalty) : '-' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalAmount">
+                  <th mat-header-cell *matHeaderCellDef>Total</th>
+                  <td mat-cell *matCellDef="let declaration">
+                    <strong>{{ formatCurrency(declaration.totalAmount) }}</strong>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let declaration">
+                    <button mat-button (click)="submitDeclaration(declaration)" 
+                            *ngIf="declaration.status === 'draft'">
+                      <mat-icon>send</mat-icon>
+                      Soumettre
+                    </button>
+                    <button mat-button (click)="approveDeclaration(declaration)" 
+                            *ngIf="declaration.status === 'submitted'">
+                      <mat-icon>check</mat-icon>
+                      Approuver
+                    </button>
+                    <button mat-button (click)="rejectDeclaration(declaration)" 
+                            *ngIf="declaration.status === 'submitted'"
+                            color="warn">
+                      <mat-icon>close</mat-icon>
+                      Rejeter
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="declarationsColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: declarationsColumns;"></tr>
+              </table>
+            </div>
+
+            <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Taux de taxes -->
+    <mat-tab label="Taux de taxes">
+      <div class="tab-content">
+        
+        <!-- Formulaire de taux -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>percent</mat-icon>
+              Configurer les taux de taxes
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <form [formGroup]="taxRateForm" class="rate-form">
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Nom du taux</mat-label>
+                  <input matInput formControlName="name" placeholder="Ex: TVA Standard">
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Taux (%)</mat-label>
+                  <input matInput type="number" formControlName="rate" placeholder="20">
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Type</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option value="percentage">Pourcentage</mat-option>
+                    <mat-option value="fixed">Montant fixe</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Catégorie</mat-label>
+                  <mat-select formControlName="category">
+                    <mat-option *ngFor="let category of taxCategories" [value]="category">
+                      {{ category }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Date d'effet</mat-label>
+                  <input matInput [matDatepicker]="effectivePicker" formControlName="effectiveDate">
+                  <mat-datepicker-toggle matSuffix [for]="effectivePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #effectivePicker></mat-datepicker>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Date de fin (optionnel)</mat-label>
+                  <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+                  <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #endPicker></mat-datepicker>
+                </mat-form-field>
+                
+                <div class="checkbox-field">
+                  <mat-checkbox formControlName="isActive">
+                    Actif
+                  </mat-checkbox>
+                </div>
+              </div>
+              
+              <div class="form-actions">
+                <button mat-raised-button color="primary" (click)="addTaxRate()">
+                  <mat-icon>add</mat-icon>
+                  Ajouter le taux
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Liste des taux -->
+        <mat-card class="rates-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>list</mat-icon>
+              Taux de taxes configurés
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="table-container">
+              <table mat-table [dataSource]="ratesDataSource" class="rates-table">
+                
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Nom</th>
+                  <td mat-cell *matCellDef="let rate">
+                    {{ rate.name }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rate">
+                  <th mat-header-cell *matHeaderCellDef>Taux</th>
+                  <td mat-cell *matCellDef="let rate">
+                    {{ formatPercentage(rate.rate) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let rate">
+                    {{ rate.type === 'percentage' ? 'Pourcentage' : 'Montant fixe' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="category">
+                  <th mat-header-cell *matHeaderCellDef>Catégorie</th>
+                  <td mat-cell *matCellDef="let rate">
+                    {{ rate.category }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="effectiveDate">
+                  <th mat-header-cell *matHeaderCellDef>Date d'effet</th>
+                  <td mat-cell *matCellDef="let rate">
+                    {{ formatDate(rate.effectiveDate) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="isActive">
+                  <th mat-header-cell *matHeaderCellDef>Statut</th>
+                  <td mat-cell *matCellDef="let rate">
+                    <mat-chip [style.background-color]="rate.isActive ? '#4caf50' : '#f44336'">
+                      {{ rate.isActive ? 'Actif' : 'Inactif' }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let rate">
+                    <button mat-button (click)="updateTaxRate(rate)">
+                      <mat-icon>edit</mat-icon>
+                      Modifier
+                    </button>
+                    <button mat-button (click)="deleteTaxRate(rate)" color="warn">
+                      <mat-icon>delete</mat-icon>
+                      Supprimer
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="ratesColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: ratesColumns;"></tr>
+              </table>
+            </div>
+
+            <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Calculs de taxes -->
+    <mat-tab label="Calculs de taxes">
+      <div class="tab-content">
+        
+        <!-- Formulaire de calcul -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>calculate</mat-icon>
+              Calculer une taxe
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <form [formGroup]="calculationForm" class="calculation-form">
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Description</mat-label>
+                  <input matInput formControlName="description" placeholder="Ex: Ventes Q3 2024">
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Montant de base</mat-label>
+                  <input matInput type="number" formControlName="baseAmount" placeholder="0">
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Taux de taxe (%)</mat-label>
+                  <input matInput type="number" formControlName="taxRate" placeholder="20">
+                </mat-form-field>
+              </div>
+              
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Catégorie</mat-label>
+                  <mat-select formControlName="category">
+                    <mat-option *ngFor="let category of taxCategories" [value]="category">
+                      {{ category }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Période</mat-label>
+                  <mat-select formControlName="period">
+                    <mat-option *ngFor="let period of periods" [value]="period">
+                      {{ period }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              
+              <div class="form-actions">
+                <button mat-raised-button color="primary" (click)="calculateTax()">
+                  <mat-icon>calculate</mat-icon>
+                  Calculer
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Liste des calculs -->
+        <mat-card class="calculations-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>list</mat-icon>
+              Calculs de taxes
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="table-container">
+              <table mat-table [dataSource]="calculationsDataSource" class="calculations-table">
+                
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef>Description</th>
+                  <td mat-cell *matCellDef="let calculation">
+                    {{ calculation.description }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="baseAmount">
+                  <th mat-header-cell *matHeaderCellDef>Montant de base</th>
+                  <td mat-cell *matCellDef="let calculation">
+                    {{ formatCurrency(calculation.baseAmount) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="taxRate">
+                  <th mat-header-cell *matHeaderCellDef>Taux</th>
+                  <td mat-cell *matCellDef="let calculation">
+                    {{ formatPercentage(calculation.taxRate) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="taxAmount">
+                  <th mat-header-cell *matHeaderCellDef>Montant de la taxe</th>
+                  <td mat-cell *matCellDef="let calculation">
+                    <strong>{{ formatCurrency(calculation.taxAmount) }}</strong>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="category">
+                  <th mat-header-cell *matHeaderCellDef>Catégorie</th>
+                  <td mat-cell *matCellDef="let calculation">
+                    {{ calculation.category }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="period">
+                  <th mat-header-cell *matHeaderCellDef>Période</th>
+                  <td mat-cell *matCellDef="let calculation">
+                    {{ calculation.period }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let calculation">
+                    <button mat-button>
+                      <mat-icon>edit</mat-icon>
+                      Modifier
+                    </button>
+                    <button mat-button color="warn">
+                      <mat-icon>delete</mat-icon>
+                      Supprimer
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="calculationsColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: calculationsColumns;"></tr>
+              </table>
+            </div>
+
+            <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+
+  <!-- Loading spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des données fiscales...</p>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+

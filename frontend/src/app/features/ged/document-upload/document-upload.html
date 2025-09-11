@@ -1,0 +1,210 @@
+<div class="document-upload">
+  <!-- En-tête -->
+  <div class="header">
+    <h2>
+      <mat-icon>cloud_upload</mat-icon>
+      Upload de Documents
+    </h2>
+    <p class="subtitle">Téléchargez vos documents dans le système GED</p>
+  </div>
+
+  <!-- Zone de drop -->
+  <div class="drop-zone" 
+       (dragover)="onDragOver($event)"
+       (dragleave)="onDragLeave($event)"
+       (drop)="onDrop($event)"
+       [class.drag-over]="false">
+    
+    <div class="drop-content" *ngIf="selectedFiles.length === 0">
+      <mat-icon>cloud_upload</mat-icon>
+      <h3>Glissez-déposez vos fichiers ici</h3>
+      <p>ou</p>
+      <button mat-raised-button color="primary" (click)="fileInput.click()">
+        <mat-icon>folder_open</mat-icon>
+        Sélectionner des fichiers
+      </button>
+      <input #fileInput type="file" multiple (change)="onFileSelected($event)" style="display: none;">
+      
+      <div class="file-info">
+        <p><strong>Formats supportés :</strong> PDF, Word, Excel, PowerPoint, Images, Texte</p>
+        <p><strong>Taille maximale :</strong> 50MB par fichier</p>
+      </div>
+    </div>
+
+    <div class="files-selected" *ngIf="selectedFiles.length > 0">
+      <div class="files-header">
+        <h3>{{ selectedFiles.length }} fichier(s) sélectionné(s)</h3>
+        <button mat-button (click)="clearFiles()">
+          <mat-icon>clear</mat-icon>
+          Effacer tout
+        </button>
+      </div>
+      
+      <div class="files-list">
+        <div class="file-item" *ngFor="let uploadFile of selectedFiles; let i = index">
+          <div class="file-info">
+            <mat-icon [color]="getStatusColor(uploadFile.status)">
+              {{ getFileIcon(uploadFile.file) }}
+            </mat-icon>
+            <div class="file-details">
+              <span class="file-name">{{ uploadFile.file.name }}</span>
+              <span class="file-size">{{ formatFileSize(uploadFile.file.size) }}</span>
+            </div>
+          </div>
+          
+          <div class="file-status">
+            <mat-icon [color]="getStatusColor(uploadFile.status)">
+              {{ getStatusIcon(uploadFile.status) }}
+            </mat-icon>
+            <span class="status-text">{{ uploadFile.status }}</span>
+          </div>
+          
+          <div class="file-progress" *ngIf="uploadFile.status === 'uploading'">
+            <mat-progress-bar [value]="uploadFile.progress" mode="determinate"></mat-progress-bar>
+          </div>
+          
+          <div class="file-error" *ngIf="uploadFile.status === 'error'">
+            <mat-icon color="warn">error</mat-icon>
+            <span class="error-text">{{ uploadFile.error }}</span>
+          </div>
+          
+          <button mat-icon-button (click)="removeFile(i)" *ngIf="uploadFile.status === 'pending'">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulaire de métadonnées -->
+  <div class="metadata-form" *ngIf="selectedFiles.length > 0">
+    <h3>Métadonnées des documents</h3>
+    
+    <form [formGroup]="uploadForm" class="form-content">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Titre *</mat-label>
+          <input matInput formControlName="title" placeholder="Titre du document">
+          <mat-error *ngIf="uploadForm.get('title')?.hasError('required')">
+            Le titre est obligatoire
+          </mat-error>
+          <mat-error *ngIf="uploadForm.get('title')?.hasError('minlength')">
+            Le titre doit contenir au moins 3 caractères
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3" placeholder="Description du document"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Type de document *</mat-label>
+          <mat-select formControlName="documentType">
+            <mat-option *ngFor="let type of documentTypes" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="uploadForm.get('documentType')?.hasError('required')">
+            Le type de document est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Niveau de sécurité *</mat-label>
+          <mat-select formControlName="securityLevel">
+            <mat-option *ngFor="let level of securityLevels" [value]="level">
+              {{ level }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Catégorie</mat-label>
+          <input matInput formControlName="category" placeholder="Catégorie du document">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Période de rétention (années)</mat-label>
+          <input matInput type="number" formControlName="retentionPeriodYears" min="1" max="50">
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Tags</mat-label>
+          <input matInput formControlName="tags" placeholder="Tags séparés par des virgules">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date d'expiration</mat-label>
+          <input matInput [matDatepicker]="expiryPicker" formControlName="expiryDate">
+          <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+          <mat-datepicker #expiryPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Module de référence</mat-label>
+          <input matInput formControlName="moduleReference" placeholder="Ex: ASSET, INVENTORY, HR">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Type d'entité liée</mat-label>
+          <input matInput formControlName="entityReferenceType" placeholder="Ex: Asset, Employee, Customer">
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>ID de l'entité liée</mat-label>
+          <input matInput type="number" formControlName="entityReferenceId" placeholder="ID de l'entité">
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button mat-button (click)="cancel()" [disabled]="uploading">
+      <mat-icon>cancel</mat-icon>
+      Annuler
+    </button>
+    
+    <button mat-raised-button 
+            color="primary" 
+            (click)="uploadFiles()" 
+            [disabled]="!canUpload"
+            *ngIf="!uploading">
+      <mat-icon>upload</mat-icon>
+      Uploader {{ selectedFiles.length }} fichier(s)
+    </button>
+    
+    <div class="upload-progress" *ngIf="uploading">
+      <mat-progress-bar [value]="uploadProgress" mode="determinate"></mat-progress-bar>
+      <span class="progress-text">Upload en cours... {{ uploadProgress | number:'1.0-0' }}%</span>
+    </div>
+  </div>
+
+  <!-- Résultats -->
+  <div class="upload-results" *ngIf="allUploaded">
+    <div class="success-message">
+      <mat-icon color="primary">check_circle</mat-icon>
+      <h3>Upload terminé avec succès !</h3>
+      <p>Tous les fichiers ont été uploadés et sont maintenant disponibles dans le système.</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

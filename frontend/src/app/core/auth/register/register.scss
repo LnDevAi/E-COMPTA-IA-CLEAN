@@ -1,0 +1,189 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.register-title {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #333;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.register-icon {
+  font-size: 28px;
+  color: #667eea;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.password-strength {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -8px 0 8px 0;
+  font-size: 14px;
+}
+
+.strength-label {
+  color: #666;
+}
+
+.strength-value {
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  
+  &.strength-très-faible {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+  
+  &.strength-faible {
+    background-color: #fff3e0;
+    color: #ef6c00;
+  }
+  
+  &.strength-moyen {
+    background-color: #fff8e1;
+    color: #f57f17;
+  }
+  
+  &.strength-fort {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+  }
+}
+
+.terms-section {
+  margin: 16px 0;
+}
+
+.terms-checkbox {
+  font-size: 14px;
+  line-height: 1.4;
+  
+  a {
+    color: #667eea;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding: 16px 0;
+}
+
+.register-actions {
+  display: flex;
+  justify-content: center;
+  padding: 16px 24px;
+  margin-top: 16px;
+}
+
+.button-spinner {
+  margin-right: 8px;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .register-container {
+    padding: 10px;
+  }
+  
+  .register-card {
+    max-width: 100%;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .half-width {
+    width: 100%;
+  }
+  
+  .step-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+// Material Design overrides
+::ng-deep {
+  .mat-form-field-appearance-outline .mat-form-field-outline {
+    color: #667eea;
+  }
+  
+  .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: #667eea;
+  }
+  
+  .mat-form-field-appearance-outline.mat-focused .mat-form-field-label {
+    color: #667eea;
+  }
+  
+  .mat-stepper-header {
+    .mat-step-header .mat-step-icon {
+      background-color: #667eea;
+    }
+    
+    .mat-step-header .mat-step-icon-selected {
+      background-color: #667eea;
+    }
+  }
+  
+  .mat-stepper-horizontal-line {
+    border-top-color: #667eea;
+  }
+}
+
+
+
+
+
+
+
+

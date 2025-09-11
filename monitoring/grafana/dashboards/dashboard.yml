@@ -1,0 +1,38 @@
+# =====================================================
+# E-COMPTA-IA - CONFIGURATION GRAFANA DASHBOARDS
+# =====================================================
+
+# Configuration des dashboards Grafana
+# Ce fichier sera utilisé par Grafana pour configurer automatiquement les dashboards
+
+# Dashboard principal E-COMPTA-IA
+# - name: E-COMPTA-IA Main Dashboard
+#   type: file
+#   options:
+#     path: /etc/grafana/provisioning/dashboards/ecomptaia-main.json
+
+# Dashboard des métriques de base de données
+# - name: Database Metrics Dashboard
+#   type: file
+#   options:
+#     path: /etc/grafana/provisioning/dashboards/database-metrics.json
+
+# Dashboard des métriques d'application
+# - name: Application Metrics Dashboard
+#   type: file
+#   options:
+#     path: /etc/grafana/provisioning/dashboards/application-metrics.json
+
+# Dashboard des métriques de sécurité
+# - name: Security Metrics Dashboard
+#   type: file
+#   options:
+#     path: /etc/grafana/provisioning/dashboards/security-metrics.json
+
+
+
+
+
+
+
+

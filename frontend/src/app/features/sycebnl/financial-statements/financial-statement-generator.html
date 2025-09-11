@@ -1,0 +1,272 @@
+<div class="financial-statement-generator-container">
+  <!-- En-tête -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>
+          <mat-icon>add_circle</mat-icon>
+          Générateur d'États Financiers SYCEBNL
+        </h1>
+        <p class="subtitle">Génération automatique des états financiers pour les organisations à but non lucratif</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stepper de génération -->
+  <mat-card class="stepper-card">
+    <mat-card-content>
+      <mat-stepper #stepper>
+        
+        <!-- Étape 1: Informations de base -->
+        <mat-step [stepControl]="basicInfoForm">
+          <ng-template matStepLabel>Informations de Base</ng-template>
+          
+          <form [formGroup]="basicInfoForm" class="step-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Organisation</mat-label>
+                <mat-select formControlName="organizationId" required>
+                  <mat-option *ngFor="let org of organizations" [value]="org.id">
+                    <div class="organization-option">
+                      <mat-icon>{{ organizationService.getOrganizationTypeIcon(org.organizationType) }}</mat-icon>
+                      <span>{{ org.organizationName }}</span>
+                      <mat-chip [style.background-color]="organizationService.getAccountingSystemIcon(org.accountingSystem) + '20'">
+                        {{ org.accountingSystem }}
+                      </mat-chip>
+                    </div>
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="basicInfoForm.get('organizationId')?.hasError('required')">
+                  L'organisation est obligatoire
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Exercice</mat-label>
+                <input matInput formControlName="exerciceId" type="number" required>
+                <mat-error *ngIf="basicInfoForm.get('exerciceId')?.hasError('required')">
+                  L'exercice est obligatoire
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Date d'Arrêté</mat-label>
+                <input matInput [matDatepicker]="datePicker" formControlName="dateArrete" required>
+                <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                <mat-datepicker #datePicker></mat-datepicker>
+                <mat-error *ngIf="basicInfoForm.get('dateArrete')?.hasError('required')">
+                  La date d'arrêté est obligatoire
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="step-actions">
+              <button mat-raised-button color="primary" (click)="goForward(stepper)" 
+                      [disabled]="!basicInfoForm.valid">
+                Suivant
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Étape 2: Sélection des états financiers -->
+        <mat-step [stepControl]="statementSelectionForm">
+          <ng-template matStepLabel>Sélection des États</ng-template>
+          
+          <form [formGroup]="statementSelectionForm" class="step-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Système Comptable</mat-label>
+                <mat-select formControlName="typeSysteme" required>
+                  <mat-option *ngFor="let system of systemTypes" [value]="system.value">
+                    <div class="system-option">
+                      <mat-icon [style.color]="system.color">{{ system.icon }}</mat-icon>
+                      <div class="system-info">
+                        <span class="system-label">{{ system.label }}</span>
+                        <span class="system-description">{{ system.description }}</span>
+                      </div>
+                    </div>
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="statementSelectionForm.get('typeSysteme')?.hasError('required')">
+                  Le système comptable est obligatoire
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="statements-selection" *ngIf="statementSelectionForm.get('typeSysteme')?.value">
+              <div class="selection-header">
+                <h3>États Financiers Disponibles</h3>
+                <div class="selection-actions">
+                  <button mat-button (click)="selectAllStatements()">
+                    <mat-icon>select_all</mat-icon>
+                    Tout sélectionner
+                  </button>
+                  <button mat-button (click)="clearStatementSelection()">
+                    <mat-icon>clear_all</mat-icon>
+                    Tout désélectionner
+                  </button>
+                </div>
+              </div>
+
+              <div class="statements-grid">
+                <div class="statement-card" 
+                     *ngFor="let statement of getAvailableStatements()"
+                     [class.selected]="isStatementSelected(statement.value)"
+                     (click)="toggleStatementSelection(statement.value)">
+                  <div class="statement-header">
+                    <mat-icon [style.color]="getFinancialStatementTypeColor(statement.value)">
+                      {{ getStatementTypeIcon(statement.value) }}
+                    </mat-icon>
+                    <mat-checkbox [checked]="isStatementSelected(statement.value)" 
+                                  (change)="toggleStatementSelection(statement.value)">
+                    </mat-checkbox>
+                  </div>
+                  <div class="statement-content">
+                    <h4>{{ statement.label }}</h4>
+                    <p>{{ statement.description }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button (click)="goBack(stepper)">
+                <mat-icon>arrow_back</mat-icon>
+                Précédent
+              </button>
+              <button mat-raised-button color="primary" (click)="goForward(stepper)" 
+                      [disabled]="!statementSelectionForm.valid">
+                Suivant
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Étape 3: Options de génération -->
+        <mat-step [stepControl]="generationForm">
+          <ng-template matStepLabel>Options de Génération</ng-template>
+          
+          <form [formGroup]="generationForm" class="step-form">
+            <div class="generation-options">
+              <mat-checkbox formControlName="generateAll">
+                Générer tous les états financiers du système sélectionné
+              </mat-checkbox>
+
+              <mat-checkbox formControlName="includeNotes">
+                Inclure les notes annexes automatiques
+              </mat-checkbox>
+
+              <mat-checkbox formControlName="validateAfterGeneration">
+                Valider automatiquement après génération
+              </mat-checkbox>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button (click)="goBack(stepper)">
+                <mat-icon>arrow_back</mat-icon>
+                Précédent
+              </button>
+              <button mat-raised-button color="primary" (click)="generateStatements(stepper)" 
+                      [disabled]="isGenerating">
+                <mat-spinner diameter="20" *ngIf="isGenerating"></mat-spinner>
+                <mat-icon *ngIf="!isGenerating">play_arrow</mat-icon>
+                {{ isGenerating ? 'Génération...' : 'Générer' }}
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Étape 4: Résultats -->
+        <mat-step>
+          <ng-template matStepLabel>Résultats</ng-template>
+          
+          <div class="results-section">
+            <div class="results-header">
+              <h2>
+                <mat-icon>check_circle</mat-icon>
+                Génération Terminée
+              </h2>
+              <p>{{ generatedStatements.length }} état(s) financier(s) généré(s) avec succès</p>
+            </div>
+
+            <div class="generated-statements" *ngIf="generatedStatements.length > 0">
+              <h3>États Financiers Générés</h3>
+              <div class="statements-list">
+                <div class="statement-item" *ngFor="let statement of generatedStatements">
+                  <div class="statement-info">
+                    <mat-icon [style.color]="getFinancialStatementTypeColor(statement.typeEtat)">
+                      {{ getStatementTypeIcon(statement.typeEtat) }}
+                    </mat-icon>
+                    <div class="statement-details">
+                      <h4>{{ statement.typeEtat }}</h4>
+                      <p>{{ statement.typeSysteme }} - {{ formatDate(statement.dateArrete) }}</p>
+                    </div>
+                  </div>
+                  <div class="statement-status">
+                    <mat-icon [style.color]="getStatusColor(statement.statut)">
+                      {{ getStatusIcon(statement.statut) }}
+                    </mat-icon>
+                    <span>{{ statement.statut }}</span>
+                  </div>
+                  <div class="statement-actions">
+                    <button mat-icon-button (click)="viewStatement(statement)">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="results-actions">
+              <button mat-raised-button color="primary" (click)="validateGeneratedStatements()">
+                <mat-icon>check_circle</mat-icon>
+                Valider Tous
+              </button>
+              
+              <button mat-icon-button [matMenuTriggerFor]="exportMenu">
+                <mat-icon>download</mat-icon>
+              </button>
+              <mat-menu #exportMenu="matMenu">
+                <button mat-menu-item (click)="exportGeneratedStatements('PDF')">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                  Export PDF
+                </button>
+                <button mat-menu-item (click)="exportGeneratedStatements('EXCEL')">
+                  <mat-icon>table_chart</mat-icon>
+                  Export Excel
+                </button>
+                <button mat-menu-item (click)="exportGeneratedStatements('CSV')">
+                  <mat-icon>description</mat-icon>
+                  Export CSV
+                </button>
+              </mat-menu>
+
+              <button mat-button (click)="goToStatementsList()">
+                <mat-icon>list</mat-icon>
+                Voir la Liste
+              </button>
+            </div>
+          </div>
+        </mat-step>
+
+      </mat-stepper>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Indicateur de chargement global -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des données...</p>
+  </div>
+</div>
+
+
+
+
+
+

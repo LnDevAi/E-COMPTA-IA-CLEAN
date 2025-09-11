@@ -1,0 +1,301 @@
+<div class="clients-container">
+  <!-- En-tête -->
+  <div class="clients-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="page-title">
+          <mat-icon>people</mat-icon>
+          Gestion des Clients
+        </h1>
+        <p class="page-subtitle">
+          Gestion des clients CRM avec intelligence artificielle et analytics
+        </p>
+      </div>
+      
+      <div class="header-actions">
+        <button mat-raised-button 
+                color="primary" 
+                (click)="addClient()"
+                class="add-button">
+          <mat-icon>add</mat-icon>
+          Nouveau Client
+        </button>
+        
+        <button mat-icon-button 
+                [matMenuTriggerFor]="actionsMenu"
+                matTooltip="Actions">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        
+        <mat-menu #actionsMenu="matMenu">
+          <button mat-menu-item (click)="importClients()">
+            <mat-icon>upload</mat-icon>
+            <span>Importer</span>
+          </button>
+          <button mat-menu-item (click)="exportClients()">
+            <mat-icon>download</mat-icon>
+            <span>Exporter</span>
+          </button>
+          <button mat-menu-item (click)="deleteSelectedClients()" 
+                  [disabled]="selectedClients.size === 0">
+            <mat-icon>delete</mat-icon>
+            <span>Supprimer sélection</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panneau de filtres -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>filter_list</mat-icon>
+        Filtres
+        <button mat-icon-button 
+                (click)="toggleFilterPanel()" 
+                class="toggle-button">
+          <mat-icon>{{ filterExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content *ngIf="filterExpanded">
+      <form [formGroup]="filterForm" class="filters-form">
+        <div class="filters-grid">
+          <!-- Recherche -->
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Rechercher</mat-label>
+            <input matInput 
+                   formControlName="search" 
+                   placeholder="Nom, email, téléphone...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <!-- Segment client -->
+          <mat-form-field appearance="outline">
+            <mat-label>Segment</mat-label>
+            <mat-select formControlName="customerSegment">
+              <mat-option value="">Tous les segments</mat-option>
+              <mat-option *ngFor="let segment of customerSegments" [value]="segment.value">
+                {{ segment.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Comportement de paiement -->
+          <mat-form-field appearance="outline">
+            <mat-label>Comportement de paiement</mat-label>
+            <mat-select formControlName="paymentBehavior">
+              <mat-option value="">Tous les comportements</mat-option>
+              <mat-option *ngFor="let behavior of paymentBehaviors" [value]="behavior.value">
+                {{ behavior.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Source -->
+          <mat-form-field appearance="outline">
+            <mat-label>Source</mat-label>
+            <mat-select formControlName="source">
+              <mat-option value="">Toutes les sources</mat-option>
+              <mat-option *ngFor="let source of sources" [value]="source">
+                {{ source }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Statut actif -->
+          <mat-form-field appearance="outline">
+            <mat-label>Statut</mat-label>
+            <mat-select formControlName="isActive">
+              <mat-option value="">Tous les statuts</mat-option>
+              <mat-option value="true">Actif</mat-option>
+              <mat-option value="false">Inactif</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="filters-actions">
+          <button mat-button 
+                  type="button" 
+                  (click)="clearFilters()"
+                  class="clear-button">
+            <mat-icon>clear</mat-icon>
+            Effacer les filtres
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tableau des clients -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-header">
+        <div class="table-info">
+          <span class="results-count">
+            {{ filteredClients.data.length }} client{{ filteredClients.data.length > 1 ? 's' : '' }}
+          </span>
+          <span *ngIf="selectedClients.size > 0" class="selected-count">
+            ({{ selectedClients.size }} sélectionné{{ selectedClients.size > 1 ? 's' : '' }})
+          </span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="filteredClients" class="clients-table">
+          
+          <!-- Colonne de sélection -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox 
+                [checked]="selectAll"
+                [indeterminate]="selectedClients.size > 0 && !selectAll"
+                (change)="toggleSelectAll()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let client">
+              <mat-checkbox 
+                [checked]="selectedClients.has(client.id)"
+                (change)="toggleClientSelection(client.id)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Informations du tiers -->
+          <ng-container matColumnDef="thirdParty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Client</th>
+            <td mat-cell *matCellDef="let client">
+              <div class="client-info">
+                <div class="client-name">{{ client.thirdParty?.name }}</div>
+                <div class="client-email">{{ client.thirdParty?.email }}</div>
+                <div class="client-phone">{{ client.thirdParty?.phone }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Segment client -->
+          <ng-container matColumnDef="customerSegment">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Segment</th>
+            <td mat-cell *matCellDef="let client">
+              <mat-chip [class]="'segment-chip segment-' + client.customerSegment">
+                <mat-icon class="segment-icon">{{ getSegmentIcon(client.customerSegment) }}</mat-icon>
+                {{ getSegmentLabel(client.customerSegment) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Comportement de paiement -->
+          <ng-container matColumnDef="paymentBehavior">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Paiement</th>
+            <td mat-cell *matCellDef="let client">
+              <mat-chip [class]="'behavior-chip behavior-' + client.paymentBehavior">
+                <mat-icon class="behavior-icon">{{ getPaymentBehaviorIcon(client.paymentBehavior) }}</mat-icon>
+                {{ getPaymentBehaviorLabel(client.paymentBehavior) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Revenus totaux -->
+          <ng-container matColumnDef="totalRevenueGenerated">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Revenus</th>
+            <td mat-cell *matCellDef="let client">
+              <span class="revenue-amount">{{ formatCurrency(client.totalRevenueGenerated) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Nombre de commandes -->
+          <ng-container matColumnDef="totalOrdersCount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Commandes</th>
+            <td mat-cell *matCellDef="let client">
+              <span class="orders-count">{{ client.totalOrdersCount }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Dernière commande -->
+          <ng-container matColumnDef="lastOrderDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Dernière commande</th>
+            <td mat-cell *matCellDef="let client">
+              <span class="last-order-date" *ngIf="client.lastOrderDate">
+                {{ formatDate(client.lastOrderDate) }}
+              </span>
+              <span class="no-orders" *ngIf="!client.lastOrderDate">
+                Aucune commande
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Statut actif -->
+          <ng-container matColumnDef="isActive">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+            <td mat-cell *matCellDef="let client">
+              <mat-chip [class]="'status-chip status-' + getClientStatusColor(client.isActive)">
+                <mat-icon class="status-icon">{{ getClientStatusIcon(client.isActive) }}</mat-icon>
+                {{ getClientStatusLabel(client.isActive) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let client">
+              <button mat-icon-button 
+                      [matMenuTriggerFor]="clientMenu"
+                      matTooltip="Actions">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              
+              <mat-menu #clientMenu="matMenu">
+                <button mat-menu-item (click)="viewClient(client)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>Voir</span>
+                </button>
+                <button mat-menu-item (click)="editClient(client)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Modifier</span>
+                </button>
+                <button mat-menu-item (click)="toggleClientStatus(client)">
+                  <mat-icon>{{ client.isActive ? 'block' : 'check_circle' }}</mat-icon>
+                  <span>{{ client.isActive ? 'Désactiver' : 'Activer' }}</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteClient(client)" class="delete-action">
+                  <mat-icon>delete</mat-icon>
+                  <span>Supprimer</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+              class="client-row"
+              [class.selected]="selectedClients.has(row.id)">
+          </tr>
+        </table>
+
+        <!-- Message si aucun résultat -->
+        <div *ngIf="filteredClients.data.length === 0" class="no-results">
+          <mat-icon class="no-results-icon">search_off</mat-icon>
+          <h3>Aucun client trouvé</h3>
+          <p>Essayez de modifier vos critères de recherche</p>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <mat-paginator [pageSize]="pageSize"
+                     [pageSizeOptions]="pageSizeOptions"
+                     [showFirstLastButtons]="true"
+                     [hidePageSize]="false">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des clients...</p>
+  </div>
+</div>

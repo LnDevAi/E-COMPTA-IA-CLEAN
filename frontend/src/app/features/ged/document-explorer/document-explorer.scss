@@ -1,0 +1,330 @@
+.document-explorer {
+  padding: 24px;
+  background-color: #fafafa;
+  min-height: 100vh;
+
+  .header {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+
+      .title-section {
+        h1 {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 0;
+          color: #1976d2;
+          font-size: 28px;
+          font-weight: 500;
+
+          mat-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+          }
+        }
+
+        .subtitle {
+          margin: 8px 0 0 0;
+          color: #666;
+          font-size: 14px;
+        }
+      }
+
+      .actions-section {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+
+        button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+      }
+    }
+  }
+
+  .filters-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+
+    .filters-content {
+      display: flex;
+      gap: 16px;
+      padding: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+
+      .search-field {
+        flex: 1;
+        min-width: 300px;
+      }
+
+      mat-form-field {
+        min-width: 200px;
+      }
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 56px;
+      }
+    }
+  }
+
+  .content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px;
+      gap: 16px;
+
+      p {
+        margin: 0;
+        color: #666;
+        font-size: 16px;
+      }
+    }
+
+    .error-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px;
+      gap: 16px;
+
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+      }
+
+      p {
+        margin: 0;
+        color: #d32f2f;
+        font-size: 16px;
+        text-align: center;
+      }
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+
+    .table-container {
+      overflow-x: auto;
+
+      .documents-table {
+        width: 100%;
+
+        .document-title {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+
+          .title-content {
+            display: flex;
+            flex-direction: column;
+
+            .title-text {
+              font-weight: 500;
+              color: #333;
+            }
+
+            .document-code {
+              font-size: 12px;
+              color: #666;
+            }
+          }
+        }
+
+        .no-data {
+          color: #999;
+          font-style: italic;
+        }
+
+        .delete-action {
+          color: #d32f2f;
+        }
+      }
+    }
+
+    .no-data-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px;
+      gap: 16px;
+
+      mat-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        color: #ccc;
+      }
+
+      h3 {
+        margin: 0;
+        color: #666;
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      p {
+        margin: 0;
+        color: #999;
+        text-align: center;
+        max-width: 400px;
+      }
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px;
+      }
+    }
+  }
+
+  // Styles pour les chips
+  mat-chip {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  // Styles pour la pagination
+  mat-paginator {
+    background: white;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    padding: 16px;
+
+    .header .header-content {
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+
+      .actions-section {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+    }
+
+    .filters-section .filters-content {
+      flex-direction: column;
+      align-items: stretch;
+
+      .search-field {
+        min-width: auto;
+      }
+
+      mat-form-field {
+        min-width: auto;
+      }
+    }
+
+    .table-container {
+      .documents-table {
+        min-width: 800px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .header .header-content .title-section h1 {
+      font-size: 24px;
+    }
+
+    .filters-section .filters-content {
+      padding: 16px;
+    }
+
+    .content {
+      .loading-container,
+      .error-container,
+      .no-data-container {
+        padding: 32px;
+      }
+    }
+  }
+}
+
+// Styles globaux pour les menus
+.mat-mdc-menu-panel {
+  .delete-action {
+    color: #d32f2f !important;
+
+    mat-icon {
+      color: #d32f2f !important;
+    }
+  }
+}
+
+// Styles pour les checkboxes
+.mat-mdc-checkbox {
+  .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+    background-color: #1976d2;
+    border-color: #1976d2;
+  }
+}
+
+// Styles pour les chips de statut
+.mat-mdc-chip {
+  &.mat-mdc-chip-selected {
+    &.mat-primary {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+
+    &.mat-accent {
+      background-color: #fff3e0;
+      color: #f57c00;
+    }
+
+    &.mat-warn {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+  }
+}
+
+
+
+
+
+

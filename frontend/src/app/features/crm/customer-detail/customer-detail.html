@@ -1,0 +1,267 @@
+<div class="customer-detail-container">
+  <!-- En-tête -->
+  <div class="header-section">
+    <div class="header-content">
+      <button mat-icon-button (click)="goBack()" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-info">
+        <h1 *ngIf="customer">{{ customer.thirdParty?.name || 'Client' }}</h1>
+        <p *ngIf="customer" class="customer-id">ID: {{ customer.id }}</p>
+      </div>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="editCustomer()" *ngIf="customer">
+          <mat-icon>edit</mat-icon>
+          Modifier
+        </button>
+        <button mat-raised-button color="warn" (click)="deleteCustomer()" *ngIf="customer">
+          <mat-icon>delete</mat-icon>
+          Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="content-section" *ngIf="customer">
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex" class="customer-tabs">
+      
+      <!-- Onglet Informations générales -->
+      <mat-tab label="Informations générales">
+        <div class="tab-content">
+          <div class="info-grid">
+            
+            <!-- Informations de base -->
+            <mat-card class="info-card">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>person</mat-icon>
+                  Informations de base
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="info-item">
+                  <label>Nom complet:</label>
+                  <span>{{ customer.thirdParty?.name }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Email:</label>
+                  <span>{{ customer.thirdParty?.email }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Téléphone:</label>
+                  <span>{{ customer.thirdParty?.phone }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Adresse:</label>
+                  <span>{{ customer.thirdParty?.address }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Segment et statut -->
+            <mat-card class="info-card">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>business</mat-icon>
+                  Segment et statut
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="info-item">
+                  <label>Segment client:</label>
+                  <mat-chip [color]="getSegmentIcon(customer.customerSegment)" selected>
+                    <mat-icon>{{ getSegmentIcon(customer.customerSegment) }}</mat-icon>
+                    {{ getSegmentLabel(customer.customerSegment) }}
+                  </mat-chip>
+                </div>
+                <div class="info-item">
+                  <label>Statut lead:</label>
+                  <mat-chip [color]="getStatusIcon(customer.leadStatus)" selected>
+                    <mat-icon>{{ getStatusIcon(customer.leadStatus) }}</mat-icon>
+                    {{ getStatusLabel(customer.leadStatus) }}
+                  </mat-chip>
+                </div>
+                <div class="info-item">
+                  <label>Source:</label>
+                  <span>{{ customer.source }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Score lead:</label>
+                  <span>{{ customer.leadScore || 'N/A' }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Comportement de paiement -->
+            <mat-card class="info-card">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>payment</mat-icon>
+                  Comportement de paiement
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="info-item">
+                  <label>Comportement:</label>
+                  <mat-chip [color]="getPaymentBehaviorIcon(customer.paymentBehavior)" selected>
+                    <mat-icon>{{ getPaymentBehaviorIcon(customer.paymentBehavior) }}</mat-icon>
+                    {{ getPaymentBehaviorLabel(customer.paymentBehavior) }}
+                  </mat-chip>
+                </div>
+                <div class="info-item">
+                  <label>Score de satisfaction:</label>
+                  <span>{{ customer.satisfactionScore || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Délai de paiement moyen:</label>
+                  <span>{{ customer.avgPaymentDelay || 'N/A' }} jours</span>
+                </div>
+                <div class="info-item">
+                  <label>Probabilité de churn:</label>
+                  <span>{{ customer.churnProbability || 'N/A' }}%</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Assignation -->
+            <mat-card class="info-card">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>assignment</mat-icon>
+                  Assignation
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="info-item">
+                  <label>Assigné à:</label>
+                  <span>{{ customer.assignedUser?.username || 'Non assigné' }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Méthode de contact préférée:</label>
+                  <span>{{ customer.preferredContactMethod }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Heure de contact préférée:</label>
+                  <span>{{ customer.preferredContactTime || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Fuseau horaire:</label>
+                  <span>{{ customer.timezone || 'N/A' }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Onglet Performance -->
+      <mat-tab label="Performance">
+        <div class="tab-content">
+          <div class="performance-grid">
+            
+            <!-- Métriques financières -->
+            <mat-card class="performance-card">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>euro</mat-icon>
+                  Métriques financières
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="metric-item">
+                  <label>Revenus générés:</label>
+                  <span class="metric-value">{{ formatCurrency(customer.totalRevenueGenerated) }}</span>
+                </div>
+                <div class="metric-item">
+                  <label>Valeur vie client prédite:</label>
+                  <span class="metric-value">{{ formatCurrency(customer.lifetimeValuePredicted || 0) }}</span>
+                </div>
+                <div class="metric-item">
+                  <label>Valeur moyenne des commandes:</label>
+                  <span class="metric-value">{{ formatCurrency(customer.avgOrderValue) }}</span>
+                </div>
+                <div class="metric-item">
+                  <label>Nombre total de commandes:</label>
+                  <span class="metric-value">{{ customer.totalOrdersCount }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Dates importantes -->
+            <mat-card class="performance-card">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>schedule</mat-icon>
+                  Dates importantes
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="metric-item">
+                  <label>Dernière commande:</label>
+                  <span class="metric-value">{{ customer.lastOrderDate ? formatDate(customer.lastOrderDate) : 'N/A' }}</span>
+                </div>
+                <div class="metric-item">
+                  <label>Dernier contact:</label>
+                  <span class="metric-value">{{ customer.lastContactDate ? formatDate(customer.lastContactDate) : 'N/A' }}</span>
+                </div>
+                <div class="metric-item">
+                  <label>Prochain contact:</label>
+                  <span class="metric-value">{{ customer.nextContactDate ? formatDate(customer.nextContactDate) : 'N/A' }}</span>
+                </div>
+                <div class="metric-item">
+                  <label>Date de création:</label>
+                  <span class="metric-value">{{ formatDate(customer.createdAt) }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Tags et notes -->
+            <mat-card class="performance-card full-width">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>label</mat-icon>
+                  Tags et notes
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="tags-section">
+                  <label>Tags:</label>
+                  <div class="tags-container">
+                    <mat-chip *ngFor="let tag of customer.tags" class="tag-chip">
+                      {{ tag }}
+                    </mat-chip>
+                  </div>
+                </div>
+                <div class="notes-section" *ngIf="customer.notes">
+                  <label>Notes:</label>
+                  <p class="notes-text">{{ customer.notes }}</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+          </div>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+  </div>
+
+  <!-- Loading spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des détails du client...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-container" *ngIf="!customer && !isLoading">
+    <mat-icon class="error-icon">error</mat-icon>
+    <h2>Client non trouvé</h2>
+    <p>Le client demandé n'existe pas ou a été supprimé.</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      Retour à la liste
+    </button>
+  </div>
+
+</div>

@@ -1,0 +1,291 @@
+<!-- Sélecteur de Pays et Région -->
+<div class="country-selector-container">
+  
+  <!-- En-tête avec titre et options avancées -->
+  <div class="selector-header">
+    <h3 class="selector-title">
+      <mat-icon>public</mat-icon>
+      Configuration Internationale
+    </h3>
+    <button mat-icon-button 
+            (click)="toggleAdvancedOptions()"
+            [class.expanded]="showAdvancedOptions"
+            matTooltip="Options avancées">
+      <mat-icon>{{ showAdvancedOptions ? 'expand_less' : 'expand_more' }}</mat-icon>
+    </button>
+  </div>
+
+  <!-- Sélection de pays -->
+  <mat-form-field appearance="outline" class="country-field">
+    <mat-label>{{ placeholder }}</mat-label>
+    <mat-select 
+      [(ngModel)]="currentCountryCode"
+      (selectionChange)="onCountryChange($event.value)"
+      [required]="required"
+      [disabled]="disabled"
+      [placeholder]="placeholder">
+      
+      <!-- Barre de recherche -->
+      <div class="search-container">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input 
+          #searchInput
+          matInput 
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange($event)"
+          placeholder="Rechercher un pays..."
+          class="search-input"
+          (keydown)="onKeyDown($event)">
+      </div>
+
+      <!-- Liste des pays filtrés -->
+      <mat-option 
+        *ngFor="let country of filteredCountries" 
+        [value]="country.code"
+        [disabled]="!country.isActive">
+        
+        <div class="country-option">
+          <span class="country-flag">{{ getCountryFlag(country.code) }}</span>
+          <div class="country-info">
+            <div class="country-name">{{ country.name }}</div>
+            <div class="country-details">
+              <span class="country-native">{{ country.nativeName }}</span>
+              <span class="country-currency">{{ getCurrencySymbol(country.currency.code) }}</span>
+            </div>
+          </div>
+          <div class="country-standards">
+            <mat-chip-listbox>
+              <mat-chip 
+                *ngFor="let standard of getStandardsForCountry(country.code)"
+                [class.recommended]="standard === getRecommendedStandard(country.code)">
+                {{ standard }}
+              </mat-chip>
+            </mat-chip-listbox>
+          </div>
+        </div>
+      </mat-option>
+
+      <!-- Message si aucun pays trouvé -->
+      <mat-option *ngIf="filteredCountries.length === 0" disabled>
+        <div class="no-results">
+          <mat-icon>search_off</mat-icon>
+          <span>Aucun pays trouvé pour "{{ searchTerm }}"</span>
+        </div>
+      </mat-option>
+    </mat-select>
+    
+    <!-- Icône de chargement -->
+    <mat-spinner *ngIf="isLoading" diameter="20" class="loading-spinner"></mat-spinner>
+    
+    <!-- Message d'erreur -->
+    <mat-error *ngIf="!isSelectionValid()">
+      {{ getValidationMessage() }}
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Sélection de région (optionnel) -->
+  <mat-form-field 
+    *ngIf="showRegionSelector" 
+    appearance="outline" 
+    class="region-field">
+    <mat-label>Région</mat-label>
+    <mat-select 
+      [(ngModel)]="currentRegionCode"
+      (selectionChange)="onRegionChange($event.value)"
+      [disabled]="disabled">
+      
+      <mat-option 
+        *ngFor="let region of regions" 
+        [value]="region.code">
+        
+        <div class="region-option">
+          <span class="region-icon">{{ getRegionIcon(region.code) }}</span>
+          <div class="region-info">
+            <div class="region-name">{{ region.name }}</div>
+            <div class="region-countries">{{ region.countries.length }} pays</div>
+          </div>
+        </div>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Options avancées -->
+  <div class="advanced-options" *ngIf="showAdvancedOptions">
+    
+    <!-- Informations sur le pays sélectionné -->
+    <mat-card *ngIf="selectedCountry" class="country-info-card">
+      <mat-card-header>
+        <mat-card-title>
+          {{ getCountryFlag(selectedCountry.code) }} {{ selectedCountry.name }}
+        </mat-card-title>
+        <mat-card-subtitle>{{ selectedCountry.nativeName }}</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="info-grid">
+          
+          <!-- Informations de base -->
+          <div class="info-section">
+            <h4>Informations de base</h4>
+            <div class="info-item">
+              <mat-icon>language</mat-icon>
+              <span>Langue : {{ selectedCountry.localization.language }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>schedule</mat-icon>
+              <span>Fuseau horaire : {{ selectedCountry.localization.timeZone }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>date_range</mat-icon>
+              <span>Année fiscale : {{ selectedCountry.fiscalYear.startMonth }}/{{ selectedCountry.fiscalYear.endMonth }}</span>
+            </div>
+          </div>
+
+          <!-- Devise -->
+          <div class="info-section" *ngIf="showCurrencyInfo">
+            <h4>Devise</h4>
+            <div class="info-item">
+              <mat-icon>attach_money</mat-icon>
+              <span>{{ selectedCountry.currency.name }} ({{ selectedCountry.currency.symbol }})</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>precision</mat-icon>
+              <span>Décimales : {{ selectedCountry.currency.decimalPlaces }}</span>
+            </div>
+          </div>
+
+          <!-- Standards comptables -->
+          <div class="info-section" *ngIf="showStandardsInfo">
+            <h4>Standards comptables</h4>
+            <div class="info-item">
+              <mat-icon>account_balance</mat-icon>
+              <span>Principal : {{ selectedCountry.accountingStandards.primary }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedCountry.accountingStandards.secondary?.length">
+              <mat-icon>account_balance_wallet</mat-icon>
+              <span>Secondaires : {{ selectedCountry.accountingStandards.secondary?.join(', ') }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>description</mat-icon>
+              <span>Framework : {{ selectedCountry.accountingStandards.framework }}</span>
+            </div>
+          </div>
+
+          <!-- Conformité -->
+          <div class="info-section">
+            <h4>Conformité</h4>
+            <div class="info-item">
+              <mat-icon>gavel</mat-icon>
+              <span>Organisme : {{ selectedCountry.compliance.regulatoryBody }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>assessment</mat-icon>
+              <span>Fréquence : {{ selectedCountry.compliance.reportingFrequency }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>event</mat-icon>
+              <span>Échéance : {{ selectedCountry.compliance.filingDeadline }}</span>
+            </div>
+          </div>
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Types d'organisations supportés -->
+    <mat-card *ngIf="selectedCountry" class="organizations-card">
+      <mat-card-header>
+        <mat-card-title>Types d'organisations supportés</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="organization-types">
+          <mat-chip-listbox>
+            <mat-chip 
+              *ngFor="let orgType of selectedCountry.organizationTypes"
+              [class.mandatory]="orgType.legalRequirements.length > 0">
+              <mat-icon>{{ getOrganizationTypeIcon(orgType.code) }}</mat-icon>
+              {{ orgType.localName }}
+            </mat-chip>
+          </mat-chip-listbox>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Systèmes comptables disponibles -->
+    <mat-card *ngIf="selectedCountry" class="accounting-systems-card">
+      <mat-card-header>
+        <mat-card-title>Systèmes comptables disponibles</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="accounting-systems">
+          <div 
+            *ngFor="let system of selectedCountry.accountingSystems"
+            class="system-item">
+            <div class="system-header">
+              <mat-icon>{{ getAccountingSystemIcon(system.code) }}</mat-icon>
+              <div class="system-info">
+                <div class="system-name">{{ system.localName }}</div>
+                <div class="system-description">{{ system.description }}</div>
+              </div>
+            </div>
+            <div class="system-criteria">
+              <h5>Critères d'application :</h5>
+              <ul>
+                <li *ngFor="let criterion of system.criteria">{{ criterion }}</li>
+              </ul>
+            </div>
+            <div class="system-thresholds" *ngIf="system.thresholds">
+              <h5>Seuils :</h5>
+              <div class="thresholds-grid">
+                <div *ngIf="system.thresholds.revenue" class="threshold-item">
+                  <mat-icon>trending_up</mat-icon>
+                  <span>Revenus : {{ system.thresholds.revenue | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
+                </div>
+                <div *ngIf="system.thresholds.assets" class="threshold-item">
+                  <mat-icon>account_balance</mat-icon>
+                  <span>Actifs : {{ system.thresholds.assets | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
+                </div>
+                <div *ngIf="system.thresholds.employees" class="threshold-item">
+                  <mat-icon>people</mat-icon>
+                  <span>Employés : {{ system.thresholds.employees }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <!-- Actions -->
+  <div class="selector-actions">
+    <button 
+      mat-button 
+      (click)="clearSelection()"
+      [disabled]="!selectedCountry">
+      <mat-icon>clear</mat-icon>
+      Effacer
+    </button>
+    
+    <button 
+      mat-raised-button 
+      color="primary"
+      [disabled]="!isSelectionValid()"
+      (click)="onCountryChange(currentCountryCode)">
+      <mat-icon>check</mat-icon>
+      Confirmer
+    </button>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+

@@ -1,0 +1,140 @@
+.ged-container {
+  padding: 24px;
+  background-color: #fafafa;
+  min-height: 100vh;
+}
+
+.ged-header {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-bottom: 24px;
+  text-align: center;
+
+  h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 0;
+    color: #1976d2;
+    font-size: 28px;
+    font-weight: 500;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .subtitle {
+    margin: 8px 0 0 0;
+    color: #666;
+    font-size: 14px;
+  }
+}
+
+.ged-tabs {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  .tab-content {
+    padding: 24px;
+    min-height: 600px;
+  }
+}
+
+.upload-placeholder,
+.stats-placeholder,
+.config-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 64px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #ccc;
+  }
+
+  h3 {
+    margin: 0;
+    color: #666;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  p {
+    margin: 0;
+    color: #999;
+    max-width: 400px;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+}
+
+// Styles pour les onglets
+::ng-deep .mat-mdc-tab-group {
+  .mat-mdc-tab-header {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .mat-mdc-tab {
+    .mdc-tab__content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  .mat-mdc-tab-body-content {
+    overflow: visible;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .ged-container {
+    padding: 16px;
+  }
+
+  .ged-header {
+    padding: 16px;
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  .ged-tabs .tab-content {
+    padding: 16px;
+  }
+
+  .upload-placeholder,
+  .stats-placeholder,
+  .config-placeholder,
+  .workflow-placeholder {
+    padding: 32px;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+    }
+  }
+}

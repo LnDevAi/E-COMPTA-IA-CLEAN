@@ -1,0 +1,273 @@
+<div class="organizations-container">
+  <!-- En-tête -->
+  <div class="organizations-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="page-title">
+          <mat-icon>account_balance</mat-icon>
+          Organisations SYCEBNL
+        </h1>
+        <p class="page-subtitle">
+          Gérez les organisations à but non lucratif et leur conformité OHADA
+        </p>
+      </div>
+      
+      <div class="header-actions">
+        <button mat-raised-button 
+                color="primary" 
+                (click)="addOrganization()"
+                class="add-button">
+          <mat-icon>add</mat-icon>
+          Nouvelle Organisation
+        </button>
+        
+        <button mat-icon-button 
+                [matMenuTriggerFor]="actionsMenu"
+                matTooltip="Actions">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        
+        <mat-menu #actionsMenu="matMenu">
+          <button mat-menu-item (click)="exportOrganizations()">
+            <mat-icon>download</mat-icon>
+            <span>Exporter</span>
+          </button>
+          <button mat-menu-item (click)="deleteSelectedOrganizations()" 
+                  [disabled]="selectedOrganizations.size === 0">
+            <mat-icon>delete</mat-icon>
+            <span>Supprimer sélection</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panneau de filtres -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>filter_list</mat-icon>
+        Filtres
+        <button mat-icon-button 
+                (click)="toggleFilterPanel()"
+                class="toggle-filters">
+          <mat-icon>{{ filterExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content [@slideInOut]="filterExpanded ? 'in' : 'out'">
+      <form [formGroup]="filterForm" class="filters-form">
+        <div class="filters-row">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Rechercher</mat-label>
+            <input matInput 
+                   formControlName="search"
+                   placeholder="Nom, type, email...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Type d'organisation</mat-label>
+            <mat-select formControlName="organizationType">
+              <mat-option value="">Tous les types</mat-option>
+              <mat-option *ngFor="let type of organizationTypes" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Système comptable</mat-label>
+            <mat-select formControlName="accountingSystem">
+              <mat-option value="">Tous les systèmes</mat-option>
+              <mat-option *ngFor="let system of accountingSystems" [value]="system.value">
+                {{ system.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Statut de conformité</mat-label>
+            <mat-select formControlName="complianceStatus">
+              <mat-option value="">Tous les statuts</mat-option>
+              <mat-option *ngFor="let status of complianceStatuses" [value]="status.value">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <button mat-button 
+                  (click)="clearFilters()"
+                  class="clear-filters">
+            <mat-icon>clear</mat-icon>
+            Effacer
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tableau des organisations -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <!-- En-tête du tableau avec statistiques -->
+      <div class="table-header">
+        <div class="table-stats">
+          <span class="total-count">
+            <mat-icon>business</mat-icon>
+            {{ filteredOrganizations.data.length }} organisation(s)
+          </span>
+          <span class="selected-count" *ngIf="selectedOrganizations.size > 0">
+            <mat-icon>check_circle</mat-icon>
+            {{ selectedOrganizations.size }} sélectionnée(s)
+          </span>
+        </div>
+      </div>
+
+      <!-- Tableau -->
+      <div class="table-container" *ngIf="!isLoading; else loadingTemplate">
+        <table mat-table 
+               [dataSource]="filteredOrganizations" 
+               class="organizations-table"
+               matSort>
+          
+          <!-- Colonne de sélection -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox 
+                [checked]="selectAll"
+                [indeterminate]="selectedOrganizations.size > 0 && selectedOrganizations.size < filteredOrganizations.data.length"
+                (change)="toggleSelectAll()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let organization">
+              <mat-checkbox 
+                [checked]="selectedOrganizations.has(organization.id)"
+                (change)="toggleOrganizationSelection(organization.id)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Nom de l'organisation -->
+          <ng-container matColumnDef="organizationName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Organisation</th>
+            <td mat-cell *matCellDef="let organization">
+              <div class="organization-cell">
+                <div class="organization-name">{{ organization.organizationName }}</div>
+                <div class="organization-email">{{ organization.email }}</div>
+                <div class="organization-phone">{{ organization.phoneNumber }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Type d'organisation -->
+          <ng-container matColumnDef="organizationType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+            <td mat-cell *matCellDef="let organization">
+              <mat-chip [class]="'type-chip type-' + organization.organizationType">
+                <mat-icon class="type-icon">{{ getOrganizationTypeIcon(organization.organizationType) }}</mat-icon>
+                {{ organization.organizationType }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Système comptable -->
+          <ng-container matColumnDef="accountingSystem">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Système</th>
+            <td mat-cell *matCellDef="let organization">
+              <mat-chip [class]="'system-chip system-' + organization.accountingSystem">
+                {{ organization.accountingSystem }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Statut de conformité -->
+          <ng-container matColumnDef="complianceStatus">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Conformité</th>
+            <td mat-cell *matCellDef="let organization">
+              <mat-chip [class]="'compliance-chip compliance-' + organization.ohadaComplianceStatus">
+                <mat-icon class="compliance-icon">{{ getComplianceStatusIcon(organization.ohadaComplianceStatus || '') }}</mat-icon>
+                {{ organization.ohadaComplianceStatus }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Revenus annuels -->
+          <ng-container matColumnDef="annualRevenue">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Revenus annuels</th>
+            <td mat-cell *matCellDef="let organization">
+              <span class="revenue-amount">{{ formatCurrency(organization.annualRevenue || 0) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Nombre d'employés -->
+          <ng-container matColumnDef="employeeCount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Employés</th>
+            <td mat-cell *matCellDef="let organization">
+              <span class="employee-count">{{ organization.employeeCount }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let organization">
+              <button mat-icon-button 
+                      [matMenuTriggerFor]="actionMenu"
+                      matTooltip="Actions">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              
+              <mat-menu #actionMenu="matMenu">
+                <button mat-menu-item (click)="viewOrganization(organization)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>Voir</span>
+                </button>
+                <button mat-menu-item (click)="editOrganization(organization)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Modifier</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteOrganization(organization)" class="delete-action">
+                  <mat-icon>delete</mat-icon>
+                  <span>Supprimer</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+              class="organization-row"></tr>
+        </table>
+
+        <!-- Pagination -->
+        <mat-paginator [pageSize]="pageSize"
+                       [pageSizeOptions]="pageSizeOptions"
+                       [showFirstLastButtons]="true"
+                       [hidePageSize]="false">
+        </mat-paginator>
+      </div>
+
+      <!-- Template de chargement -->
+      <ng-template #loadingTemplate>
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Chargement des organisations...</p>
+        </div>
+      </ng-template>
+
+      <!-- Message si aucune donnée -->
+      <div class="no-data" *ngIf="!isLoading && filteredOrganizations.data.length === 0">
+        <mat-icon>business_off</mat-icon>
+        <h3>Aucune organisation trouvée</h3>
+        <p>Il n'y a actuellement aucune organisation correspondant à vos critères de recherche.</p>
+        <button mat-raised-button color="primary" (click)="addOrganization()">
+          <mat-icon>add</mat-icon>
+          Ajouter une organisation
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

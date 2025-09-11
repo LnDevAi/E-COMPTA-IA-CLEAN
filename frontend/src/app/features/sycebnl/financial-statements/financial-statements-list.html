@@ -1,0 +1,320 @@
+<div class="financial-statements-list-container">
+  <!-- En-tête -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>
+          <mat-icon>account_balance</mat-icon>
+          États Financiers SYCEBNL
+        </h1>
+        <p class="subtitle">Gestion des états financiers pour les organisations à but non lucratif</p>
+      </div>
+      
+      <div class="actions-section">
+        <button mat-raised-button color="primary" (click)="generateNewStatement()">
+          <mat-icon>add</mat-icon>
+          Générer un État
+        </button>
+        
+        <button mat-icon-button [matMenuTriggerFor]="exportMenu" [disabled]="selectedStatements.size === 0">
+          <mat-icon>download</mat-icon>
+        </button>
+        <mat-menu #exportMenu="matMenu">
+          <button mat-menu-item (click)="exportSelectedStatements('PDF')">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Export PDF
+          </button>
+          <button mat-menu-item (click)="exportSelectedStatements('EXCEL')">
+            <mat-icon>table_chart</mat-icon>
+            Export Excel
+          </button>
+          <button mat-menu-item (click)="exportSelectedStatements('CSV')">
+            <mat-icon>description</mat-icon>
+            Export CSV
+          </button>
+        </mat-menu>
+
+        <button mat-icon-button [matMenuTriggerFor]="actionsMenu" [disabled]="selectedStatements.size === 0">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #actionsMenu="matMenu">
+          <button mat-menu-item (click)="deleteSelectedStatements()">
+            <mat-icon>delete</mat-icon>
+            Supprimer Sélection
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <button mat-icon-button (click)="toggleFilterPanel()">
+          <mat-icon>{{ filterExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+        Filtres
+      </mat-card-title>
+      <mat-card-subtitle>
+        {{ filteredFinancialStatements.data.length }} état(s) financier(s) trouvé(s)
+      </mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content *ngIf="filterExpanded">
+      <form [formGroup]="filterForm" class="filters-form">
+        <div class="filters-row">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Rechercher</mat-label>
+            <input matInput formControlName="search" placeholder="Type d'état, système, générateur...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Type d'État</mat-label>
+            <mat-select formControlName="typeEtat">
+              <mat-option value="">Tous</mat-option>
+              <mat-option *ngFor="let type of financialStatementTypes" [value]="type.value">
+                <mat-icon [style.color]="type.color">{{ type.icon }}</mat-icon>
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Système</mat-label>
+            <mat-select formControlName="typeSysteme">
+              <mat-option value="">Tous</mat-option>
+              <mat-option *ngFor="let system of systemTypes" [value]="system.value">
+                {{ system.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Statut</mat-label>
+            <mat-select formControlName="statut">
+              <mat-option value="">Tous</mat-option>
+              <mat-option *ngFor="let status of statuses" [value]="status.value">
+                <mat-icon [style.color]="status.color">{{ getStatusIcon(status.value) }}</mat-icon>
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="filters-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Date de début</mat-label>
+            <input matInput [matDatepicker]="dateFromPicker" formControlName="dateFrom">
+            <mat-datepicker-toggle matSuffix [for]="dateFromPicker"></mat-datepicker-toggle>
+            <mat-datepicker #dateFromPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Date de fin</mat-label>
+            <input matInput [matDatepicker]="dateToPicker" formControlName="dateTo">
+            <mat-datepicker-toggle matSuffix [for]="dateToPicker"></mat-datepicker-toggle>
+            <mat-datepicker #dateToPicker></mat-datepicker>
+          </mat-form-field>
+
+          <button mat-button (click)="clearFilters()">
+            <mat-icon>clear</mat-icon>
+            Effacer
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tableau des états financiers -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="filteredFinancialStatements" matSort class="financial-statements-table">
+          
+          <!-- Colonne de sélection -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox 
+                [checked]="selectAll" 
+                [indeterminate]="selectedStatements.size > 0 && !selectAll"
+                (change)="toggleSelectAll()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let statement">
+              <mat-checkbox 
+                [checked]="selectedStatements.has(statement.id!)"
+                (change)="toggleStatementSelection(statement.id)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Type d'état -->
+          <ng-container matColumnDef="typeEtat">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Type d'État</th>
+            <td mat-cell *matCellDef="let statement">
+              <div class="type-cell">
+                <mat-icon [style.color]="getFinancialStatementTypeColor(statement.typeEtat)">
+                  {{ getFinancialStatementTypeIcon(statement.typeEtat) }}
+                </mat-icon>
+                <span class="type-label">{{ statement.typeEtat }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Système -->
+          <ng-container matColumnDef="typeSysteme">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Système</th>
+            <td mat-cell *matCellDef="let statement">
+              <mat-chip [style.background-color]="getSystemTypeColor(statement.typeSysteme) + '20'" 
+                        [style.color]="getSystemTypeColor(statement.typeSysteme)">
+                {{ statement.typeSysteme }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Date d'arrêté -->
+          <ng-container matColumnDef="dateArrete">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date d'Arrêté</th>
+            <td mat-cell *matCellDef="let statement">
+              {{ formatDate(statement.dateArrete) }}
+            </td>
+          </ng-container>
+
+          <!-- Statut -->
+          <ng-container matColumnDef="statut">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+            <td mat-cell *matCellDef="let statement">
+              <div class="status-cell">
+                <mat-icon [style.color]="getStatusColor(statement.statut)">
+                  {{ getStatusIcon(statement.statut) }}
+                </mat-icon>
+                <span>{{ statement.statut }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Total Actif -->
+          <ng-container matColumnDef="totalActif">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Actif</th>
+            <td mat-cell *matCellDef="let statement">
+              <span class="amount" *ngIf="statement.totalActif">
+                {{ formatAmount(statement.totalActif) }}
+              </span>
+              <span class="no-data" *ngIf="!statement.totalActif">-</span>
+            </td>
+          </ng-container>
+
+          <!-- Total Passif -->
+          <ng-container matColumnDef="totalPassif">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Passif</th>
+            <td mat-cell *matCellDef="let statement">
+              <span class="amount" *ngIf="statement.totalPassif">
+                {{ formatAmount(statement.totalPassif) }}
+              </span>
+              <span class="no-data" *ngIf="!statement.totalPassif">-</span>
+            </td>
+          </ng-container>
+
+          <!-- Résultat Net -->
+          <ng-container matColumnDef="resultatNet">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Résultat Net</th>
+            <td mat-cell *matCellDef="let statement">
+              <span class="amount" *ngIf="statement.resultatNet" 
+                    [style.color]="statement.resultatNet >= 0 ? 'green' : 'red'">
+                {{ formatAmount(statement.resultatNet) }}
+              </span>
+              <span class="no-data" *ngIf="!statement.resultatNet">-</span>
+            </td>
+          </ng-container>
+
+          <!-- Équilibre -->
+          <ng-container matColumnDef="equilibre">
+            <th mat-header-cell *matHeaderCellDef>Équilibre</th>
+            <td mat-cell *matCellDef="let statement">
+              <mat-icon [style.color]="getEquilibreColor(statement.equilibre)">
+                {{ getEquilibreIcon(statement.equilibre) }}
+              </mat-icon>
+            </td>
+          </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let statement">
+              <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #actionMenu="matMenu">
+                <button mat-menu-item (click)="viewStatement(statement)">
+                  <mat-icon>visibility</mat-icon>
+                  Consulter
+                </button>
+                <button mat-menu-item (click)="editStatement(statement)">
+                  <mat-icon>edit</mat-icon>
+                  Modifier
+                </button>
+                <button mat-menu-item (click)="validateStatement(statement)" 
+                        [disabled]="statement.statut === 'VALIDE'">
+                  <mat-icon>check_circle</mat-icon>
+                  Valider
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="exportStatement(statement, 'PDF')">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                  Export PDF
+                </button>
+                <button mat-menu-item (click)="exportStatement(statement, 'EXCEL')">
+                  <mat-icon>table_chart</mat-icon>
+                  Export Excel
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteStatement(statement)" 
+                        class="delete-action">
+                  <mat-icon>delete</mat-icon>
+                  Supprimer
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+              [class.selected-row]="selectedStatements.has(row.id!)"></tr>
+        </table>
+
+        <!-- Message si aucun résultat -->
+        <div class="no-data-message" *ngIf="filteredFinancialStatements.data.length === 0">
+          <mat-icon>inbox</mat-icon>
+          <h3>Aucun état financier trouvé</h3>
+          <p>Essayez de modifier vos critères de recherche ou générez un nouvel état financier.</p>
+          <button mat-raised-button color="primary" (click)="generateNewStatement()">
+            <mat-icon>add</mat-icon>
+            Générer un État
+          </button>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <mat-paginator 
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [showFirstLastButtons]="true"
+        [hidePageSize]="false">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Indicateur de chargement -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des états financiers...</p>
+  </div>
+</div>
+
+
+
+
+
+

@@ -1,0 +1,253 @@
+<div class="employee-list-container">
+  
+  <!-- En-tête -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="header-info">
+        <h1>Liste des employés</h1>
+        <p class="subtitle">Gestion des employés et de la paie</p>
+      </div>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="addEmployee()">
+          <mat-icon>add</mat-icon>
+          Nouvel employé
+        </button>
+        <button mat-raised-button (click)="exportEmployees()" [disabled]="filteredEmployees.data.length === 0">
+          <mat-icon>download</mat-icon>
+          Exporter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>filter_list</mat-icon>
+        Filtres
+        <button mat-icon-button (click)="toggleFilterPanel()" class="toggle-button">
+          <mat-icon>{{ filterExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content *ngIf="filterExpanded" class="filters-content">
+      <form [formGroup]="filterForm" class="filters-form">
+        <div class="filter-row">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Rechercher</mat-label>
+            <input matInput formControlName="search" placeholder="Nom, email, département...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Département</mat-label>
+            <mat-select formControlName="department">
+              <mat-option value="">Tous les départements</mat-option>
+              <mat-option *ngFor="let dept of departments" [value]="dept">
+                {{ dept }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Type de contrat</mat-label>
+            <mat-select formControlName="contractType">
+              <mat-option value="">Tous les types</mat-option>
+              <mat-option *ngFor="let type of contractTypes" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Statut d'emploi</mat-label>
+            <mat-select formControlName="employmentStatus">
+              <mat-option value="">Tous les statuts</mat-option>
+              <mat-option *ngFor="let status of employmentStatuses" [value]="status.value">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <div class="filter-actions">
+          <button mat-button (click)="clearFilters()">
+            <mat-icon>clear</mat-icon>
+            Effacer les filtres
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Actions en lot -->
+  <div class="bulk-actions" *ngIf="selectedEmployees.size > 0">
+    <mat-card class="bulk-actions-card">
+      <div class="bulk-actions-content">
+        <span class="selected-count">{{ selectedEmployees.size }} employé(s) sélectionné(s)</span>
+        <div class="bulk-actions-buttons">
+          <button mat-button color="warn" (click)="deleteSelectedEmployees()">
+            <mat-icon>delete</mat-icon>
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Tableau des employés -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="filteredEmployees" matSort class="employees-table">
+          
+          <!-- Colonne de sélection -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox 
+                (change)="toggleSelectAll()" 
+                [checked]="selectAll"
+                [indeterminate]="selectedEmployees.size > 0 && !selectAll">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let employee">
+              <mat-checkbox 
+                (change)="toggleEmployeeSelection(employee.id)"
+                [checked]="selectedEmployees.has(employee.id!)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Code employé -->
+          <ng-container matColumnDef="employeeCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+            <td mat-cell *matCellDef="let employee">
+              <span class="employee-code">{{ employee.employeeCode }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Nom complet -->
+          <ng-container matColumnDef="fullName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom complet</th>
+            <td mat-cell *matCellDef="let employee">
+              <div class="employee-info">
+                <div class="employee-name">{{ getFullName(employee) }}</div>
+                <div class="employee-details">
+                  <span class="employee-email">{{ employee.email }}</span>
+                  <span class="employee-phone">{{ employee.phone }}</span>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Département -->
+          <ng-container matColumnDef="department">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Département</th>
+            <td mat-cell *matCellDef="let employee">
+              <span class="department-text">{{ employee.department || 'N/A' }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Poste -->
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Poste</th>
+            <td mat-cell *matCellDef="let employee">
+              <span class="position-text">{{ employee.position || 'N/A' }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Type de contrat -->
+          <ng-container matColumnDef="contractType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Contrat</th>
+            <td mat-cell *matCellDef="let employee">
+              <mat-chip [color]="getContractTypeColor(employee.contractType)" selected class="contract-chip">
+                <mat-icon>{{ getContractTypeIcon(employee.contractType) }}</mat-icon>
+                {{ employee.contractType }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Statut d'emploi -->
+          <ng-container matColumnDef="employmentStatus">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+            <td mat-cell *matCellDef="let employee">
+              <mat-chip [color]="getEmploymentStatusColor(employee.employmentStatus)" selected class="status-chip">
+                <mat-icon>{{ getEmploymentStatusIcon(employee.employmentStatus) }}</mat-icon>
+                {{ employee.employmentStatus }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Salaire -->
+          <ng-container matColumnDef="baseSalary">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Salaire</th>
+            <td mat-cell *matCellDef="let employee">
+              <span class="salary-amount">{{ formatCurrency(employee.baseSalary || 0) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let employee">
+              <button mat-icon-button [matMenuTriggerFor]="actionMenu" class="action-button">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #actionMenu="matMenu">
+                <button mat-menu-item (click)="viewEmployee(employee)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>Voir</span>
+                </button>
+                <button mat-menu-item (click)="editEmployee(employee)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Modifier</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteEmployee(employee)" class="delete-action">
+                  <mat-icon>delete</mat-icon>
+                  <span>Supprimer</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="employee-row"></tr>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <mat-paginator 
+        [pageSize]="pageSize" 
+        [pageSizeOptions]="pageSizeOptions" 
+        [length]="filteredEmployees.data.length"
+        showFirstLastButtons>
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Message vide -->
+  <div class="empty-state" *ngIf="filteredEmployees.data.length === 0 && !isLoading">
+    <mat-icon class="empty-icon">people</mat-icon>
+    <h2>Aucun employé trouvé</h2>
+    <p *ngIf="employees.length === 0">Aucun employé n'a encore été créé.</p>
+    <p *ngIf="employees.length > 0">Aucun employé ne correspond aux filtres sélectionnés.</p>
+    <button mat-raised-button color="primary" (click)="addEmployee()" *ngIf="employees.length === 0">
+      <mat-icon>add</mat-icon>
+      Créer le premier employé
+    </button>
+    <button mat-button (click)="clearFilters()" *ngIf="employees.length > 0">
+      <mat-icon>clear</mat-icon>
+      Effacer les filtres
+    </button>
+  </div>
+
+  <!-- Loading spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des employés...</p>
+  </div>
+
+</div>

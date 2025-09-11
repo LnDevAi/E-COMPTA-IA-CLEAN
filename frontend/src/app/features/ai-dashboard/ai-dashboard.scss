@@ -1,0 +1,802 @@
+.ai-dashboard-container {
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+
+  .dashboard-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+
+      .title-section {
+        .dashboard-title {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 0 0 8px 0;
+          color: #1976d2;
+          font-size: 28px;
+          font-weight: 600;
+
+          .ai-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+        }
+
+        .dashboard-subtitle {
+          margin: 0;
+          color: #666;
+          font-size: 16px;
+          font-style: italic;
+        }
+      }
+
+      .stats-overview {
+        display: flex;
+        gap: 16px;
+
+        .stat-card {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 16px 20px;
+          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+          border-radius: 12px;
+          color: white;
+          min-width: 140px;
+
+          mat-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+          }
+
+          .stat-content {
+            .stat-value {
+              font-size: 20px;
+              font-weight: 700;
+              line-height: 1;
+            }
+
+            .stat-label {
+              font-size: 12px;
+              opacity: 0.9;
+              margin-top: 2px;
+            }
+          }
+        }
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      button[mat-icon-button] {
+        &.active {
+          background-color: #1976d2;
+          color: white;
+        }
+      }
+
+      button[mat-button] {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+    }
+  }
+
+  .tab-content {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+
+    .filters-section {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e0e0e0;
+
+      mat-chip-listbox {
+        mat-chip-option {
+          margin: 4px;
+        }
+      }
+    }
+  }
+
+  // Styles pour les insights
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+
+    .insight-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border-left: 4px solid transparent;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      &.high-priority {
+        border-left-color: #f44336;
+        background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+      }
+
+      .insight-avatar {
+        &.primary { background-color: #1976d2; }
+        &.warn { background-color: #f44336; }
+        &.accent { background-color: #ff9800; }
+
+        mat-icon {
+          color: white;
+        }
+      }
+
+      .priority-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+
+        &.green { background-color: #4caf50; color: white; }
+        &.yellow { background-color: #ffeb3b; color: #333; }
+        &.orange { background-color: #ff9800; color: white; }
+        &.red { background-color: #f44336; color: white; }
+      }
+
+      .insight-metrics {
+        margin: 16px 0;
+
+        .metric {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 8px;
+          font-size: 14px;
+
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            color: #666;
+          }
+
+          mat-progress-bar {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+
+            &.green ::ng-deep .mat-progress-bar-fill::after {
+              background-color: #4caf50;
+            }
+
+            &.orange ::ng-deep .mat-progress-bar-fill::after {
+              background-color: #ff9800;
+            }
+
+            &.red ::ng-deep .mat-progress-bar-fill::after {
+              background-color: #f44336;
+            }
+          }
+        }
+      }
+
+      .suggested-actions {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e0e0e0;
+
+        h4 {
+          margin: 0 0 8px 0;
+          font-size: 14px;
+          color: #333;
+        }
+
+        ul {
+          margin: 0;
+          padding-left: 16px;
+
+          li {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+          }
+        }
+      }
+    }
+  }
+
+  // Styles pour les prédictions
+  .predictions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+
+    .prediction-card {
+      .prediction-avatar {
+        &.green { background-color: #4caf50; }
+        &.red { background-color: #f44336; }
+        &.gray { background-color: #9e9e9e; }
+
+        mat-icon {
+          color: white;
+        }
+      }
+
+      .prediction-values {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin: 16px 0;
+
+        .value-current,
+        .value-predicted {
+          text-align: center;
+          padding: 12px;
+          border-radius: 8px;
+          background-color: #f5f5f5;
+
+          label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+          }
+
+          .value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+
+            &.green { color: #4caf50; }
+            &.red { color: #f44336; }
+          }
+        }
+      }
+
+      .confidence-bar {
+        margin: 16px 0;
+
+        label {
+          display: block;
+          font-size: 12px;
+          color: #666;
+          margin-bottom: 4px;
+        }
+      }
+
+      .factors {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e0e0e0;
+
+        h4 {
+          margin: 0 0 12px 0;
+          font-size: 14px;
+          color: #333;
+        }
+
+        .factor-list {
+          .factor-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+
+            mat-icon {
+              font-size: 16px;
+              width: 16px;
+              height: 16px;
+
+              &.positive { color: #4caf50; }
+              &.negative { color: #f44336; }
+            }
+
+            .factor-name {
+              flex: 1;
+              color: #333;
+            }
+
+            .factor-impact {
+              font-weight: 600;
+
+              &.positive { color: #4caf50; }
+              &.negative { color: #f44336; }
+            }
+          }
+        }
+      }
+
+      .recommendations {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e0e0e0;
+
+        h4 {
+          margin: 0 0 8px 0;
+          font-size: 14px;
+          color: #333;
+        }
+
+        ul {
+          margin: 0;
+          padding-left: 16px;
+
+          li {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+          }
+        }
+      }
+    }
+  }
+
+  // Styles pour les scénarios
+  .scenarios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+
+    .scenario-card {
+      .scenario-avatar {
+        &.green { background-color: #4caf50; }
+        &.orange { background-color: #ff9800; }
+        &.red { background-color: #f44336; }
+        &.darkred { background-color: #d32f2f; }
+
+        mat-icon {
+          color: white;
+        }
+      }
+
+      .probability {
+        font-size: 12px;
+        color: #666;
+        margin-left: 8px;
+      }
+
+      .scenario-outcomes {
+        margin: 16px 0;
+
+        h4 {
+          margin: 0 0 12px 0;
+          font-size: 14px;
+          color: #333;
+        }
+
+        .outcome-list {
+          .outcome-item {
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+
+            .outcome-metric {
+              font-weight: 600;
+              color: #333;
+              margin-bottom: 8px;
+            }
+
+            .outcome-values {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              margin-bottom: 4px;
+
+              .current {
+                color: #666;
+                font-size: 14px;
+              }
+
+              mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+                color: #666;
+              }
+
+              .predicted {
+                font-weight: 600;
+
+                &.positive { color: #4caf50; }
+                &.negative { color: #f44336; }
+              }
+            }
+
+            .outcome-impact {
+              font-size: 12px;
+              color: #666;
+              font-style: italic;
+            }
+          }
+        }
+      }
+
+      .scenario-recommendations {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e0e0e0;
+
+        h4 {
+          margin: 0 0 8px 0;
+          font-size: 14px;
+          color: #333;
+        }
+
+        ul {
+          margin: 0;
+          padding-left: 16px;
+
+          li {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+          }
+        }
+      }
+    }
+  }
+
+  // Styles pour les recommandations
+  .recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+
+    .recommendation-card {
+      .recommendation-avatar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        mat-icon {
+          color: white;
+        }
+      }
+
+      .effort {
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-weight: 600;
+
+        &.green { background-color: #4caf50; color: white; }
+        &.orange { background-color: #ff9800; color: white; }
+        &.red { background-color: #f44336; color: white; }
+      }
+
+      .recommendation-benefits {
+        margin: 16px 0;
+
+        .benefit-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 8px;
+          font-size: 14px;
+
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            color: #4caf50;
+          }
+        }
+      }
+
+      .prerequisites {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e0e0e0;
+
+        h4 {
+          margin: 0 0 8px 0;
+          font-size: 14px;
+          color: #333;
+        }
+
+        ul {
+          margin: 0;
+          padding-left: 16px;
+
+          li {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+          }
+        }
+      }
+    }
+  }
+
+  // Styles pour les workflows
+  .workflows-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+
+    .workflow-card {
+      .workflow-avatar {
+        &.green { background-color: #4caf50; }
+        &.blue { background-color: #2196f3; }
+        &.gray { background-color: #9e9e9e; }
+
+        mat-icon {
+          color: white;
+        }
+      }
+
+      .success-rate {
+        font-size: 12px;
+        color: #666;
+        margin-left: 8px;
+      }
+
+      .workflow-metrics {
+        margin: 16px 0;
+
+        .metric {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 8px;
+          font-size: 14px;
+
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            color: #666;
+          }
+        }
+      }
+
+      .workflow-actions {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e0e0e0;
+
+        h4 {
+          margin: 0 0 12px 0;
+          font-size: 14px;
+          color: #333;
+        }
+
+        .action-list {
+          .action-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #666;
+
+            mat-icon {
+              font-size: 16px;
+              width: 16px;
+              height: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Styles pour les benchmarks
+  .benchmarks-table {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+
+    .benchmark-card {
+      .benchmark-values {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin: 16px 0;
+
+        .value-section {
+          text-align: center;
+          padding: 12px;
+          border-radius: 8px;
+          background-color: #f5f5f5;
+
+          label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+          }
+
+          .value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+
+            &.your-value { color: #1976d2; }
+            &.industry-average { color: #ff9800; }
+            &.best-practice { color: #4caf50; }
+          }
+        }
+      }
+
+      .benchmark-analysis {
+        margin: 16px 0;
+
+        .percentile,
+        .gap {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 8px;
+          font-size: 14px;
+
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+
+            &.green { color: #4caf50; }
+            &.orange { color: #ff9800; }
+            &.red { color: #f44336; }
+          }
+
+          &.positive { color: #4caf50; }
+          &.negative { color: #f44336; }
+        }
+      }
+
+      .opportunity {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e0e0e0;
+
+        h4 {
+          margin: 0 0 8px 0;
+          font-size: 14px;
+          color: #333;
+        }
+
+        p {
+          margin: 0;
+          font-size: 13px;
+          color: #666;
+          font-style: italic;
+        }
+      }
+    }
+  }
+
+  // Indicateur de chargement
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    p {
+      margin-top: 16px;
+      color: #666;
+      font-size: 16px;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .ai-dashboard-container {
+    padding: 16px;
+
+    .dashboard-header {
+      .header-content {
+        flex-direction: column;
+        gap: 20px;
+
+        .stats-overview {
+          flex-wrap: wrap;
+          justify-content: center;
+
+          .stat-card {
+            min-width: 120px;
+          }
+        }
+      }
+
+      .header-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    .insights-grid,
+    .predictions-grid,
+    .scenarios-grid,
+    .recommendations-grid,
+    .workflows-grid,
+    .benchmarks-table {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Animations
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.insight-card,
+.prediction-card,
+.scenario-card,
+.recommendation-card,
+.workflow-card,
+.benchmark-card {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+// Dark theme support
+@media (prefers-color-scheme: dark) {
+  .ai-dashboard-container {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+
+    .dashboard-header,
+    .tab-content {
+      background: rgba(44, 62, 80, 0.95);
+      color: #e0e0e0;
+    }
+
+    .insight-card,
+    .prediction-card,
+    .scenario-card,
+    .recommendation-card,
+    .workflow-card,
+    .benchmark-card {
+      background-color: #34495e;
+      color: #e0e0e0;
+    }
+  }
+}
+
+
+
+
+
+
+
+

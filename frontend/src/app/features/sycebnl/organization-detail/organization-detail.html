@@ -1,0 +1,270 @@
+<div class="organization-detail-container">
+  
+  <!-- En-tête -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="header-info">
+        <button mat-icon-button (click)="goBack()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="header-text">
+          <h1>{{ organization?.organizationName || 'Chargement...' }}</h1>
+          <p class="subtitle">Détails de l'organisation SYCEBNL</p>
+        </div>
+      </div>
+      <div class="header-actions" *ngIf="organization">
+        <button mat-raised-button color="primary" (click)="editOrganization()">
+          <mat-icon>edit</mat-icon>
+          Modifier
+        </button>
+        <button mat-raised-button (click)="createTransaction()">
+          <mat-icon>add</mat-icon>
+          Nouvelle transaction
+        </button>
+        <button mat-raised-button color="warn" (click)="deleteOrganization()">
+          <mat-icon>delete</mat-icon>
+          Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Informations générales -->
+  <mat-card class="info-card" *ngIf="organization">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>business</mat-icon>
+        Informations générales
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Nom de l'organisation</label>
+          <span class="info-value">{{ organization.organizationName }}</span>
+        </div>
+        
+        <div class="info-item">
+          <label>Numéro d'enregistrement</label>
+          <span class="info-value">{{ organization.registrationNumber || '-' }}</span>
+        </div>
+        
+        <div class="info-item">
+          <label>Type</label>
+          <span class="info-value">{{ organization.organizationType }}</span>
+        </div>
+        
+        <div class="info-item">
+          <label>Statut</label>
+          <mat-chip [color]="getOrganizationStatusColor(organization.isActive ? 'ACTIVE' : 'INACTIVE')">
+            {{ organization.isActive ? 'Actif' : 'Inactif' }}
+          </mat-chip>
+        </div>
+        
+        <div class="info-item">
+          <label>Forme juridique</label>
+          <span class="info-value">{{ organization.legalForm || '-' }}</span>
+        </div>
+        
+        <div class="info-item">
+          <label>Devise de base</label>
+          <span class="info-value">{{ organization.baseCurrency }}</span>
+        </div>
+        
+        <div class="info-item">
+          <label>Date de création</label>
+          <span class="info-value">{{ organization.createdAt ? formatDate(organization.createdAt) : '-' }}</span>
+        </div>
+        
+        <div class="info-item">
+          <label>Dernière mise à jour</label>
+          <span class="info-value">{{ organization.updatedAt ? formatDate(organization.updatedAt) : '-' }}</span>
+        </div>
+      </div>
+      
+      <div class="description-section" *ngIf="organization.missionStatement">
+        <mat-divider></mat-divider>
+        <div class="description-content">
+          <label>Mission</label>
+          <p>{{ organization.missionStatement }}</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Statistiques -->
+  <div class="stats-grid" *ngIf="organization">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon">receipt_long</mat-icon>
+          <div class="stat-info">
+            <div class="stat-number">{{ getTotalTransactions() }}</div>
+            <div class="stat-label">Transactions totales</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon">euro</mat-icon>
+          <div class="stat-info">
+            <div class="stat-number">{{ formatCurrency(getTotalAmount(), organization.baseCurrency) }}</div>
+            <div class="stat-label">Montant total</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon">pending</mat-icon>
+          <div class="stat-info">
+            <div class="stat-number">{{ getPendingTransactions() }}</div>
+            <div class="stat-label">En attente</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon">check_circle</mat-icon>
+          <div class="stat-info">
+            <div class="stat-number">{{ getCompletedTransactions() }}</div>
+            <div class="stat-label">Terminées</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Onglets -->
+  <mat-card class="tabs-card" *ngIf="organization">
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+      
+      <!-- Onglet Transactions -->
+      <mat-tab label="Transactions">
+        <div class="tab-content">
+          <div class="transactions-header">
+            <h3>Transactions de l'organisation</h3>
+            <button mat-raised-button color="primary" (click)="createTransaction()">
+              <mat-icon>add</mat-icon>
+              Nouvelle transaction
+            </button>
+          </div>
+          
+          <div class="table-container">
+            <table mat-table [dataSource]="filteredTransactions" class="transactions-table">
+              
+              <!-- Colonne Date -->
+              <ng-container matColumnDef="transactionDate">
+                <th mat-header-cell *matHeaderCellDef>Date</th>
+                <td mat-cell *matCellDef="let transaction">
+                  {{ formatDate(transaction.transactionDate) }}
+                </td>
+              </ng-container>
+
+              <!-- Colonne Type -->
+              <ng-container matColumnDef="transactionType">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let transaction">
+                  <mat-chip>{{ getTransactionTypeLabel(transaction.transactionType) }}</mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Colonne Montant -->
+              <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef>Montant</th>
+                <td mat-cell *matCellDef="let transaction">
+                  <span class="amount-value">{{ formatCurrency(transaction.amount, transaction.currency) }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Colonne Devise -->
+              <ng-container matColumnDef="currency">
+                <th mat-header-cell *matHeaderCellDef>Devise</th>
+                <td mat-cell *matCellDef="let transaction">
+                  <span class="currency-code">{{ transaction.currency }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Colonne Statut -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Statut</th>
+                <td mat-cell *matCellDef="let transaction">
+                  <mat-chip [color]="getTransactionStatusColor(transaction.status)">
+                    {{ transaction.status }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Colonne Description -->
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>Description</th>
+                <td mat-cell *matCellDef="let transaction">
+                  <span class="description-text">{{ transaction.description || '-' }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Colonne Actions -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let transaction">
+                  <button mat-icon-button (click)="viewTransaction(transaction)" matTooltip="Voir les détails">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="transaction-row"></tr>
+            </table>
+          </div>
+
+          <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+        </div>
+      </mat-tab>
+      
+      <!-- Onglet Historique -->
+      <mat-tab label="Historique">
+        <div class="tab-content">
+          <h3>Historique des modifications</h3>
+          <p>Historique des modifications de l'organisation (à implémenter)</p>
+        </div>
+      </mat-tab>
+      
+      <!-- Onglet Documents -->
+      <mat-tab label="Documents">
+        <div class="tab-content">
+          <h3>Documents associés</h3>
+          <p>Documents liés à cette organisation (à implémenter)</p>
+        </div>
+      </mat-tab>
+      
+    </mat-tab-group>
+  </mat-card>
+
+  <!-- Loading spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Chargement en cours...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-state" *ngIf="!organization && !isLoading">
+    <mat-icon class="error-icon">error</mat-icon>
+    <h2>Organisation non trouvée</h2>
+    <p>L'organisation demandée n'existe pas ou a été supprimée.</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Retour à la liste
+    </button>
+  </div>
+
+</div>

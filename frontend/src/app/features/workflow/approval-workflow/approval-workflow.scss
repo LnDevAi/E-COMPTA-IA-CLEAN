@@ -1,0 +1,352 @@
+.approval-workflow-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .header-section {
+    margin-bottom: 24px;
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      .header-info {
+        h1 {
+          margin: 0;
+          color: #333;
+          font-size: 24px;
+          font-weight: 500;
+        }
+
+        .subtitle {
+          margin: 4px 0 0 0;
+          color: #666;
+          font-size: 14px;
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
+      }
+    }
+  }
+
+  .tab-content {
+    padding: 16px 0;
+
+    .form-card,
+    .requests-card,
+    .templates-card,
+    .details-card {
+      margin-bottom: 24px;
+
+      .mat-card-header {
+        .mat-card-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #333;
+          font-size: 18px;
+          font-weight: 500;
+        }
+      }
+
+      .request-form,
+      .template-form {
+        .form-row {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 16px;
+          margin-bottom: 16px;
+        }
+
+        .checkbox-field {
+          display: flex;
+          align-items: center;
+          padding-top: 16px;
+        }
+
+        .form-actions {
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+
+      .table-container {
+        overflow-x: auto;
+        margin-bottom: 16px;
+
+        .requests-table {
+          width: 100%;
+
+          .mat-header-cell {
+            font-weight: 600;
+            color: #333;
+          }
+
+          .mat-cell {
+            font-size: 12px;
+
+            .request-title {
+              .request-progress {
+                margin-top: 8px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                mat-progress-bar {
+                  flex: 1;
+                  height: 4px;
+                }
+
+                .progress-text {
+                  font-size: 10px;
+                  color: #666;
+                  min-width: 30px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .templates-list {
+        .template-panel {
+          margin-bottom: 16px;
+
+          .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            .template-name {
+              font-weight: 500;
+            }
+          }
+
+          .template-content {
+            .template-description {
+              margin-bottom: 16px;
+              color: #666;
+            }
+
+            .workflow-steps {
+              h4 {
+                margin-bottom: 16px;
+                color: #333;
+              }
+
+              .step-content {
+                p {
+                  margin: 4px 0;
+                  font-size: 14px;
+                }
+              }
+
+              .step-actions {
+                margin-top: 8px;
+              }
+
+              .add-step-section {
+                margin-top: 16px;
+                padding-top: 16px;
+                border-top: 1px solid #e0e0e0;
+              }
+            }
+          }
+        }
+      }
+
+      .request-details {
+        .detail-section {
+          margin-bottom: 24px;
+
+          h4 {
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+          }
+
+          .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+
+            .detail-item {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 8px;
+              background-color: #f8f9fa;
+              border-radius: 4px;
+
+              label {
+                font-weight: 500;
+                color: #666;
+                font-size: 12px;
+              }
+
+              span {
+                color: #333;
+                font-size: 12px;
+              }
+            }
+          }
+
+          .approver-content {
+            p {
+              margin: 4px 0;
+              font-size: 14px;
+            }
+          }
+
+          .comments-list {
+            margin-bottom: 16px;
+
+            .comment-item {
+              margin-bottom: 12px;
+              padding: 12px;
+              background-color: #f8f9fa;
+              border-radius: 4px;
+
+              .comment-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+
+                strong {
+                  color: #333;
+                  font-size: 14px;
+                }
+
+                .comment-date {
+                  color: #666;
+                  font-size: 12px;
+                }
+              }
+
+              .comment-content {
+                color: #333;
+                font-size: 14px;
+                line-height: 1.4;
+              }
+            }
+          }
+
+          .comment-form {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+
+            mat-form-field {
+              flex: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    text-align: center;
+
+    mat-spinner {
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: #666;
+      margin: 0;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 1200px) {
+  .approval-workflow-container {
+    .tab-content {
+      .form-card,
+      .requests-card,
+      .templates-card,
+      .details-card {
+        .request-form,
+        .template-form {
+          .form-row {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        .request-details {
+          .detail-section {
+            .detail-grid {
+              grid-template-columns: 1fr;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .approval-workflow-container {
+    padding: 16px;
+
+    .header-section {
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+
+        .header-actions {
+          justify-content: center;
+        }
+      }
+    }
+
+    .tab-content {
+      .form-card,
+      .requests-card,
+      .templates-card,
+      .details-card {
+        .request-form,
+        .template-form {
+          .form-row {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .request-details {
+          .detail-section {
+            .comment-form {
+              flex-direction: column;
+              align-items: stretch;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+

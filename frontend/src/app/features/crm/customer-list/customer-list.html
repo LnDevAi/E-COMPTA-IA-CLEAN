@@ -1,0 +1,260 @@
+<div class="customer-list-container">
+  
+  <!-- En-tête -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="header-info">
+        <h1>Liste des clients</h1>
+        <p class="subtitle">Gestion des clients CRM</p>
+      </div>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="addCustomer()">
+          <mat-icon>add</mat-icon>
+          Nouveau client
+        </button>
+        <button mat-raised-button (click)="exportCustomers()" [disabled]="filteredCustomers.data.length === 0">
+          <mat-icon>download</mat-icon>
+          Exporter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>filter_list</mat-icon>
+        Filtres
+        <button mat-icon-button (click)="toggleFilterPanel()" class="toggle-button">
+          <mat-icon>{{ filterExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content *ngIf="filterExpanded" class="filters-content">
+      <form [formGroup]="filterForm" class="filters-form">
+        <div class="filter-row">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Rechercher</mat-label>
+            <input matInput formControlName="search" placeholder="Nom, email, téléphone...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Segment client</mat-label>
+            <mat-select formControlName="customerSegment">
+              <mat-option value="">Tous les segments</mat-option>
+              <mat-option *ngFor="let segment of customerSegments" [value]="segment.value">
+                {{ segment.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Statut lead</mat-label>
+            <mat-select formControlName="leadStatus">
+              <mat-option value="">Tous les statuts</mat-option>
+              <mat-option *ngFor="let status of leadStatuses" [value]="status.value">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Source</mat-label>
+            <mat-select formControlName="source">
+              <mat-option value="">Toutes les sources</mat-option>
+              <mat-option *ngFor="let source of sources" [value]="source">
+                {{ source }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <div class="filter-actions">
+          <button mat-button (click)="clearFilters()">
+            <mat-icon>clear</mat-icon>
+            Effacer les filtres
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Actions en lot -->
+  <div class="bulk-actions" *ngIf="selectedCustomers.size > 0">
+    <mat-card class="bulk-actions-card">
+      <div class="bulk-actions-content">
+        <span class="selected-count">{{ selectedCustomers.size }} client(s) sélectionné(s)</span>
+        <div class="bulk-actions-buttons">
+          <button mat-button color="warn" (click)="deleteSelectedCustomers()">
+            <mat-icon>delete</mat-icon>
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Tableau des clients -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="filteredCustomers" matSort class="customers-table">
+          
+          <!-- Colonne de sélection -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox 
+                (change)="toggleSelectAll()" 
+                [checked]="selectAll"
+                [indeterminate]="selectedCustomers.size > 0 && !selectAll">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let customer">
+              <mat-checkbox 
+                (change)="toggleCustomerSelection(customer.id)"
+                [checked]="selectedCustomers.has(customer.id!)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Tiers -->
+          <ng-container matColumnDef="thirdParty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Client</th>
+            <td mat-cell *matCellDef="let customer">
+              <div class="customer-info">
+                <div class="customer-name">{{ customer.thirdParty?.name }}</div>
+                <div class="customer-details">
+                  <span class="customer-email">{{ customer.thirdParty?.email }}</span>
+                  <span class="customer-phone">{{ customer.thirdParty?.phone }}</span>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Segment client -->
+          <ng-container matColumnDef="customerSegment">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Segment</th>
+            <td mat-cell *matCellDef="let customer">
+              <mat-chip [color]="getSegmentIcon(customer.customerSegment)" selected class="segment-chip">
+                <mat-icon>{{ getSegmentIcon(customer.customerSegment) }}</mat-icon>
+                {{ getSegmentLabel(customer.customerSegment) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Source -->
+          <ng-container matColumnDef="source">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Source</th>
+            <td mat-cell *matCellDef="let customer">
+              <span class="source-text">{{ customer.source }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Statut lead -->
+          <ng-container matColumnDef="leadStatus">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+            <td mat-cell *matCellDef="let customer">
+              <mat-chip [color]="getStatusIcon(customer.leadStatus)" selected class="status-chip">
+                <mat-icon>{{ getStatusIcon(customer.leadStatus) }}</mat-icon>
+                {{ getStatusLabel(customer.leadStatus) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Revenus générés -->
+          <ng-container matColumnDef="totalRevenueGenerated">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Revenus</th>
+            <td mat-cell *matCellDef="let customer">
+              <span class="revenue-amount">{{ formatCurrency(customer.totalRevenueGenerated) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Score lead -->
+          <ng-container matColumnDef="leadScore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Score</th>
+            <td mat-cell *matCellDef="let customer">
+              <div class="score-container">
+                <span class="score-value">{{ customer.leadScore || 'N/A' }}</span>
+                <mat-progress-bar 
+                  *ngIf="customer.leadScore" 
+                  [value]="customer.leadScore" 
+                  class="score-progress">
+                </mat-progress-bar>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Assigné à -->
+          <ng-container matColumnDef="assignedTo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Assigné à</th>
+            <td mat-cell *matCellDef="let customer">
+              <span class="assigned-user">{{ customer.assignedUser?.username || 'Non assigné' }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let customer">
+              <button mat-icon-button [matMenuTriggerFor]="actionMenu" class="action-button">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #actionMenu="matMenu">
+                <button mat-menu-item (click)="viewCustomer(customer)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>Voir</span>
+                </button>
+                <button mat-menu-item (click)="editCustomer(customer)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Modifier</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteCustomer(customer)" class="delete-action">
+                  <mat-icon>delete</mat-icon>
+                  <span>Supprimer</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="customer-row"></tr>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <mat-paginator 
+        [pageSize]="pageSize" 
+        [pageSizeOptions]="pageSizeOptions" 
+        [length]="filteredCustomers.data.length"
+        showFirstLastButtons>
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Message vide -->
+  <div class="empty-state" *ngIf="filteredCustomers.data.length === 0 && !isLoading">
+    <mat-icon class="empty-icon">people</mat-icon>
+    <h2>Aucun client trouvé</h2>
+    <p *ngIf="customers.length === 0">Aucun client n'a encore été créé.</p>
+    <p *ngIf="customers.length > 0">Aucun client ne correspond aux filtres sélectionnés.</p>
+    <button mat-raised-button color="primary" (click)="addCustomer()" *ngIf="customers.length === 0">
+      <mat-icon>add</mat-icon>
+      Créer le premier client
+    </button>
+    <button mat-button (click)="clearFilters()" *ngIf="customers.length > 0">
+      <mat-icon>clear</mat-icon>
+      Effacer les filtres
+    </button>
+  </div>
+
+  <!-- Loading spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des clients...</p>
+  </div>
+
+</div>

@@ -1,0 +1,289 @@
+.bank-integration-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .header-section {
+    margin-bottom: 24px;
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      .header-info {
+        h1 {
+          margin: 0;
+          color: #333;
+          font-size: 24px;
+          font-weight: 500;
+        }
+
+        .subtitle {
+          margin: 4px 0 0 0;
+          color: #666;
+          font-size: 14px;
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
+      }
+    }
+  }
+
+  .tab-content {
+    padding: 16px 0;
+
+    .form-card,
+    .accounts-card,
+    .import-card,
+    .reconciliation-card,
+    .transactions-card {
+      margin-bottom: 24px;
+
+      .mat-card-header {
+        .mat-card-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #333;
+          font-size: 18px;
+          font-weight: 500;
+        }
+      }
+
+      .bank-form,
+      .import-form {
+        .form-row {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 16px;
+          margin-bottom: 16px;
+        }
+
+        .form-options {
+          margin-bottom: 16px;
+        }
+
+        .form-actions {
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+
+      .accounts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 16px;
+
+        .account-item {
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          padding: 16px;
+          background-color: #fafafa;
+
+          .account-info {
+            .account-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 12px;
+
+              h4 {
+                margin: 0;
+                color: #333;
+                font-size: 16px;
+                font-weight: 500;
+              }
+            }
+
+            .account-details {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 8px;
+              margin-bottom: 16px;
+
+              .detail-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                label {
+                  font-weight: 500;
+                  color: #666;
+                  font-size: 12px;
+                }
+
+                span {
+                  color: #333;
+                  font-size: 12px;
+
+                  &.balance {
+                    font-weight: 600;
+                    color: #2e7d32;
+                  }
+                }
+              }
+            }
+          }
+
+          .account-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+          }
+        }
+      }
+
+      .reconciliation-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+
+        .summary-item {
+          text-align: center;
+          padding: 16px;
+          background-color: #f8f9fa;
+          border-radius: 8px;
+
+          .summary-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 4px;
+          }
+
+          .summary-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+        }
+      }
+
+      .table-container {
+        overflow-x: auto;
+        margin-bottom: 16px;
+
+        .transactions-table {
+          width: 100%;
+
+          .mat-header-cell {
+            font-weight: 600;
+            color: #333;
+          }
+
+          .mat-cell {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    text-align: center;
+
+    mat-spinner {
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: #666;
+      margin: 0;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 1200px) {
+  .bank-integration-container {
+    .tab-content {
+      .accounts-card {
+        .accounts-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .reconciliation-card {
+        .reconciliation-summary {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .bank-integration-container {
+    padding: 16px;
+
+    .header-section {
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+
+        .header-actions {
+          justify-content: center;
+        }
+      }
+    }
+
+    .tab-content {
+      .form-card,
+      .accounts-card,
+      .import-card,
+      .reconciliation-card,
+      .transactions-card {
+        .bank-form,
+        .import-form {
+          .form-row {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .accounts-card {
+          .accounts-grid {
+            .account-item {
+              .account-details {
+                grid-template-columns: 1fr;
+              }
+
+              .account-actions {
+                flex-direction: column;
+                align-items: stretch;
+              }
+            }
+          }
+        }
+
+        .reconciliation-card {
+          .reconciliation-summary {
+            grid-template-columns: 1fr;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+

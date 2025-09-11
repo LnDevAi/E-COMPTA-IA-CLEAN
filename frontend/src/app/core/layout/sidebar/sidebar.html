@@ -1,0 +1,78 @@
+<mat-sidenav-container class="sidebar-container">
+  <mat-sidenav #sidenav 
+               mode="side" 
+               [opened]="isExpanded"
+               class="sidebar-sidenav">
+    
+    <div class="sidebar-header">
+      <div class="sidebar-logo" *ngIf="isExpanded">
+        <mat-icon class="logo-icon">account_balance</mat-icon>
+        <span class="logo-text">E-COMPTA-IA</span>
+      </div>
+      <button mat-icon-button 
+              (click)="toggleSidebar()" 
+              class="toggle-button"
+              [matTooltip]="isExpanded ? 'Réduire le menu' : 'Étendre le menu'">
+        <mat-icon>{{ isExpanded ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+      </button>
+    </div>
+
+    <mat-nav-list class="sidebar-nav">
+      <ng-container *ngFor="let item of menuItems">
+        <!-- Vérifier les permissions -->
+        <ng-container *ngIf="hasPermission(item.permission)">
+          
+          <!-- Élément simple (sans enfants) -->
+          <mat-list-item *ngIf="!item.children" 
+                         class="nav-item"
+                         [class.active]="isActiveRoute(item.route!)"
+                         (click)="navigateTo(item.route!)">
+            <mat-icon matListItemIcon class="nav-icon">{{ item.icon }}</mat-icon>
+            <span matListItemTitle class="nav-label" *ngIf="isExpanded">{{ item.label }}</span>
+            <span *ngIf="!isExpanded" matTooltip="{{ item.label }}" matTooltipPosition="right"></span>
+          </mat-list-item>
+
+          <!-- Élément avec enfants (expandable) -->
+          <mat-expansion-panel *ngIf="item.children" 
+                               class="nav-expansion-panel"
+                               [expanded]="false"
+                               [hideToggle]="!isExpanded">
+            <mat-expansion-panel-header class="nav-expansion-header">
+              <mat-icon matListIcon class="nav-icon">{{ item.icon }}</mat-icon>
+              <span matListTitle class="nav-label" *ngIf="isExpanded">{{ item.label }}</span>
+              <span *ngIf="!isExpanded" matTooltip="{{ item.label }}" matTooltipPosition="right"></span>
+            </mat-expansion-panel-header>
+
+            <mat-list class="submenu-list">
+              <mat-list-item *ngFor="let child of item.children" 
+                             class="submenu-item"
+                             [class.active]="isActiveRoute(child.route!)"
+                             (click)="navigateTo(child.route!)">
+                <mat-icon matListItemIcon class="submenu-icon">{{ child.icon }}</mat-icon>
+                <span matListItemTitle class="submenu-label" *ngIf="isExpanded">{{ child.label }}</span>
+                <span *ngIf="!isExpanded" matTooltip="{{ child.label }}" matTooltipPosition="right"></span>
+              </mat-list-item>
+            </mat-list>
+          </mat-expansion-panel>
+
+        </ng-container>
+      </ng-container>
+    </mat-nav-list>
+
+    <!-- Footer de la sidebar -->
+    <div class="sidebar-footer" *ngIf="isExpanded">
+      <div class="user-info">
+        <mat-icon class="user-avatar">account_circle</mat-icon>
+        <div class="user-details">
+          <span class="user-name">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+          <span class="user-role">{{ currentUser?.roles?.[0] || 'Utilisateur' }}</span>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <!-- Contenu principal -->
+  <mat-sidenav-content class="main-content">
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

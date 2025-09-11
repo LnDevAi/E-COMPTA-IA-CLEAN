@@ -1,0 +1,232 @@
+<div class="chart-of-accounts-container">
+  
+  <!-- En-tête -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="header-info">
+        <h1>Plan comptable</h1>
+        <p class="subtitle">Gestion des comptes comptables et de leur hiérarchie</p>
+      </div>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="createAccount()" [disabled]="isLoading">
+          <mat-icon>add</mat-icon>
+          Nouveau compte
+        </button>
+        <button mat-raised-button (click)="exportAccounts()">
+          <mat-icon>download</mat-icon>
+          Exporter
+        </button>
+        <button mat-raised-button (click)="importAccounts()">
+          <mat-icon>upload</mat-icon>
+          Importer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres et recherche -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>search</mat-icon>
+        Filtres et recherche
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="searchForm" class="search-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Rechercher</mat-label>
+            <input matInput formControlName="searchTerm" placeholder="Code ou nom du compte">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Type de compte</mat-label>
+            <mat-select formControlName="type">
+              <mat-option value="">Tous les types</mat-option>
+              <mat-option *ngFor="let type of accountTypes" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Statut</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="">Tous les statuts</mat-option>
+              <mat-option value="true">Actif</mat-option>
+              <mat-option value="false">Inactif</mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <button mat-button (click)="clearFilters()">
+            <mat-icon>clear</mat-icon>
+            Effacer
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Actions en lot -->
+  <mat-card class="bulk-actions-card" *ngIf="selectedAccounts.size > 0">
+    <mat-card-content>
+      <div class="bulk-actions">
+        <span class="selection-info">{{ selectedAccounts.size }} compte(s) sélectionné(s)</span>
+        <div class="bulk-buttons">
+          <button mat-button (click)="activateSelectedAccounts()">
+            <mat-icon>check_circle</mat-icon>
+            Activer
+          </button>
+          <button mat-button (click)="deactivateSelectedAccounts()">
+            <mat-icon>cancel</mat-icon>
+            Désactiver
+          </button>
+          <button mat-button (click)="deleteSelectedAccounts()" color="warn">
+            <mat-icon>delete</mat-icon>
+            Supprimer
+          </button>
+          <button mat-button (click)="clearSelection()">
+            <mat-icon>clear</mat-icon>
+            Effacer
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Vue tableau -->
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>table_chart</mat-icon>
+        Liste des comptes
+        <div class="table-actions">
+          <button mat-button (click)="selectAllAccounts()">
+            <mat-icon>select_all</mat-icon>
+            Tout sélectionner
+          </button>
+          <button mat-button (click)="clearSelection()">
+            <mat-icon>clear</mat-icon>
+            Effacer
+          </button>
+        </div>
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="filteredAccounts" matSort class="accounts-table">
+          
+          <!-- Colonne Sélection -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox 
+                [checked]="selectedAccounts.size === filteredAccounts.data.length && filteredAccounts.data.length > 0"
+                [indeterminate]="selectedAccounts.size > 0 && selectedAccounts.size < filteredAccounts.data.length"
+                (change)="selectedAccounts.size === filteredAccounts.data.length ? clearSelection() : selectAllAccounts()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let account">
+              <mat-checkbox 
+                [checked]="selectedAccounts.has(account.id!)"
+                (change)="toggleAccountSelection(account.id!)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Code -->
+          <ng-container matColumnDef="accountCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+            <td mat-cell *matCellDef="let account">
+              <span class="account-code">{{ account.accountCode }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Nom -->
+          <ng-container matColumnDef="accountName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+            <td mat-cell *matCellDef="let account">
+              <div class="account-name">{{ account.accountName }}</div>
+              <div class="account-description" *ngIf="account.accountDescription">{{ account.accountDescription }}</div>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Type -->
+          <ng-container matColumnDef="accountType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+            <td mat-cell *matCellDef="let account">
+              <mat-chip [style.background-color]="getAccountTypeColor(account.accountType)">
+                {{ getAccountTypeLabel(account.accountType) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Compte parent -->
+          <ng-container matColumnDef="parentCode">
+            <th mat-header-cell *matHeaderCellDef>Compte parent</th>
+            <td mat-cell *matCellDef="let account">
+              <span class="parent-code">{{ getParentAccountCode(account) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Solde -->
+          <ng-container matColumnDef="balance">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Solde</th>
+            <td mat-cell *matCellDef="let account">
+              <span class="balance-amount" [class.positive]="(account.currentDebitBalance - account.currentCreditBalance) >= 0" [class.negative]="(account.currentDebitBalance - account.currentCreditBalance) < 0">
+                {{ formatCurrency(account.currentDebitBalance - account.currentCreditBalance) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Statut -->
+          <ng-container matColumnDef="isActive">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+            <td mat-cell *matCellDef="let account">
+              <mat-chip [color]="account.isActive ? 'primary' : 'warn'">
+                {{ account.isActive ? 'Actif' : 'Inactif' }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let account">
+              <div class="action-buttons">
+                <button mat-icon-button (click)="editAccount(account)" matTooltip="Modifier">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="deleteAccount(account)" color="warn" matTooltip="Supprimer">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="account-row"></tr>
+        </table>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Chargement en cours...</p>
+  </div>
+
+  <!-- Message vide -->
+  <div class="empty-state" *ngIf="filteredAccounts.data.length === 0 && !isLoading">
+    <mat-icon class="empty-icon">account_balance</mat-icon>
+    <h2>Aucun compte trouvé</h2>
+    <p>Créez votre premier compte ou ajustez vos filtres de recherche.</p>
+  </div>
+
+</div>

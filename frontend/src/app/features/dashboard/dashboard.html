@@ -1,0 +1,188 @@
+<div class="dashboard-container">
+  <!-- En-tête du Dashboard -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="welcome-section">
+        <h1 class="dashboard-title">
+          Bonjour, {{ currentUser?.firstName }} ! 👋
+        </h1>
+        <p class="dashboard-subtitle">
+          Voici un aperçu de votre activité ERP aujourd'hui
+        </p>
+      </div>
+      
+      <div class="header-actions">
+        <button mat-icon-button 
+                (click)="refreshDashboard()" 
+                matTooltip="Actualiser le dashboard">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        
+        <button mat-icon-button 
+                [matMenuTriggerFor]="dashboardMenu" 
+                matTooltip="Options du dashboard">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        
+        <mat-menu #dashboardMenu="matMenu">
+          <button mat-menu-item (click)="exportDashboard()">
+            <mat-icon>download</mat-icon>
+            <span>Exporter</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>settings</mat-icon>
+            <span>Paramètres</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <!-- Widgets principaux -->
+  <div class="widgets-grid">
+    <mat-card *ngFor="let widget of widgets" 
+              class="widget-card"
+              [class]="'widget-' + widget.color"
+              (click)="navigateToWidget(widget)">
+      <mat-card-content class="widget-content">
+        <div class="widget-header">
+          <div class="widget-icon">
+            <mat-icon [class]="'icon-' + widget.color">{{ widget.icon }}</mat-icon>
+          </div>
+          <div class="widget-change" [class]="'change-' + widget.changeType">
+            <mat-icon class="change-icon">{{ getChangeIcon(widget.changeType) }}</mat-icon>
+            <span class="change-value">{{ widget.change }}%</span>
+          </div>
+        </div>
+        
+        <div class="widget-body">
+          <h3 class="widget-title">{{ widget.title }}</h3>
+          <div class="widget-value">{{ widget.value }}</div>
+        </div>
+        
+        <div class="widget-footer">
+          <span class="widget-link">Voir détails</span>
+          <mat-icon class="link-icon">arrow_forward</mat-icon>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Contenu principal en grille -->
+  <div class="main-content-grid">
+    
+    <!-- Actions rapides -->
+    <mat-card class="quick-actions-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>flash_on</mat-icon>
+          Actions rapides
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="quick-actions-grid">
+          <button *ngFor="let action of quickActions" 
+                  mat-raised-button 
+                  [color]="action.color"
+                  class="quick-action-button"
+                  (click)="navigateToQuickAction(action)"
+                  [matTooltip]="action.description">
+            <mat-icon>{{ action.icon }}</mat-icon>
+            <span>{{ action.label }}</span>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Activités récentes -->
+    <mat-card class="activities-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>history</mat-icon>
+          Activités récentes
+        </mat-card-title>
+        <mat-card-subtitle>Dernières actions dans le système</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="activities-list">
+          <div *ngFor="let activity of recentActivities" 
+               class="activity-item"
+               [class]="'activity-' + activity.status">
+            <div class="activity-icon">
+              <mat-icon [class]="'icon-' + getActivityColor(activity.status)">
+                {{ getActivityIcon(activity.type) }}
+              </mat-icon>
+            </div>
+            
+            <div class="activity-content">
+              <div class="activity-description">{{ activity.description }}</div>
+              <div class="activity-meta">
+                <span class="activity-time">{{ formatTimeAgo(activity.timestamp) }}</span>
+                <span *ngIf="activity.amount" class="activity-amount">
+                  {{ activity.amount | currency:'EUR':'symbol':'1.0-0' }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="activity-status">
+              <mat-chip [class]="'chip-' + activity.status">
+                {{ activity.status | titlecase }}
+              </mat-chip>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Graphique des revenus -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>trending_up</mat-icon>
+          Évolution du chiffre d'affaires
+        </mat-card-title>
+        <mat-card-subtitle>6 derniers mois</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <div class="chart-placeholder">
+            <mat-icon class="chart-icon">bar_chart</mat-icon>
+            <p>Graphique des revenus</p>
+            <small>Intégration Chart.js prévue</small>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Statistiques clients -->
+    <mat-card class="stats-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>people</mat-icon>
+          Statistiques clients
+        </mat-card-title>
+        <mat-card-subtitle>Croissance trimestrielle</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stats-container">
+          <div class="stat-item" *ngFor="let quarter of chartData.clients.labels; let i = index">
+            <div class="stat-label">{{ quarter }}</div>
+            <div class="stat-value">{{ chartData.clients.data[i] }}</div>
+            <mat-progress-bar 
+              mode="determinate" 
+              [value]="(chartData.clients.data[i] / 1300) * 100"
+              class="stat-progress">
+            </mat-progress-bar>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement du dashboard...</p>
+  </div>
+</div>

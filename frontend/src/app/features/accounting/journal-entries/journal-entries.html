@@ -1,0 +1,325 @@
+<div class="journal-entries-container">
+  <!-- En-tête -->
+  <div class="journal-entries-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="page-title">
+          <mat-icon>book</mat-icon>
+          Journal des Écritures
+        </h1>
+        <p class="page-subtitle">
+          Gestion des écritures comptables et validation des transactions
+        </p>
+      </div>
+      
+      <div class="header-actions">
+        <button mat-raised-button 
+                color="primary" 
+                (click)="addJournalEntry()"
+                class="add-button">
+          <mat-icon>add</mat-icon>
+          Nouvelle Écriture
+        </button>
+        
+        <button mat-icon-button 
+                [matMenuTriggerFor]="actionsMenu"
+                matTooltip="Actions">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        
+        <mat-menu #actionsMenu="matMenu">
+          <button mat-menu-item (click)="importJournalEntries()">
+            <mat-icon>upload</mat-icon>
+            <span>Importer</span>
+          </button>
+          <button mat-menu-item (click)="exportJournalEntries()">
+            <mat-icon>download</mat-icon>
+            <span>Exporter</span>
+          </button>
+          <button mat-menu-item (click)="deleteSelectedEntries()" 
+                  [disabled]="selectedEntries.size === 0">
+            <mat-icon>delete</mat-icon>
+            <span>Supprimer sélection</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panneau de filtres -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>filter_list</mat-icon>
+        Filtres
+        <button mat-icon-button 
+                (click)="toggleFilterPanel()" 
+                class="toggle-button">
+          <mat-icon>{{ filterExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content *ngIf="filterExpanded">
+      <form [formGroup]="filterForm" class="filters-form">
+        <div class="filters-grid">
+          <!-- Recherche -->
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Rechercher</mat-label>
+            <input matInput 
+                   formControlName="search" 
+                   placeholder="Numéro, description, référence...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <!-- Type de journal -->
+          <mat-form-field appearance="outline">
+            <mat-label>Type de journal</mat-label>
+            <mat-select formControlName="journalType">
+              <mat-option value="">Tous les types</mat-option>
+              <mat-option *ngFor="let type of journalTypes" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Statut -->
+          <mat-form-field appearance="outline">
+            <mat-label>Statut</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="">Tous les statuts</mat-option>
+              <mat-option *ngFor="let status of statuses" [value]="status.value">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Devise -->
+          <mat-form-field appearance="outline">
+            <mat-label>Devise</mat-label>
+            <mat-select formControlName="currency">
+              <mat-option value="">Toutes les devises</mat-option>
+              <mat-option *ngFor="let currency of currencies" [value]="currency">
+                {{ currency }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="filters-actions">
+          <button mat-button 
+                  type="button" 
+                  (click)="clearFilters()"
+                  class="clear-button">
+            <mat-icon>clear</mat-icon>
+            Effacer les filtres
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tableau des écritures -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-header">
+        <div class="table-info">
+          <span class="results-count">
+            {{ filteredJournalEntries.data.length }} écriture{{ filteredJournalEntries.data.length > 1 ? 's' : '' }}
+          </span>
+          <span *ngIf="selectedEntries.size > 0" class="selected-count">
+            ({{ selectedEntries.size }} sélectionnée{{ selectedEntries.size > 1 ? 's' : '' }})
+          </span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="filteredJournalEntries" class="journal-entries-table">
+          
+          <!-- Colonne de sélection -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox 
+                [checked]="selectAll"
+                [indeterminate]="selectedEntries.size > 0 && !selectAll"
+                (change)="toggleSelectAll()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let entry">
+              <mat-checkbox 
+                [checked]="selectedEntries.has(entry.id)"
+                (change)="toggleEntrySelection(entry.id)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Numéro d'écriture -->
+          <ng-container matColumnDef="entryNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>N° Écriture</th>
+            <td mat-cell *matCellDef="let entry">
+              <div class="entry-number">
+                <div class="number">{{ entry.entryNumber }}</div>
+                <div class="reference" *ngIf="entry.reference">{{ entry.reference }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Date -->
+          <ng-container matColumnDef="entryDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+            <td mat-cell *matCellDef="let entry">
+              <span class="date-cell">{{ formatDate(entry.entryDate) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Description -->
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+            <td mat-cell *matCellDef="let entry">
+              <div class="description-cell">
+                <div class="description">{{ entry.description }}</div>
+                <div class="document-number" *ngIf="entry.documentNumber">{{ entry.documentNumber }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Type de journal -->
+          <ng-container matColumnDef="journalType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+            <td mat-cell *matCellDef="let entry">
+              <mat-chip [class]="'type-chip type-' + entry.journalType">
+                <mat-icon class="type-icon">{{ getJournalTypeIcon(entry.journalType) }}</mat-icon>
+                {{ entry.journalType }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Statut -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+            <td mat-cell *matCellDef="let entry">
+              <mat-chip [class]="'status-chip status-' + entry.status">
+                <mat-icon class="status-icon">{{ getStatusIcon(entry.status) }}</mat-icon>
+                {{ entry.status }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Total Débit -->
+          <ng-container matColumnDef="totalDebit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Débit</th>
+            <td mat-cell *matCellDef="let entry">
+              <span class="debit-amount">{{ formatCurrency(entry.totalDebit, entry.currency) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Total Crédit -->
+          <ng-container matColumnDef="totalCredit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Crédit</th>
+            <td mat-cell *matCellDef="let entry">
+              <span class="credit-amount">{{ formatCurrency(entry.totalCredit, entry.currency) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Équilibre -->
+          <ng-container matColumnDef="isBalanced">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Équilibre</th>
+            <td mat-cell *matCellDef="let entry">
+              <mat-chip [class]="'balance-chip balance-' + getBalanceColor(entry)">
+                <mat-icon class="balance-icon">{{ getBalanceIcon(entry) }}</mat-icon>
+                {{ getBalanceStatus(entry) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Créé par -->
+          <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Créé par</th>
+            <td mat-cell *matCellDef="let entry">
+              <span class="created-by" *ngIf="entry.createdBy">
+                {{ entry.createdBy.firstName }} {{ entry.createdBy.lastName }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let entry">
+              <button mat-icon-button 
+                      [matMenuTriggerFor]="entryMenu"
+                      matTooltip="Actions">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              
+              <mat-menu #entryMenu="matMenu">
+                <button mat-menu-item (click)="viewJournalEntry(entry)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>Voir</span>
+                </button>
+                <button mat-menu-item (click)="editJournalEntry(entry)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Modifier</span>
+                </button>
+                <button mat-menu-item (click)="postJournalEntry(entry)"
+                        *ngIf="entry.status === 'BROUILLON'">
+                  <mat-icon>check_circle</mat-icon>
+                  <span>Comptabiliser</span>
+                </button>
+                <button mat-menu-item (click)="approveJournalEntry(entry)"
+                        *ngIf="entry.status === 'BROUILLON'">
+                  <mat-icon>verified</mat-icon>
+                  <span>Approuver</span>
+                </button>
+                <button mat-menu-item (click)="rejectJournalEntry(entry)"
+                        *ngIf="entry.status === 'BROUILLON'">
+                  <mat-icon>cancel</mat-icon>
+                  <span>Rejeter</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteJournalEntry(entry)" class="delete-action">
+                  <mat-icon>delete</mat-icon>
+                  <span>Supprimer</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+              class="journal-entry-row"
+              [class.selected]="selectedEntries.has(row.id)">
+          </tr>
+        </table>
+
+        <!-- Message si aucun résultat -->
+        <div *ngIf="filteredJournalEntries.data.length === 0" class="no-results">
+          <mat-icon class="no-results-icon">search_off</mat-icon>
+          <h3>Aucune écriture trouvée</h3>
+          <p>Essayez de modifier vos critères de recherche</p>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <mat-paginator [pageSize]="pageSize"
+                     [pageSizeOptions]="pageSizeOptions"
+                     [showFirstLastButtons]="true"
+                     [hidePageSize]="false">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des écritures...</p>
+  </div>
+</div>
+
+
+
+
+
+
+
+

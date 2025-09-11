@@ -1,0 +1,548 @@
+<!-- Tableau de Bord IA Révolutionnaire SYCEBNL -->
+<div class="ai-dashboard-container">
+  
+  <!-- En-tête avec statistiques globales -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="dashboard-title">
+          <mat-icon class="ai-icon">psychology</mat-icon>
+          Intelligence Artificielle SYCEBNL
+        </h1>
+        <p class="dashboard-subtitle">
+          Tableau de bord prédictif et analytique - Révolution vs TOMPRO
+        </p>
+      </div>
+      
+      <div class="stats-overview">
+        <div class="stat-card">
+          <mat-icon>insights</mat-icon>
+          <div class="stat-content">
+            <div class="stat-value">{{ aiStats.totalInsights || 0 }}</div>
+            <div class="stat-label">Insights IA</div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <mat-icon>trending_up</mat-icon>
+          <div class="stat-content">
+            <div class="stat-value">{{ predictiveStats.totalPredictions || 0 }}</div>
+            <div class="stat-label">Prédictions</div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <mat-icon>auto_awesome</mat-icon>
+          <div class="stat-content">
+            <div class="stat-value">{{ aiStats.averageConfidence || 0 | number:'1.0-0' }}%</div>
+            <div class="stat-label">Confiance IA</div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <mat-icon>speed</mat-icon>
+          <div class="stat-content">
+            <div class="stat-value">{{ aiStats.activeWorkflows || 0 }}</div>
+            <div class="stat-label">Workflows Actifs</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="header-actions">
+      <button mat-icon-button 
+              [class.active]="autoRefresh"
+              (click)="toggleAutoRefresh()"
+              matTooltip="Actualisation automatique">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      
+      <button mat-icon-button 
+              (click)="refreshData()"
+              matTooltip="Actualiser maintenant">
+        <mat-icon>update</mat-icon>
+      </button>
+      
+      <button mat-button 
+              [matMenuTriggerFor]="exportMenu"
+              matTooltip="Exporter les données">
+        <mat-icon>download</mat-icon>
+        Exporter
+      </button>
+      
+      <mat-menu #exportMenu="matMenu">
+        <button mat-menu-item (click)="exportData('PDF')">
+          <mat-icon>picture_as_pdf</mat-icon>
+          PDF
+        </button>
+        <button mat-menu-item (click)="exportData('EXCEL')">
+          <mat-icon>table_chart</mat-icon>
+          Excel
+        </button>
+        <button mat-menu-item (click)="exportData('CSV')">
+          <mat-icon>description</mat-icon>
+          CSV
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Contenu principal avec onglets -->
+  <mat-tab-group [(selectedIndex)]="selectedTab" (selectedIndexChange)="onTabChange($event)">
+    
+    <!-- Onglet Insights IA -->
+    <mat-tab label="Insights IA">
+      <div class="tab-content">
+        
+        <!-- Filtres et actions -->
+        <div class="filters-section">
+          <mat-chip-listbox [(ngModel)]="insightFilter" (change)="onInsightFilterChange($event.value)">
+            <mat-chip-option value="ALL">Tous</mat-chip-option>
+            <mat-chip-option value="FINANCIAL">Financier</mat-chip-option>
+            <mat-chip-option value="OPERATIONAL">Opérationnel</mat-chip-option>
+            <mat-chip-option value="COMPLIANCE">Conformité</mat-chip-option>
+            <mat-chip-option value="STRATEGIC">Stratégique</mat-chip-option>
+          </mat-chip-listbox>
+        </div>
+
+        <!-- Liste des insights -->
+        <div class="insights-grid">
+          <mat-card *ngFor="let insight of getFilteredInsights()" 
+                    class="insight-card"
+                    [class.high-priority]="insight.priority >= 8"
+                    (click)="openInsightDetails(insight)">
+            
+            <mat-card-header>
+              <div mat-card-avatar class="insight-avatar" [ngClass]="getInsightColor(insight.type)">
+                <mat-icon>{{ getInsightIcon(insight.type) }}</mat-icon>
+              </div>
+              
+              <mat-card-title>{{ insight.title }}</mat-card-title>
+              <mat-card-subtitle>
+                <mat-chip [ngClass]="getImpactColor(insight.impact)">
+                  {{ insight.impact }}
+                </mat-chip>
+                <span class="priority-badge" [ngClass]="getPriorityColor(insight.priority)">
+                  Priorité {{ insight.priority }}
+                </span>
+              </mat-card-subtitle>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <p class="insight-description">{{ insight.description }}</p>
+              
+              <div class="insight-metrics">
+                <div class="metric">
+                  <mat-icon>psychology</mat-icon>
+                  <span>Confiance: {{ insight.confidence }}%</span>
+                  <mat-progress-bar 
+                    mode="determinate" 
+                    [value]="insight.confidence"
+                    [ngClass]="getConfidenceColor(insight.confidence)">
+                  </mat-progress-bar>
+                </div>
+                
+                <div class="metric">
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{ formatTimeAgo(insight.createdAt) }}</span>
+                </div>
+              </div>
+              
+              <div class="suggested-actions" *ngIf="insight.suggestedActions.length > 0">
+                <h4>Actions suggérées:</h4>
+                <ul>
+                  <li *ngFor="let action of insight.suggestedActions">{{ action }}</li>
+                </ul>
+              </div>
+            </mat-card-content>
+            
+            <mat-card-actions>
+              <button mat-button 
+                      color="primary"
+                      (click)="openInsightDetails(insight); $event.stopPropagation()">
+                <mat-icon>visibility</mat-icon>
+                Détails
+              </button>
+              
+              <button mat-button 
+                      color="accent"
+                      (click)="resolveInsight(insight.id); $event.stopPropagation()">
+                <mat-icon>check</mat-icon>
+                Résoudre
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Prédictions -->
+    <mat-tab label="Prédictions">
+      <div class="tab-content">
+        
+        <!-- Filtres prédictions -->
+        <div class="filters-section">
+          <mat-chip-listbox [(ngModel)]="predictionFilter" (change)="onPredictionFilterChange($event.value)">
+            <mat-chip-option value="ALL">Toutes</mat-chip-option>
+            <mat-chip-option value="FINANCIAL">Financier</mat-chip-option>
+            <mat-chip-option value="OPERATIONAL">Opérationnel</mat-chip-option>
+            <mat-chip-option value="IMPACT">Impact</mat-chip-option>
+            <mat-chip-option value="COMPLIANCE">Conformité</mat-chip-option>
+          </mat-chip-listbox>
+        </div>
+
+        <!-- Grille des prédictions -->
+        <div class="predictions-grid">
+          <mat-card *ngFor="let prediction of getFilteredPredictions()" class="prediction-card">
+            
+            <mat-card-header>
+              <div mat-card-avatar class="prediction-avatar" [ngClass]="getTrendColor(prediction.trend, prediction.isPositive)">
+                <mat-icon>{{ getTrendIcon(prediction.trend) }}</mat-icon>
+              </div>
+              
+              <mat-card-title>{{ prediction.name }}</mat-card-title>
+              <mat-card-subtitle>
+                <mat-chip [ngClass]="getTrendColor(prediction.trend, prediction.isPositive)">
+                  {{ prediction.trend }}
+                </mat-chip>
+                <span class="timeframe">{{ prediction.timeframe }}</span>
+              </mat-card-subtitle>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <div class="prediction-values">
+                <div class="value-current">
+                  <label>Valeur actuelle</label>
+                  <div class="value">{{ formatValue(prediction.currentValue, prediction.unit) }}</div>
+                </div>
+                
+                <div class="value-predicted">
+                  <label>Prédiction</label>
+                  <div class="value" [ngClass]="getTrendColor(prediction.trend, prediction.isPositive)">
+                    {{ formatValue(prediction.predictedValue, prediction.unit) }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="confidence-bar">
+                <label>Confiance: {{ prediction.confidence }}%</label>
+                <mat-progress-bar 
+                  mode="determinate" 
+                  [value]="prediction.confidence"
+                  [ngClass]="getConfidenceColor(prediction.confidence)">
+                </mat-progress-bar>
+              </div>
+              
+              <div class="factors" *ngIf="prediction.factors.length > 0">
+                <h4>Facteurs d'influence:</h4>
+                <div class="factor-list">
+                  <div *ngFor="let factor of prediction.factors" class="factor-item">
+                    <mat-icon [ngClass]="factor.impact > 0 ? 'positive' : 'negative'">
+                      {{ factor.impact > 0 ? 'trending_up' : 'trending_down' }}
+                    </mat-icon>
+                    <span class="factor-name">{{ factor.name }}</span>
+                    <span class="factor-impact" [ngClass]="factor.impact > 0 ? 'positive' : 'negative'">
+                      {{ factor.impact > 0 ? '+' : '' }}{{ factor.impact }}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="recommendations" *ngIf="prediction.recommendations.length > 0">
+                <h4>Recommandations:</h4>
+                <ul>
+                  <li *ngFor="let rec of prediction.recommendations">{{ rec }}</li>
+                </ul>
+              </div>
+            </mat-card-content>
+            
+            <mat-card-actions>
+              <button mat-button 
+                      color="primary"
+                      (click)="generateNewPrediction(prediction.id)">
+                <mat-icon>refresh</mat-icon>
+                Nouvelle prédiction
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Scénarios -->
+    <mat-tab label="Scénarios">
+      <div class="tab-content">
+        
+        <!-- Filtres scénarios -->
+        <div class="filters-section">
+          <mat-chip-listbox [(ngModel)]="scenarioFilter" (change)="onScenarioFilterChange($event.value)">
+            <mat-chip-option value="ALL">Tous</mat-chip-option>
+            <mat-chip-option value="LOW">Faible risque</mat-chip-option>
+            <mat-chip-option value="MEDIUM">Risque moyen</mat-chip-option>
+            <mat-chip-option value="HIGH">Risque élevé</mat-chip-option>
+            <mat-chip-option value="CRITICAL">Risque critique</mat-chip-option>
+          </mat-chip-listbox>
+        </div>
+
+        <!-- Liste des scénarios -->
+        <div class="scenarios-grid">
+          <mat-card *ngFor="let scenario of getFilteredScenarios()" class="scenario-card">
+            
+            <mat-card-header>
+              <div mat-card-avatar class="scenario-avatar" [ngClass]="getRiskColor(scenario.riskLevel)">
+                <mat-icon>{{ getRiskIcon(scenario.riskLevel) }}</mat-icon>
+              </div>
+              
+              <mat-card-title>{{ scenario.name }}</mat-card-title>
+              <mat-card-subtitle>
+                <mat-chip [ngClass]="getRiskColor(scenario.riskLevel)">
+                  {{ scenario.riskLevel }}
+                </mat-chip>
+                <span class="probability">Probabilité: {{ scenario.probability }}%</span>
+              </mat-card-subtitle>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <p class="scenario-description">{{ scenario.description }}</p>
+              
+              <div class="scenario-outcomes">
+                <h4>Résultats prévus:</h4>
+                <div class="outcome-list">
+                  <div *ngFor="let outcome of scenario.outcomes" class="outcome-item">
+                    <div class="outcome-metric">{{ outcome.metric }}</div>
+                    <div class="outcome-values">
+                      <span class="current">{{ formatValue(outcome.currentValue, 'FCFA') }}</span>
+                      <mat-icon>arrow_forward</mat-icon>
+                      <span class="predicted" [ngClass]="outcome.variance > 0 ? 'positive' : 'negative'">
+                        {{ formatValue(outcome.predictedValue, 'FCFA') }}
+                      </span>
+                    </div>
+                    <div class="outcome-impact">{{ outcome.impact }}</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="scenario-recommendations" *ngIf="scenario.recommendations.length > 0">
+                <h4>Recommandations:</h4>
+                <ul>
+                  <li *ngFor="let rec of scenario.recommendations">{{ rec }}</li>
+                </ul>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Recommandations -->
+    <mat-tab label="Recommandations IA">
+      <div class="tab-content">
+        
+        <!-- Liste des recommandations -->
+        <div class="recommendations-grid">
+          <mat-card *ngFor="let recommendation of recommendations" class="recommendation-card">
+            
+            <mat-card-header>
+              <div mat-card-avatar class="recommendation-avatar">
+                <mat-icon>{{ getRecommendationIcon(recommendation.category) }}</mat-icon>
+              </div>
+              
+              <mat-card-title>{{ recommendation.title }}</mat-card-title>
+              <mat-card-subtitle>
+                <mat-chip>{{ recommendation.category }}</mat-chip>
+                <span class="effort" [ngClass]="getEffortColor(recommendation.implementationEffort)">
+                  Effort: {{ recommendation.implementationEffort }}
+                </span>
+              </mat-card-subtitle>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <p class="recommendation-description">{{ recommendation.description }}</p>
+              
+              <div class="recommendation-benefits">
+                <div class="benefit-item">
+                  <mat-icon>trending_up</mat-icon>
+                  <span>{{ recommendation.expectedBenefit }}</span>
+                </div>
+                
+                <div class="benefit-item">
+                  <mat-icon>attach_money</mat-icon>
+                  <span>Impact estimé: {{ recommendation.estimatedImpact | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
+                </div>
+                
+                <div class="benefit-item">
+                  <mat-icon>schedule</mat-icon>
+                  <span>Timeline: {{ recommendation.timeline }}</span>
+                </div>
+              </div>
+              
+              <div class="prerequisites" *ngIf="recommendation.prerequisites.length > 0">
+                <h4>Prérequis:</h4>
+                <ul>
+                  <li *ngFor="let prereq of recommendation.prerequisites">{{ prereq }}</li>
+                </ul>
+              </div>
+            </mat-card-content>
+            
+            <mat-card-actions>
+              <button mat-button 
+                      color="primary"
+                      (click)="openRecommendationDetails(recommendation)">
+                <mat-icon>visibility</mat-icon>
+                Détails
+              </button>
+              
+              <button mat-raised-button 
+                      color="accent"
+                      [disabled]="recommendation.implementationEffort === 'HIGH'">
+                <mat-icon>play_arrow</mat-icon>
+                Implémenter
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Workflows -->
+    <mat-tab label="Workflows IA">
+      <div class="tab-content">
+        
+        <!-- Liste des workflows -->
+        <div class="workflows-grid">
+          <mat-card *ngFor="let workflow of workflows" class="workflow-card">
+            
+            <mat-card-header>
+              <div mat-card-avatar class="workflow-avatar" [ngClass]="getWorkflowStatusColor(workflow)">
+                <mat-icon>settings</mat-icon>
+              </div>
+              
+              <mat-card-title>{{ workflow.name }}</mat-card-title>
+              <mat-card-subtitle>
+                <mat-chip [ngClass]="getWorkflowStatusColor(workflow)">
+                  {{ getWorkflowStatus(workflow) }}
+                </mat-chip>
+                <span class="success-rate">Succès: {{ workflow.successRate }}%</span>
+              </mat-card-subtitle>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <p class="workflow-description">{{ workflow.description }}</p>
+              
+              <div class="workflow-metrics">
+                <div class="metric">
+                  <mat-icon>schedule</mat-icon>
+                  <span>Dernière exécution: {{ workflow.lastExecuted ? formatTimeAgo(workflow.lastExecuted) : 'Jamais' }}</span>
+                </div>
+                
+                <div class="metric" *ngIf="workflow.nextExecution">
+                  <mat-icon>event</mat-icon>
+                  <span>Prochaine exécution: {{ formatTimeAgo(workflow.nextExecution) }}</span>
+                </div>
+              </div>
+              
+              <div class="workflow-actions">
+                <h4>Actions:</h4>
+                <div class="action-list">
+                  <div *ngFor="let action of workflow.actions" class="action-item">
+                    <mat-icon>{{ getActionIcon(action.type) }}</mat-icon>
+                    <span>{{ action.type }}: {{ action.params | json }}</span>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+            
+            <mat-card-actions>
+              <button mat-button 
+                      [disabled]="!workflow.isActive"
+                      (click)="executeWorkflow(workflow.id)">
+                <mat-icon>play_arrow</mat-icon>
+                Exécuter
+              </button>
+              
+              <button mat-button>
+                <mat-icon>edit</mat-icon>
+                Configurer
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Benchmarks -->
+    <mat-tab label="Benchmarks">
+      <div class="tab-content">
+        
+        <!-- Tableau des benchmarks -->
+        <div class="benchmarks-table">
+          <mat-card class="benchmark-card" *ngFor="let benchmark of benchmarks">
+            
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon [ngClass]="getBenchmarkColor(benchmark.percentile)">
+                  {{ getBenchmarkIcon(benchmark.percentile) }}
+                </mat-icon>
+                {{ benchmark.metric }}
+              </mat-card-title>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <div class="benchmark-values">
+                <div class="value-section">
+                  <label>Votre valeur</label>
+                  <div class="value your-value">{{ benchmark.yourValue | number:'1.2-2' }}</div>
+                </div>
+                
+                <div class="value-section">
+                  <label>Moyenne secteur</label>
+                  <div class="value industry-average">{{ benchmark.industryAverage | number:'1.2-2' }}</div>
+                </div>
+                
+                <div class="value-section">
+                  <label>Meilleure pratique</label>
+                  <div class="value best-practice">{{ benchmark.bestInClass | number:'1.2-2' }}</div>
+                </div>
+              </div>
+              
+              <div class="benchmark-analysis">
+                <div class="percentile">
+                  <mat-icon [ngClass]="getBenchmarkColor(benchmark.percentile)">
+                    {{ getBenchmarkIcon(benchmark.percentile) }}
+                  </mat-icon>
+                  <span>Vous êtes dans le {{ benchmark.percentile }}e percentile</span>
+                </div>
+                
+                <div class="gap" [ngClass]="benchmark.gap > 0 ? 'positive' : 'negative'">
+                  <mat-icon>{{ benchmark.gap > 0 ? 'trending_up' : 'trending_down' }}</mat-icon>
+                  <span>Écart: {{ benchmark.gap > 0 ? '+' : '' }}{{ benchmark.gap | number:'1.2-2' }}</span>
+                </div>
+              </div>
+              
+              <div class="opportunity">
+                <h4>Opportunité:</h4>
+                <p>{{ benchmark.opportunity }}</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+
+  <!-- Indicateur de chargement -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Analyse IA en cours...</p>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+

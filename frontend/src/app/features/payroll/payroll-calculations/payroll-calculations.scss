@@ -1,0 +1,363 @@
+.payroll-calculations-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .header-section {
+    margin-bottom: 24px;
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      .header-info {
+        h1 {
+          margin: 0;
+          color: #333;
+          font-size: 24px;
+          font-weight: 500;
+        }
+
+        .subtitle {
+          margin: 4px 0 0 0;
+          color: #666;
+          font-size: 14px;
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
+      }
+    }
+  }
+
+  .configuration-card,
+  .employees-card,
+  .results-card,
+  .generation-card {
+    margin-bottom: 24px;
+
+    .mat-card-header {
+      .mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #333;
+        font-size: 18px;
+        font-weight: 500;
+
+        .selection-actions {
+          margin-left: auto;
+          display: flex;
+          gap: 8px;
+        }
+      }
+    }
+
+    .calculation-form,
+    .payroll-form {
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .notes-field {
+        width: 100%;
+        margin-bottom: 16px;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+
+    .employees-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+
+      .employee-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: #1976d2;
+          background-color: #f8f9fa;
+        }
+
+        &.selected {
+          border-color: #1976d2;
+          background-color: #e3f2fd;
+        }
+
+        .employee-info {
+          flex: 1;
+
+          .employee-name {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+          }
+
+          .employee-details {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 4px;
+
+            .employee-code {
+              font-family: 'Courier New', monospace;
+              font-size: 12px;
+              color: #666;
+              background-color: #f5f5f5;
+              padding: 2px 6px;
+              border-radius: 4px;
+            }
+
+            .employee-department {
+              font-size: 12px;
+              color: #666;
+            }
+          }
+
+          .employee-salary {
+            font-weight: 500;
+            color: #2e7d32;
+          }
+        }
+      }
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 24px;
+
+      .calculations-table {
+        width: 100%;
+
+        .mat-header-cell {
+          font-weight: 600;
+          color: #333;
+        }
+
+        .calculation-row {
+          &:hover {
+            background-color: #f8f9fa;
+          }
+        }
+
+        .employee-name {
+          font-weight: 500;
+          color: #333;
+        }
+
+        .salary-amount,
+        .bonus-amount,
+        .allowance-amount,
+        .gross-salary,
+        .deductions-amount,
+        .net-salary {
+          font-weight: 500;
+        }
+
+        .salary-amount,
+        .bonus-amount,
+        .allowance-amount,
+        .gross-salary {
+          color: #2e7d32;
+        }
+
+        .deductions-amount {
+          color: #d32f2f;
+        }
+
+        .net-salary {
+          color: #1976d2;
+          font-weight: 600;
+        }
+
+        .overtime-info {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+
+          .overtime-hours {
+            font-size: 12px;
+            color: #666;
+          }
+
+          .overtime-amount {
+            font-weight: 500;
+            color: #2e7d32;
+          }
+        }
+      }
+    }
+
+    .totals-section {
+      .totals-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-top: 16px;
+
+        .total-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px;
+          background-color: #f8f9fa;
+          border-radius: 8px;
+
+          &.total-net {
+            background-color: #e3f2fd;
+            border: 2px solid #1976d2;
+
+            label {
+              font-weight: 600;
+              color: #1976d2;
+            }
+
+            .total-amount {
+              font-weight: 700;
+              color: #1976d2;
+              font-size: 16px;
+            }
+          }
+
+          label {
+            font-weight: 500;
+            color: #666;
+          }
+
+          .total-amount {
+            font-weight: 600;
+            color: #333;
+          }
+        }
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    text-align: center;
+
+    mat-spinner {
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: #666;
+      margin: 0;
+    }
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    text-align: center;
+
+    .empty-icon {
+      font-size: 48px;
+      color: #ccc;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      color: #333;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      color: #666;
+      margin: 0;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 1200px) {
+  .payroll-calculations-container {
+    .configuration-card,
+    .generation-card {
+      .calculation-form,
+      .payroll-form {
+        .form-row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .payroll-calculations-container {
+    padding: 16px;
+
+    .header-section {
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+
+        .header-actions {
+          justify-content: center;
+        }
+      }
+    }
+
+    .configuration-card,
+    .generation-card {
+      .calculation-form,
+      .payroll-form {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+
+    .employees-card {
+      .employees-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .results-card {
+      .totals-section {
+        .totals-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
