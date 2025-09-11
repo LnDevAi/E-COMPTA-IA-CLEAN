@@ -13,51 +13,29 @@ import java.util.ArrayList;
  * RÃ©volutionnaire vs TOMPRO - Assistant IA 24/7
  */
 @Entity
-@Table(name = "ai_assistant_messages")
+@Table(name = "ai_assistants")
 public class AIAssistant {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private MessageType type;
-    
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
-    
-    @Column(columnDefinition = "TEXT")
-    private String context; // Contexte de la conversation en JSON
-    
-    @Column(nullable = false)
-    private LocalDateTime timestamp;
-    
-    @Column(nullable = false)
-    private Boolean isFromUser;
-    
-    @Column
-    private Integer confidence; // 0-100 pour les rÃ©ponses IA
-    
-    @ElementCollection
-    @CollectionTable(name = "related_insights", joinColumns = @JoinColumn(name = "message_id"))
-    @Column(name = "insight_id")
-    private List<Long> relatedInsights = new ArrayList<>();
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "conversation_id")
-    private Conversation conversation;
+    @JoinColumn(name = "user_id")
+    private User user;
     
-    @Column(columnDefinition = "TEXT")
-    private String metadata;
+    @Column
+    private String name;
+    
+    @Column
+    private String model;
+    
+    @Column
+    private LocalDateTime createdAt = LocalDateTime.now();
     
     // Constructeurs
     public AIAssistant() {

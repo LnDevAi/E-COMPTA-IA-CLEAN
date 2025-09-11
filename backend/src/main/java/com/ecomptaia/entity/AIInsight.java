@@ -20,69 +20,22 @@ public class AIInsight {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false, length = 100)
-    private String title;
-    
-    @Column(columnDefinition = "TEXT")
-    private String description;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private InsightType type;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private InsightCategory category;
-    
-    @Column(nullable = false)
-    private Integer confidence; // 0-100
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private ImpactLevel impact;
-    
-    @Column(nullable = false)
-    private Integer priority; // 1-10
-    
-    @Column(nullable = false)
-    private Boolean actionable = false;
-    
-    @ElementCollection
-    @CollectionTable(name = "ai_insight_actions", joinColumns = @JoinColumn(name = "insight_id"))
-    @Column(name = "action", columnDefinition = "TEXT")
-    private List<String> suggestedActions = new ArrayList<>();
-    
-    @Column(columnDefinition = "JSON")
-    private String data; // DonnÃ©es JSON associÃ©es
-    
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-    
-    @Column
-    private LocalDateTime expiresAt;
-    
-    @Column
-    private LocalDateTime resolvedAt;
-    
-    @Column
-    private Boolean isResolved = false;
-    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_user_id")
-    private User createdBy;
+    @JoinColumn(name = "user_id")
+    private User user;
     
-    @Column(length = 50)
-    private String source; // Source de l'insight (ML_MODEL, RULE_ENGINE, etc.)
+    @Column(name = "insight_type")
+    private String insightType;
     
-    @Column(length = 20)
-    private String version; // Version du modÃ¨le IA
+    @Column(name = "content", columnDefinition = "TEXT")
+    private String content;
     
-    @Column(columnDefinition = "TEXT")
-    private String metadata; // MÃ©tadonnÃ©es additionnelles
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
     
     // Constructeurs
     public AIInsight() {

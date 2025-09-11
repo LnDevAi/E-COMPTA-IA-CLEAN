@@ -1,6 +1,5 @@
 package com.ecomptaia.entity;
 
-import com.ecomptaia.security.entity.Company;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
