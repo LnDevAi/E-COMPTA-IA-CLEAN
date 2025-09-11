@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+Test set: com.ecomptaia.controller.GovernmentPlatformControllerTest
+-------------------------------------------------------------------------------
+Tests run: 20, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.468 s <<< FAILURE! -- in com.ecomptaia.controller.GovernmentPlatformControllerTest
+com.ecomptaia.controller.GovernmentPlatformControllerTest.testSubmitSocialDeclaration_Success -- Time elapsed: 0.011 s <<< FAILURE!
+java.lang.AssertionError: JSON path "$.submissionResult.declarationType" expected:<Déclaration mensuelle> but was:<TVA>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:123)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:111)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.ecomptaia.controller.GovernmentPlatformControllerTest.testSubmitSocialDeclaration_Success(GovernmentPlatformControllerTest.java:263)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

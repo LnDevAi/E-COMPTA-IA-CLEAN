@@ -1,4 +1,4 @@
-ackage com.ecomptaia.sycebnl.service;
+package com.ecomptaia.sycebnl.service;
 
 import com.ecomptaia.sycebnl.entity.PieceJustificativeSycebnl;
 import org.junit.jupiter.api.Test;

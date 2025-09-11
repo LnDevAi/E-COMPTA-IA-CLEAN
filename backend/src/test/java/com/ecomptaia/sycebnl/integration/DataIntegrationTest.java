@@ -1,7 +1,7 @@
-ackage com.ecomptaia.sycebnl.integration;
+package com.ecomptaia.sycebnl.integration;
 
-import com.ecomptaia.security.entity.Company;
-import com.ecomptaia.security.entity.User;
+import com.ecomptaia.entity.Company;
+import com.ecomptaia.entity.User;
 import com.ecomptaia.entity.Account;
 import com.ecomptaia.entity.FinancialPeriod;
 import com.ecomptaia.sycebnl.entity.PieceJustificativeSycebnl;
