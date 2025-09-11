@@ -135,6 +135,20 @@ public class BalanceComptable {
     public void setDateFin(LocalDate dateFin) { this.dateFin = dateFin; }
     public String getDevise() { return devise; }
     public void setDevise(String devise) { this.devise = devise; }
+	// Champs additionnels pour statistiques
+	@Column(name = "nombre_comptes")
+	private Integer nombreComptes;
+
+	@Column(name = "nombre_mouvements")
+	private Integer nombreMouvements;
+
+	public Integer getNombreComptes() { return nombreComptes; }
+	public void setNombreComptes(Integer nombreComptes) { this.nombreComptes = nombreComptes; }
+
+	public Integer getNombreMouvements() { return nombreMouvements; }
+	public void setNombreMouvements(Integer nombreMouvements) { this.nombreMouvements = nombreMouvements; }
+
+	public boolean isValidated() { return "VALIDATED".equalsIgnoreCase(this.statut) || this.dateValidation != null; }
 }
 
 

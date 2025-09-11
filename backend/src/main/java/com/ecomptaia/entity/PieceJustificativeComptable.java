@@ -1,7 +1,7 @@
 package com.ecomptaia.entity;
 
-import com.ecomptaia.security.entity.Company;
-import com.ecomptaia.security.entity.User;
+import com.ecomptaia.entity.Company;
+import com.ecomptaia.entity.User;
 import com.ecomptaia.entity.FinancialPeriod;
 
 import jakarta.persistence.*;

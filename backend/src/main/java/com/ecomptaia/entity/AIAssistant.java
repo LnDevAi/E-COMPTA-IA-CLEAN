@@ -1,7 +1,7 @@
 package com.ecomptaia.entity;
 
-import com.ecomptaia.security.entity.Company;
-import com.ecomptaia.security.entity.User;
+import com.ecomptaia.entity.Company;
+import com.ecomptaia.entity.User;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -27,6 +27,10 @@ public class AIAssistant {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "conversation_id")
+    private Conversation conversation;
     
     @Column
     private String name;
@@ -36,6 +40,34 @@ public class AIAssistant {
     
     @Column
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    // Champs de message
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private MessageType type;
+
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
+    @Column(columnDefinition = "TEXT")
+    private String context;
+
+    @Column
+    private LocalDateTime timestamp;
+
+    @Column
+    private Boolean isFromUser;
+
+    @Column
+    private Integer confidence;
+
+    @ElementCollection
+    @CollectionTable(name = "ai_assistant_related_insights", joinColumns = @JoinColumn(name = "assistant_id"))
+    @Column(name = "insight_id")
+    private List<Long> relatedInsights = new ArrayList<>();
+
+    @Column(columnDefinition = "TEXT")
+    private String metadata;
     
     // Constructeurs
     public AIAssistant() {

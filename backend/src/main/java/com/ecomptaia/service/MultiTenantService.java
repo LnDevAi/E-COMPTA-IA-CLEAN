@@ -6,7 +6,7 @@ import com.ecomptaia.entity.Company;
 import com.ecomptaia.entity.LocaleSettings;
 import com.ecomptaia.entity.CompanySubscription;
 import com.ecomptaia.entity.SubscriptionPlan;
-import com.ecomptaia.accounting.entity.AccountingStandard;
+import com.ecomptaia.accounting.AccountingStandard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,7 +95,7 @@ public class MultiTenantService {
     public boolean hasFeatureAccess(Company company, String featureName) {
         // Pour l'instant, toutes les entreprises ont accÃ¨s aux fonctionnalitÃ©s de base
         // Cette logique sera implÃ©mentÃ©e avec la relation CompanySubscription
-        return company != null && Boolean.TRUE.equals(company.getIsActive());
+        return company != null && company.isActive();
     }
     
     /**
@@ -104,7 +104,7 @@ public class MultiTenantService {
     public boolean checkUsageLimits(Company company, String resourceType, int requestedAmount) {
         // Pour l'instant, pas de limites strictes
         // Cette logique sera implÃ©mentÃ©e avec la relation CompanySubscription
-        return company != null && Boolean.TRUE.equals(company.getIsActive());
+        return company != null && company.isActive();
     }
     
     /**
@@ -218,7 +218,7 @@ public class MultiTenantService {
         stats.put("companyName", company.getName());
         stats.put("countryCode", company.getCountryCode());
         stats.put("currency", company.getCurrency());
-        stats.put("isActive", company.getIsActive());
+        stats.put("isActive", company.isActive());
         stats.put("createdAt", company.getCreatedAt());
         
         // Statistiques d'abonnement - implÃ©mentation future

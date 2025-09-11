@@ -1,7 +1,7 @@
 package com.ecomptaia.controller;
 
-import com.ecomptaia.accounting.entity.AccountingStandard;
-import com.ecomptaia.accounting.entity.ChartOfAccounts;
+import com.ecomptaia.accounting.AccountingStandard;
+import com.ecomptaia.accounting.ChartOfAccounts;
 import com.ecomptaia.service.AccountingStandardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

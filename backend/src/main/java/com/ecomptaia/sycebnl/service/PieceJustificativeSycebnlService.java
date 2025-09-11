@@ -1,8 +1,8 @@
 package com.ecomptaia.sycebnl.service;
 
-import com.ecomptaia.security.entity.Company;
+import com.ecomptaia.entity.Company;
 import com.ecomptaia.entity.GedDocument;
-import com.ecomptaia.security.entity.User;
+import com.ecomptaia.entity.User;
 import com.ecomptaia.sycebnl.entity.PieceJustificativeSycebnl;
 import com.ecomptaia.sycebnl.entity.AnalyseOCRSycebnl;
 import com.ecomptaia.sycebnl.entity.AnalyseIASycebnl;

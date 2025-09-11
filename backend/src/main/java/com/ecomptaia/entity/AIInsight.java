@@ -1,7 +1,7 @@
 package com.ecomptaia.entity;
 
-import com.ecomptaia.security.entity.Company;
-import com.ecomptaia.security.entity.User;
+import com.ecomptaia.entity.Company;
+import com.ecomptaia.entity.User;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -28,14 +28,65 @@ public class AIInsight {
     @JoinColumn(name = "user_id")
     private User user;
     
-    @Column(name = "insight_type")
-    private String insightType;
-    
-    @Column(name = "content", columnDefinition = "TEXT")
-    private String content;
+    @Column
+    private String title;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 30)
+    private InsightType type;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 30)
+    private InsightCategory category;
+
+    @Column
+    private Integer confidence;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ImpactLevel impact;
+
+    @Column
+    private Integer priority;
+
+    @Column
+    private Boolean actionable;
+
+    @ElementCollection
+    @CollectionTable(name = "ai_insight_actions", joinColumns = @JoinColumn(name = "insight_id"))
+    @Column(name = "action")
+    private List<String> suggestedActions = new ArrayList<>();
+
+    @Column(columnDefinition = "TEXT")
+    private String data;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column
+    private LocalDateTime expiresAt;
+
+    @Column
+    private LocalDateTime resolvedAt;
+
+    @Column
+    private Boolean isResolved = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
+    @Column
+    private String source;
+
+    @Column
+    private String version;
+
+    @Column(columnDefinition = "TEXT")
+    private String metadata;
     
     // Constructeurs
     public AIInsight() {
