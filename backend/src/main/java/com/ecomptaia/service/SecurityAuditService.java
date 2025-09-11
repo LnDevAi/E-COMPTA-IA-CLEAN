@@ -26,7 +26,7 @@ public class SecurityAuditService {
         audit.setSessionId(sessionId);
         audit.setEventType(eventType);
         audit.setEventCategory(eventCategory);
-        audit.setEventDescription(eventDescription);
+        audit.setDetails(eventDescription);
         audit.setRiskLevel(riskLevel);
         audit.setIsSuccessful(isSuccessful);
         audit.setIpAddress(ipAddress);

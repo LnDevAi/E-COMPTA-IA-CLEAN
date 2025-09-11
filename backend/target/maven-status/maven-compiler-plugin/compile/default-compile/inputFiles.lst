@@ -38,6 +38,7 @@
 /workspace/backend/src/main/java/com/ecomptaia/service/UserManagementService.java
 /workspace/backend/src/main/java/com/ecomptaia/dto/AuthResponse.java
 /workspace/backend/src/main/java/com/ecomptaia/config/SecurityProperties.java
+/workspace/backend/src/main/java/com/ecomptaia/crm/service/CrmCustomerService.java
 /workspace/backend/src/main/java/com/ecomptaia/controller/ExportController.java
 /workspace/backend/src/main/java/com/ecomptaia/service/ThirdPartySoftwareService.java
 /workspace/backend/src/main/java/com/ecomptaia/entity/Utilisateur.java
@@ -112,6 +113,7 @@
 /workspace/backend/src/main/java/com/ecomptaia/repository/AccountEntryRepository.java
 /workspace/backend/src/main/java/com/ecomptaia/dto/LoginRequest.java
 /workspace/backend/src/main/java/com/ecomptaia/accounting/ChartOfAccountsFactory.java
+/workspace/backend/src/main/java/com/ecomptaia/service/EtatsFinanciersAutoService.java
 /workspace/backend/src/main/java/com/ecomptaia/controller/InternationalAccountingController.java
 /workspace/backend/src/main/java/com/ecomptaia/controller/ThirdPartyReportingController.java
 /workspace/backend/src/main/java/com/ecomptaia/controller/UserManagementController.java
@@ -185,6 +187,7 @@
 /workspace/backend/src/main/java/com/ecomptaia/sycebnl/controller/SycebnlController.java
 /workspace/backend/src/main/java/com/ecomptaia/controller/SupplierController.java
 /workspace/backend/src/main/java/com/ecomptaia/repository/ExchangeRateRepository.java
+/workspace/backend/src/main/java/com/ecomptaia/entity/Role.java
 /workspace/backend/src/main/java/com/ecomptaia/entity/Metric.java
 /workspace/backend/src/main/java/com/ecomptaia/repository/AccountRepository.java
 /workspace/backend/src/main/java/com/ecomptaia/service/UserService.java
@@ -267,6 +270,7 @@
 /workspace/backend/src/main/java/com/ecomptaia/service/InternationalDataInitializer.java
 /workspace/backend/src/main/java/com/ecomptaia/controller/AIDocumentAnalysisController.java
 /workspace/backend/src/main/java/com/ecomptaia/repository/SubscriptionRepository.java
+/workspace/backend/src/main/java/com/ecomptaia/entity/PredictiveMetric.java
 /workspace/backend/src/main/java/com/ecomptaia/sycebnl/repository/PieceJustificativeSycebnlRepository.java
 /workspace/backend/src/main/java/com/ecomptaia/entity/Backup.java
 /workspace/backend/src/main/java/com/ecomptaia/model/ohada/TableauFluxSYSCOHADA.java
@@ -394,6 +398,7 @@
 /workspace/backend/src/main/java/com/ecomptaia/repository/TaxRepository.java
 /workspace/backend/src/main/java/com/ecomptaia/controller/JournalEntryController.java
 /workspace/backend/src/main/java/com/ecomptaia/repository/WorkflowRepository.java
+/workspace/backend/src/main/java/com/ecomptaia/entity/ConsentRecord.java
 /workspace/backend/src/main/java/com/ecomptaia/repository/WebhookEventRepository.java
 /workspace/backend/src/main/java/com/ecomptaia/config/CorsConfig.java
 /workspace/backend/src/main/java/com/ecomptaia/config/TaxDataInitializer.java

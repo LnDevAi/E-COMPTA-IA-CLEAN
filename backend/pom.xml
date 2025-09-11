@@ -16,7 +16,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.5</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <dependencies>
         <!-- Spring Boot Starters -->
@@ -43,6 +43,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <!-- Add Elasticsearch starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
         </dependency>
         <!-- JWT -->
         <dependency>
@@ -131,7 +136,6 @@
             <artifactId>svg</artifactId>
             <version>7.2.5</version>
         </dependency>
-        
         
         <!-- Jakarta Mail -->
         <dependency>
