@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.service;
+package com.ecomptaia.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

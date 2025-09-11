@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.inventory.entity;
+package com.ecomptaia.inventory.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

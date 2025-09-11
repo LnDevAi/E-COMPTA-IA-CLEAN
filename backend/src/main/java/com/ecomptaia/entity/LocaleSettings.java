@@ -1,8 +1,4 @@
-﻿ackage com.ecomptaia.entity;
-
-pa
-import com.ecomptaia.entity.LocaleSettings;
-ckage com.ecomptaia.entity;
+package com.ecomptaia.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

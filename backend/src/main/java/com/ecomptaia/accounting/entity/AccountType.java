@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.accounting.entity;
+package com.ecomptaia.accounting.entity;
 
 public enum AccountType {
     ASSET("ASSET", "Actif"),

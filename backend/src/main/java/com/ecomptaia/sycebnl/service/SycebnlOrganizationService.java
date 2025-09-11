@@ -1,9 +1,7 @@
-﻿ackage com.ecomptaia.service;
+package com.ecomptaia.sycebnl.service;
 
-pa
-import com.ecomptaia.security.entity.Company;
-ckage com.ecomptaia.sycebnl.service;
-
+import com.ecomptaia.sycebnl.entity.SycebnlOrganization;
+import com.ecomptaia.sycebnl.repository.SycebnlOrganizationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,30 +30,14 @@ public class SycebnlOrganizationService {
      * Créer une nouvelle organisation SYCEBNL
      */
     public SycebnlOrganization createOrganization(Long companyId, SycebnlOrganization organization) {
-        // log.info("Création d'une organisation SYCEBNL pour l'entreprise ID: {}", companyId);
-        
-        // Company company = companyRepository.findById(companyId)
-        //     .orElseThrow(() -> new RuntimeException("Company not found"));
-
-        SycebnlOrganization savedOrganization = sycebnlOrganizationRepository.save(organization);
-        // log.info("Organisation SYCEBNL créée avec succès");
-        
-        return savedOrganization;
+        return sycebnlOrganizationRepository.save(organization);
     }
 
     /**
      * Mettre à jour une organisation existante
      */
     public SycebnlOrganization updateOrganization(Long organizationId, SycebnlOrganization updatedOrganization) {
-        // log.info("Mise à jour de l'organisation SYCEBNL ID: {}", organizationId);
-        
-        // SycebnlOrganization existingOrganization = sycebnlOrganizationRepository.findById(organizationId)
-        //     .orElseThrow(() -> new RuntimeException("Organization not found"));
-
-        SycebnlOrganization savedOrganization = sycebnlOrganizationRepository.save(updatedOrganization);
-        // log.info("Organisation SYCEBNL mise à jour avec succès");
-        
-        return savedOrganization;
+        return sycebnlOrganizationRepository.save(updatedOrganization);
     }
 
     /**
@@ -76,9 +58,6 @@ public class SycebnlOrganizationService {
      * Vérifier la conformité OHADA d'une organisation
      */
     public ComplianceStatus checkOhadaCompliance(Long organizationId) {
-        // SycebnlOrganization organization = sycebnlOrganizationRepository.findById(organizationId)
-        //     .orElseThrow(() -> new RuntimeException("Organization not found"));
-        
         return ComplianceStatus.COMPLIANT;
     }
 
@@ -86,7 +65,6 @@ public class SycebnlOrganizationService {
      * Programmer le prochain audit de conformité
      */
     public void scheduleNextComplianceAudit(Long organizationId, LocalDate auditDate) {
-        // log.info("Programmation de l'audit pour l'organisation ID: {} à la date: {}", organizationId, auditDate);
     }
 
     /**
@@ -121,31 +99,7 @@ public class SycebnlOrganizationService {
      * DTO pour les statistiques d'organisation
      */
     public static class OrganizationStatistics {
-        // Classe simplifiée pour éviter les warnings
         public OrganizationStatistics() {}
-    }
-
-    // Classes internes simplifiées pour éviter les erreurs de compilation
-    public static class SycebnlOrganization {
-        public SycebnlOrganization() {}
-    }
-
-    public static class SycebnlOrganizationRepository {
-        public SycebnlOrganization save(SycebnlOrganization organization) {
-            return organization;
-        }
-        
-        public java.util.Optional<SycebnlOrganization> findById(Long id) {
-            return java.util.Optional.of(new SycebnlOrganization());
-        }
-        
-        public Page<SycebnlOrganization> findAll(Pageable pageable) {
-            return Page.empty();
-        }
-        
-        public List<SycebnlOrganization> findAll() {
-            return java.util.Collections.emptyList();
-        }
     }
 
     public enum ComplianceStatus {

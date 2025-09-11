@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.crm.service;
+package com.ecomptaia.crm.service;
 
 import com.ecomptaia.crm.dto.CustomerIntelligence;
 import com.ecomptaia.crm.entity.CrmCustomer;

@@ -1,11 +1,11 @@
-﻿ackage com.ecomptaia.entity;
+package com.ecomptaia.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
 
 /**
- * EntitÃ© pour la configuration fiscale par pays
+ * Entité pour la configuration fiscale par pays
  */
 @Entity
 @Table(name = "tax_configurations")
@@ -44,7 +44,7 @@ public class TaxConfiguration {
     @JoinColumn(name = "configuration_id")
     private InternationalConfiguration configuration;
     
-    // Ã‰numÃ©rations
+    // Énumérations
     public enum TaxType {
         VAT, INCOME_TAX, CORPORATE_TAX, PAYROLL_TAX, CUSTOMS_DUTY, STAMP_TAX
     }

@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.controller;
+package com.ecomptaia.controller;
 
 import com.ecomptaia.entity.DataProtection;
 import com.ecomptaia.entity.ConsentRecord;

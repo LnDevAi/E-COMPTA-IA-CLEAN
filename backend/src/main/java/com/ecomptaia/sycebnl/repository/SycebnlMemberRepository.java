@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.sycebnl.repository;
+package com.ecomptaia.sycebnl.repository;
 
 import com.ecomptaia.sycebnl.entity.SycebnlMember;
 import com.ecomptaia.sycebnl.entity.SycebnlMember.ContributionFrequency;

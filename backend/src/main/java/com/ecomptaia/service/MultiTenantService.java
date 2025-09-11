@@ -1,8 +1,6 @@
-﻿ackage com.ecomptaia.service;
+package com.ecomptaia.service;
 
-pa
-import com.ecomptaia.accounting.entity.ChartOfAccounts;
-ckage com.ecomptaia.service;
+ 
 
 import com.ecomptaia.security.entity.Company;
 import com.ecomptaia.entity.LocaleSettings;

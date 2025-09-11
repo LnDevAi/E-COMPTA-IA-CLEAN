@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.repository;
+package com.ecomptaia.repository;
 
 import com.ecomptaia.entity.ConsentRecord;
 import org.springframework.data.jpa.repository.JpaRepository;

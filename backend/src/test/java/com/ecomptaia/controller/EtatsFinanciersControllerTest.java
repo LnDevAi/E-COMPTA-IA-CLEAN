@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.controller;
+ackage com.ecomptaia.controller;
 
 import com.ecomptaia.entity.BalanceComptable;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.entity;
+package com.ecomptaia.entity;
 
 import com.ecomptaia.security.entity.Company;
 

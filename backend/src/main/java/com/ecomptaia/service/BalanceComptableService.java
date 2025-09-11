@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.service;
+package com.ecomptaia.service;
 
 import com.ecomptaia.entity.EcritureComptable;
 import com.ecomptaia.entity.LigneEcriture;

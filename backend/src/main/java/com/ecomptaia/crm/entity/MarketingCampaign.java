@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.crm.entity;
+package com.ecomptaia.crm.entity;
 
 import com.ecomptaia.security.entity.Company;
 import jakarta.persistence.*;

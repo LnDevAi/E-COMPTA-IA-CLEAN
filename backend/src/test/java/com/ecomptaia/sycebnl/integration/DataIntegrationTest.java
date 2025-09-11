@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.sycebnl.integration;
+ackage com.ecomptaia.sycebnl.integration;
 
 import com.ecomptaia.security.entity.Company;
 import com.ecomptaia.security.entity.User;

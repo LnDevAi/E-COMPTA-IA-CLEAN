@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.crm.dto;
+package com.ecomptaia.crm.dto;
 
 import com.ecomptaia.crm.entity.CrmCustomer.CustomerSegment;
 import com.ecomptaia.crm.entity.CrmCustomer.PaymentBehavior;

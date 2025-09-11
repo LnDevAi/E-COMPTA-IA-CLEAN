@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.payroll.entity;
+package com.ecomptaia.payroll.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

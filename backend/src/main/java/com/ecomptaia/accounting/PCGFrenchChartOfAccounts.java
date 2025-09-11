@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.accounting;
+package com.ecomptaia.accounting;
 
 import com.ecomptaia.accounting.entity.ChartOfAccounts;
 import com.ecomptaia.accounting.entity.AccountClass;

@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.sycebnl.entity;
+package com.ecomptaia.sycebnl.entity;
 
 import com.ecomptaia.security.entity.Company;
 import jakarta.persistence.*;

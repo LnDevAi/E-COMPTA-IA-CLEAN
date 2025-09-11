@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.entity;
+package com.ecomptaia.entity;
 
 import com.ecomptaia.entity.Account;
 import com.ecomptaia.entity.BalanceComptable;
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * EntitÃ© Solde Compte - DÃ©tail des soldes par compte dans la balance
+ * Entité Solde Compte - Détail des soldes par compte dans la balance
  */
 @Entity
 @Table(name = "solde_compte")
@@ -145,12 +145,12 @@ public class SoldeCompte {
     public Integer getOrdreAffichage() { return ordreAffichage; }
     public void setOrdreAffichage(Integer ordreAffichage) { this.ordreAffichage = ordreAffichage; }
     
-    // MÃ©thodes utilitaires
+    // Méthodes utilitaires
     /**
      * Calculer le solde final
      */
     public void calculerSoldeFinal() {
-        // Solde dÃ©but
+        // Solde début
         BigDecimal soldeDebut = soldeDebutDebit.subtract(soldeDebutCredit);
         
         // Mouvements
@@ -159,7 +159,7 @@ public class SoldeCompte {
         // Solde final
         this.soldeFinal = soldeDebut.add(mouvementNet);
         
-        // DÃ©terminer le sens du solde
+        // Déterminer le sens du solde
         if (soldeFinal.compareTo(BigDecimal.ZERO) > 0) {
             this.sensSolde = "DEBIT";
             this.soldeFinDebit = soldeFinal;
@@ -176,7 +176,7 @@ public class SoldeCompte {
     }
     
     /**
-     * DÃ©terminer la classe du compte Ã  partir du numÃ©ro
+     * Déterminer la classe du compte à partir du numéro
      */
     private Integer getClasseFromAccountNumber(String accountNumber) {
         if (accountNumber == null || accountNumber.length() < 1) {
@@ -190,7 +190,7 @@ public class SoldeCompte {
     }
     
     /**
-     * DÃ©terminer la nature du compte Ã  partir du numÃ©ro
+     * Déterminer la nature du compte à partir du numéro
      */
     private String getNatureFromAccountNumber(String accountNumber) {
         if (accountNumber == null || accountNumber.length() < 1) {
@@ -211,14 +211,14 @@ public class SoldeCompte {
     }
     
     /**
-     * VÃ©rifier si le compte a des mouvements
+     * Vérifier si le compte a des mouvements
      */
     public boolean hasMouvements() {
         return nombreMouvements != null && nombreMouvements > 0;
     }
     
     /**
-     * VÃ©rifier si le compte a un solde
+     * Vérifier si le compte a un solde
      */
     public boolean hasSolde() {
         return soldeFinal != null && soldeFinal.compareTo(BigDecimal.ZERO) != 0;

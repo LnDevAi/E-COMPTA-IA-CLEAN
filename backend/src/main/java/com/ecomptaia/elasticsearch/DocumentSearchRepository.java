@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.elasticsearch;
+package com.ecomptaia.elasticsearch;
 
 import com.ecomptaia.accounting.entity.AccountingStandard;
 

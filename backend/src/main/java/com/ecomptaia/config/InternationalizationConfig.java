@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.config;
+package com.ecomptaia.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
