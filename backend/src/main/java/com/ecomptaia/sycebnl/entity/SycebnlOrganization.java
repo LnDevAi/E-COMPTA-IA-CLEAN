@@ -1,6 +1,6 @@
 package com.ecomptaia.sycebnl.entity;
 
-import com.ecomptaia.security.entity.Company;
+import com.ecomptaia.entity.Company;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * Service pour la gestion de l'audit de sécurité
  */
-@Service
+@Service("domainSecurityAuditService")
 public class SecurityAuditService {
     
     /**

@@ -1,7 +1,5 @@
 package com.ecomptaia.crm.controller;
 
-import com.ecomptaia.security.entity.User;
-
 import com.ecomptaia.crm.entity.CrmCustomer;
 import com.ecomptaia.crm.service.CrmCustomerService;
 import lombok.extern.slf4j.Slf4j;

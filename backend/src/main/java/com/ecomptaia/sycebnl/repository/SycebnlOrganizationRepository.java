@@ -1,7 +1,5 @@
 package com.ecomptaia.sycebnl.repository;
 
-import com.ecomptaia.security.entity.Company;
-
 import com.ecomptaia.sycebnl.entity.SycebnlOrganization;
 import com.ecomptaia.sycebnl.entity.SycebnlOrganization.AccountingSystem;
 import com.ecomptaia.sycebnl.entity.SycebnlOrganization.OrganizationType;

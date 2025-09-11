@@ -1,7 +1,5 @@
 package com.ecomptaia.crm.repository;
 
-import com.ecomptaia.security.entity.Company;
-
 import com.ecomptaia.crm.entity.CrmCustomer;
 import com.ecomptaia.crm.entity.CrmCustomer.CustomerSegment;
 import org.springframework.data.domain.Page;

@@ -3,7 +3,7 @@ package com.ecomptaia.security;
 import org.springframework.stereotype.Service;
 import java.util.regex.Pattern;
 
-@Service
+@Service("securityDataValidationService")
 public class DataValidationService {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(

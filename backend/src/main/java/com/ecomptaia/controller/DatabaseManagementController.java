@@ -1,7 +1,5 @@
 package com.ecomptaia.controller;
 
-import com.ecomptaia.security.entity.Company;
-
 import com.ecomptaia.service.DatabaseConnectionService;
 import com.ecomptaia.service.DataValidationService;
 import com.ecomptaia.service.DataSynchronizationService;

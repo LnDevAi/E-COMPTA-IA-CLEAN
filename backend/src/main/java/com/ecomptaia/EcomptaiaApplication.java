@@ -15,8 +15,17 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @since 2024
  */
 @SpringBootApplication
-@EntityScan("com.ecomptaia.entity")
-@EnableJpaRepositories("com.ecomptaia.repository")
+@EntityScan(basePackages = {
+    "com.ecomptaia.entity",
+    "com.ecomptaia.crm.entity",
+    "com.ecomptaia.sycebnl.entity",
+    "com.ecomptaia.payroll.entity"
+})
+@EnableJpaRepositories(basePackages = {
+    "com.ecomptaia.repository",
+    "com.ecomptaia.crm.repository",
+    "com.ecomptaia.sycebnl.repository"
+})
 @EnableAsync
 @EnableScheduling
 public class EcomptaiaApplication {

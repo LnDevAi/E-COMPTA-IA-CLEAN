@@ -1,8 +1,5 @@
 package com.ecomptaia.service;
 
-import com.ecomptaia.security.entity.Company;
-import com.ecomptaia.security.entity.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

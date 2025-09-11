@@ -49,6 +49,10 @@ public class ConsentRecord {
     @Column
     private LocalDateTime createdAt = LocalDateTime.now();
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "data_protection_id")
+    private DataProtection dataProtection;
+    
     public enum ConsentType {
         MARKETING_EMAIL("Marketing Email"),
         MARKETING_SMS("Marketing SMS"),
@@ -102,4 +106,6 @@ public class ConsentRecord {
     public void setWithdrawalDate(LocalDateTime withdrawalDate) { this.withdrawalDate = withdrawalDate; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public DataProtection getDataProtection() { return dataProtection; }
+    public void setDataProtection(DataProtection dataProtection) { this.dataProtection = dataProtection; }
 }
