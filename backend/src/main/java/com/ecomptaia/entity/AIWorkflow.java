@@ -31,8 +31,37 @@ public class AIWorkflow {
     @Column
     private String workflowName;
     
+    @Enumerated(EnumType.STRING)
+    @Column(name = "trigger_type")
+    private WorkflowTrigger trigger;
+    
+    @Column
+    private Boolean isActive = true;
+    
+    @Column
+    private Integer successRate = 0;
+    
+    @Column
+    private String version = "v1";
+    
+    @Column
+    private Integer executionCount = 0;
+    
+    @Column
+    private Integer failureCount = 0;
+    
     @Column
     private LocalDateTime createdAt = LocalDateTime.now();
+    
+    @Column
+    private LocalDateTime nextExecution;
+    
+    @Column
+    private LocalDateTime lastExecuted;
+    
+    public enum WorkflowTrigger {
+        SCHEDULED, EVENT, MANUAL
+    }
 }
 
 
