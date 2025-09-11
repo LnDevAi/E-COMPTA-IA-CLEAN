@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 Test set: com.ecomptaia.service.GovernmentPlatformServiceTest
 -------------------------------------------------------------------------------
-Tests run: 23, Failures: 6, Errors: 3, Skipped: 0, Time elapsed: 0.207 s <<< FAILURE! -- in com.ecomptaia.service.GovernmentPlatformServiceTest
+Tests run: 23, Failures: 6, Errors: 3, Skipped: 0, Time elapsed: 0.171 s <<< FAILURE! -- in com.ecomptaia.service.GovernmentPlatformServiceTest
 com.ecomptaia.service.GovernmentPlatformServiceTest.testTestConnection_HttpError -- Time elapsed: 0.003 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <CONNECTION_FAILED> but was: <ERROR>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
@@ -65,7 +65,7 @@ org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.ecomptaia.service.GovernmentPlatformServiceTest.testTestConnection_GenericException -- Time elapsed: 0.004 s <<< FAILURE!
+com.ecomptaia.service.GovernmentPlatformServiceTest.testTestConnection_GenericException -- Time elapsed: 0.003 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 expected: <Network error> but was: <
 Strict stubbing argument mismatch. Please check:
@@ -107,7 +107,7 @@ java.lang.IllegalArgumentException: Pays non supporté: SN
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.ecomptaia.service.GovernmentPlatformServiceTest.testGetIntegrationStatistics -- Time elapsed: 0.003 s <<< FAILURE!
+com.ecomptaia.service.GovernmentPlatformServiceTest.testGetIntegrationStatistics -- Time elapsed: 0.002 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)

@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 Test set: com.ecomptaia.service.ThirdPartySoftwareServiceTest
 -------------------------------------------------------------------------------
-Tests run: 13, Failures: 3, Errors: 1, Skipped: 0, Time elapsed: 0.023 s <<< FAILURE! -- in com.ecomptaia.service.ThirdPartySoftwareServiceTest
+Tests run: 13, Failures: 3, Errors: 1, Skipped: 0, Time elapsed: 0.029 s <<< FAILURE! -- in com.ecomptaia.service.ThirdPartySoftwareServiceTest
 com.ecomptaia.service.ThirdPartySoftwareServiceTest.testRunCompleteTest_Failure -- Time elapsed: 0.003 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <ERROR> but was: <OPERATIONAL>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
