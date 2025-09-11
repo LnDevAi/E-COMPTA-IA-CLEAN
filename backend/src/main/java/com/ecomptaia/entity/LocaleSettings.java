@@ -46,6 +46,9 @@ public class LocaleSettings {
     
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
+
+    @Column(name = "is_default", nullable = false)
+    private Boolean isDefault = false;
     
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -151,6 +154,9 @@ public class LocaleSettings {
     
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public Boolean getIsDefault() { return isDefault; }
+    public void setIsDefault(Boolean isDefault) { this.isDefault = isDefault; }
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

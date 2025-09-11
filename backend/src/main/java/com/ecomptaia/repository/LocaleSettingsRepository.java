@@ -27,37 +27,37 @@ public interface LocaleSettingsRepository extends JpaRepository<LocaleSettings, 
     /**
      * Trouve les paramètres par langue
      */
-    List<LocaleSettings> findByLanguage(String language);
+    List<LocaleSettings> findByLanguageCode(String languageCode);
     
     /**
      * Trouve les paramètres par pays
      */
-    List<LocaleSettings> findByCountry(String country);
+    List<LocaleSettings> findByCountryCode(String countryCode);
     
     /**
      * Trouve les paramètres par devise
      */
-    List<LocaleSettings> findByCurrency(String currency);
+    List<LocaleSettings> findByCurrencyCode(String currencyCode);
     
     /**
      * Trouve les paramètres par entreprise et langue
      */
-    List<LocaleSettings> findByCompanyIdAndLanguage(Long companyId, String language);
+    List<LocaleSettings> findByCompanyIdAndLanguageCode(Long companyId, String languageCode);
     
     /**
      * Trouve les paramètres par entreprise et pays
      */
-    List<LocaleSettings> findByCompanyIdAndCountry(Long companyId, String country);
+    List<LocaleSettings> findByCompanyIdAndCountryCode(Long companyId, String countryCode);
     
     /**
      * Trouve les paramètres par entreprise et devise
      */
-    List<LocaleSettings> findByCompanyIdAndCurrency(Long companyId, String currency);
+    List<LocaleSettings> findByCompanyIdAndCurrencyCode(Long companyId, String currencyCode);
     
     /**
      * Trouve les paramètres par entreprise, langue et pays
      */
-    Optional<LocaleSettings> findByCompanyIdAndLanguageAndCountry(Long companyId, String language, String country);
+    Optional<LocaleSettings> findByCompanyIdAndLanguageCodeAndCountryCode(Long companyId, String languageCode, String countryCode);
     
     /**
      * Vérifie si une entreprise a des paramètres de localisation
@@ -82,19 +82,19 @@ public interface LocaleSettingsRepository extends JpaRepository<LocaleSettings, 
     /**
      * Compte les paramètres par langue
      */
-    @Query("SELECT ls.language, COUNT(ls) FROM LocaleSettings ls GROUP BY ls.language")
+    @Query("SELECT ls.languageCode, COUNT(ls) FROM LocaleSettings ls GROUP BY ls.languageCode")
     List<Object[]> countByLanguage();
     
     /**
      * Compte les paramètres par pays
      */
-    @Query("SELECT ls.country, COUNT(ls) FROM LocaleSettings ls GROUP BY ls.country")
+    @Query("SELECT ls.countryCode, COUNT(ls) FROM LocaleSettings ls GROUP BY ls.countryCode")
     List<Object[]> countByCountry();
     
     /**
      * Compte les paramètres par devise
      */
-    @Query("SELECT ls.currency, COUNT(ls) FROM LocaleSettings ls GROUP BY ls.currency")
+    @Query("SELECT ls.currencyCode, COUNT(ls) FROM LocaleSettings ls GROUP BY ls.currencyCode")
     List<Object[]> countByCurrency();
     
     /**

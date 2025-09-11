@@ -3,6 +3,7 @@ package com.ecomptaia.service;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.annotation.Profile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Map;
 /**
  * Service d'initialisation des données de base
  */
+@Profile("!test")
 @Service
 @Transactional
 public class DataInitializationService implements CommandLineRunner {

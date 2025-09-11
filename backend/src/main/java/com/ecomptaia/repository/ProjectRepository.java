@@ -24,7 +24,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     /**
      * Trouve un projet par code et entreprise
      */
-    Optional<Project> findByProjectCodeAndCompanyId(String projectCode, Long companyId);
+    Optional<Project> findByCodeAndCompanyId(String code, Long companyId);
     
     /**
      * Trouve les projets actifs
@@ -39,12 +39,12 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     /**
      * Trouve les projets par statut
      */
-    List<Project> findByStatus(String status);
+    List<Project> findByStatus(Project.ProjectStatus status);
     
     /**
      * Trouve les projets par entreprise et statut
      */
-    List<Project> findByCompanyIdAndStatus(Long companyId, String status);
+    List<Project> findByCompanyIdAndStatus(Long companyId, Project.ProjectStatus status);
     
     /**
      * Trouve les projets par nom
@@ -99,43 +99,43 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     /**
      * Trouve les projets en cours
      */
-    @Query("SELECT p FROM Project p WHERE p.startDate <= :currentDate AND (p.endDate IS NULL OR p.endDate >= :currentDate) AND p.isActive = true")
+    @Query("SELECT p FROM Project p WHERE p.startDate <= :currentDate AND (p.endDate IS NULL OR p.endDate >= :currentDate)")
     List<Project> findActiveProjects(@Param("currentDate") LocalDate currentDate);
     
     /**
      * Trouve les projets en cours par entreprise
      */
-    @Query("SELECT p FROM Project p WHERE p.companyId = :companyId AND p.startDate <= :currentDate AND (p.endDate IS NULL OR p.endDate >= :currentDate) AND p.isActive = true")
+    @Query("SELECT p FROM Project p WHERE p.company.id = :companyId AND p.startDate <= :currentDate AND (p.endDate IS NULL OR p.endDate >= :currentDate)")
     List<Project> findActiveProjectsByCompany(@Param("companyId") Long companyId, @Param("currentDate") LocalDate currentDate);
     
     /**
      * Trouve les projets terminés
      */
-    @Query("SELECT p FROM Project p WHERE p.endDate < :currentDate AND p.isActive = true")
+    @Query("SELECT p FROM Project p WHERE p.endDate < :currentDate")
     List<Project> findCompletedProjects(@Param("currentDate") LocalDate currentDate);
     
     /**
      * Trouve les projets terminés par entreprise
      */
-    @Query("SELECT p FROM Project p WHERE p.companyId = :companyId AND p.endDate < :currentDate AND p.isActive = true")
+    @Query("SELECT p FROM Project p WHERE p.company.id = :companyId AND p.endDate < :currentDate")
     List<Project> findCompletedProjectsByCompany(@Param("companyId") Long companyId, @Param("currentDate") LocalDate currentDate);
     
     /**
      * Trouve les projets en retard
      */
-    @Query("SELECT p FROM Project p WHERE p.endDate < :currentDate AND p.status != 'COMPLETED' AND p.isActive = true")
+    @Query("SELECT p FROM Project p WHERE p.endDate < :currentDate AND p.status <> 'COMPLETED'")
     List<Project> findOverdueProjects(@Param("currentDate") LocalDate currentDate);
     
     /**
      * Trouve les projets en retard par entreprise
      */
-    @Query("SELECT p FROM Project p WHERE p.companyId = :companyId AND p.endDate < :currentDate AND p.status != 'COMPLETED' AND p.isActive = true")
+    @Query("SELECT p FROM Project p WHERE p.company.id = :companyId AND p.endDate < :currentDate AND p.status <> 'COMPLETED'")
     List<Project> findOverdueProjectsByCompany(@Param("companyId") Long companyId, @Param("currentDate") LocalDate currentDate);
     
     /**
      * Vérifie si un projet existe par code et entreprise
      */
-    boolean existsByProjectCodeAndCompanyId(String projectCode, Long companyId);
+    boolean existsByCodeAndCompanyId(String code, Long companyId);
     
     /**
      * Trouve les projets créés après une date
@@ -150,37 +150,37 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     /**
      * Compte les projets par entreprise
      */
-    @Query("SELECT p.companyId, COUNT(p) FROM Project p WHERE p.isActive = true GROUP BY p.companyId")
+    @Query("SELECT p.company.id, COUNT(p) FROM Project p GROUP BY p.company.id")
     List<Object[]> countByCompany();
     
     /**
      * Compte les projets par statut
      */
-    @Query("SELECT p.status, COUNT(p) FROM Project p WHERE p.isActive = true GROUP BY p.status")
+    @Query("SELECT p.status, COUNT(p) FROM Project p GROUP BY p.status")
     List<Object[]> countByStatus();
     
     /**
      * Compte les projets par chef de projet
      */
-    @Query("SELECT p.projectManagerId, COUNT(p) FROM Project p WHERE p.isActive = true GROUP BY p.projectManagerId")
+    @Query("SELECT p.projectManagerId, COUNT(p) FROM Project p GROUP BY p.projectManagerId")
     List<Object[]> countByProjectManager();
     
     /**
      * Trouve les projets par budget minimum
      */
-    @Query("SELECT p FROM Project p WHERE p.budget >= :minBudget AND p.isActive = true")
+    @Query("SELECT p FROM Project p WHERE p.budget >= :minBudget")
     List<Project> findByBudgetGreaterThanEqual(@Param("minBudget") java.math.BigDecimal minBudget);
     
     /**
      * Trouve les projets par budget maximum
      */
-    @Query("SELECT p FROM Project p WHERE p.budget <= :maxBudget AND p.isActive = true")
+    @Query("SELECT p FROM Project p WHERE p.budget <= :maxBudget")
     List<Project> findByBudgetLessThanEqual(@Param("maxBudget") java.math.BigDecimal maxBudget);
     
     /**
      * Trouve les projets par plage de budget
      */
-    @Query("SELECT p FROM Project p WHERE p.budget BETWEEN :minBudget AND :maxBudget AND p.isActive = true")
+    @Query("SELECT p FROM Project p WHERE p.budget BETWEEN :minBudget AND :maxBudget")
     List<Project> findByBudgetBetween(@Param("minBudget") java.math.BigDecimal minBudget, @Param("maxBudget") java.math.BigDecimal maxBudget);
 }
 
