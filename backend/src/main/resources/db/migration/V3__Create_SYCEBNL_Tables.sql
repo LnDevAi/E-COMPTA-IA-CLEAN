@@ -287,6 +287,7 @@ CREATE TABLE sycebnl_budgets (
     is_approved BOOLEAN DEFAULT FALSE,
     approved_by VARCHAR(255),
     approval_date TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE,
     
     -- Métadonnées
     created_by VARCHAR(255),

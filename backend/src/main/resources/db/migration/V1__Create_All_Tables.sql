@@ -683,6 +683,15 @@ INSERT INTO companies (id, name, country_code, currency, is_active)
 VALUES (1, 'Entreprise Démo', 'FR', 'EUR', true)
 ON CONFLICT (id) DO NOTHING;
 
+-- Utilisateur admin par défaut pour cohérence des seeds ultérieures
+INSERT INTO users (
+    id, username, email, password, first_name, last_name, is_active, is_admin,
+    created_at, updated_at
+) VALUES (
+    1, 'admin', 'admin@ecomptaia.com', '{noop}admin123', 'Admin', 'System', true, true,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+) ON CONFLICT (id) DO NOTHING;
+
 INSERT INTO roles (name, description) VALUES 
 ('ADMIN', 'Administrateur système'),
 ('ACCOUNTANT', 'Comptable'),
