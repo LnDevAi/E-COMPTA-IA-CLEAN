@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.repository;
+package com.ecomptaia.repository;
 
 import com.ecomptaia.entity.CostCenter;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -72,7 +72,7 @@ public interface CostCenterRepository extends JpaRepository<CostCenter, Long> {
     /**
      * Compte les centres de coûts par entreprise
      */
-    @Query("SELECT cc.companyId, COUNT(cc) FROM CostCenter cc WHERE cc.isActive = true GROUP BY cc.companyId")
+    @Query("SELECT cc.company.id, COUNT(cc) FROM CostCenter cc WHERE cc.isActive = true GROUP BY cc.company.id")
     List<Object[]> countByCompany();
     
     /**
@@ -91,34 +91,9 @@ public interface CostCenterRepository extends JpaRepository<CostCenter, Long> {
      */
     List<CostCenter> findByCompanyIdAndLevel(Long companyId, Integer level);
     
-    /**
-     * Trouve les centres de coûts parents (sans parent)
+    /*
+     * Les relations hiérarchiques (parentId / children) et le responsable ne sont
+     * pas présents dans l'entité actuelle. Ces méthodes sont retirées/à réimplémenter
+     * si les champs sont ajoutés plus tard.
      */
-    @Query("SELECT cc FROM CostCenter cc WHERE cc.parentId IS NULL AND cc.isActive = true")
-    List<CostCenter> findParentCostCenters();
-    
-    /**
-     * Trouve les centres de coûts enfants d'un parent
-     */
-    List<CostCenter> findByParentId(Long parentId);
-    
-    /**
-     * Trouve les centres de coûts enfants actifs d'un parent
-     */
-    List<CostCenter> findByParentIdAndIsActiveTrue(Long parentId);
-    
-    /**
-     * Trouve les centres de coûts par entreprise et parent
-     */
-    List<CostCenter> findByCompanyIdAndParentId(Long companyId, Long parentId);
-    
-    /**
-     * Trouve les centres de coûts par responsable
-     */
-    List<CostCenter> findByResponsibleUserId(Long responsibleUserId);
-    
-    /**
-     * Trouve les centres de coûts par entreprise et responsable
-     */
-    List<CostCenter> findByCompanyIdAndResponsibleUserId(Long companyId, Long responsibleUserId);
 }

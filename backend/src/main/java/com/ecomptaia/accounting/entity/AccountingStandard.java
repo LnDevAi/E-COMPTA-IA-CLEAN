@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.accounting.entity;
+package com.ecomptaia.accounting.entity;
 
 public enum AccountingStandard {
     SYSCOHADA("SYSCOHADA", "Système Comptable OHADA - Système Normal"),

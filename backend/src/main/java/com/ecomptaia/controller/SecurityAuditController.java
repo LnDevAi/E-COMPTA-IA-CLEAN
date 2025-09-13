@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.controller;
+package com.ecomptaia.controller;
 
 import com.ecomptaia.entity.SecurityAudit;
 import com.ecomptaia.service.SecurityAuditService;
@@ -7,8 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Contrôleur pour la gestion de l'audit de sécurité
@@ -157,24 +159,22 @@ public class SecurityAuditController {
      * Récupère les types d'événements supportés
      */
     @GetMapping("/event-types")
-    public ResponseEntity<Map<String, String>> getSupportedEventTypes() {
-        Map<String, String> eventTypes = new java.util.HashMap<>();
-        for (SecurityAudit.EventType type : SecurityAudit.EventType.values()) {
-            eventTypes.put(type.name(), type.getDescription());
-        }
-        return ResponseEntity.ok(eventTypes);
+    public ResponseEntity<List<Map<String, String>>> getEventTypes() {
+        List<Map<String, String>> types = Arrays.stream(SecurityAudit.EventType.values())
+                .map(t -> Map.of("code", t.name(), "label", t.name()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(types);
     }
     
     /**
      * Récupère les catégories d'événements supportées
      */
     @GetMapping("/event-categories")
-    public ResponseEntity<Map<String, String>> getSupportedEventCategories() {
-        Map<String, String> eventCategories = new java.util.HashMap<>();
-        for (SecurityAudit.EventCategory category : SecurityAudit.EventCategory.values()) {
-            eventCategories.put(category.name(), category.getDescription());
-        }
-        return ResponseEntity.ok(eventCategories);
+    public ResponseEntity<List<Map<String, String>>> getEventCategories() {
+        List<Map<String, String>> categories = Arrays.stream(SecurityAudit.EventCategory.values())
+                .map(c -> Map.of("code", c.name(), "label", c.name()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(categories);
     }
     
     /**

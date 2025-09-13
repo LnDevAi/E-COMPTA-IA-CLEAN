@@ -641,14 +641,14 @@ CREATE INDEX idx_companies_name ON companies(name);
 CREATE INDEX idx_companies_siret ON companies(siret);
 CREATE INDEX idx_accounts_account_number ON accounts(account_number);
 CREATE INDEX idx_journal_entries_entry_number ON journal_entries(entry_number);
-CREATE INDEX idx_journal_entries_entry_date ON journal_entries(entry_date);
+CREATE INDEX IF NOT EXISTS idx_journal_entries_entry_date ON journal_entries(entry_date);
 CREATE INDEX idx_employees_employee_number ON employees(employee_number);
 CREATE INDEX idx_third_parties_name ON third_parties(name);
 CREATE INDEX idx_inventory_item_code ON inventory(item_code);
 CREATE INDEX idx_inventory_name ON inventory(name);
 
 -- Index sur les champs de date pour les requêtes temporelles
-CREATE INDEX idx_journal_entries_entry_date ON journal_entries(entry_date);
+CREATE INDEX IF NOT EXISTS idx_journal_entries_entry_date ON journal_entries(entry_date);
 CREATE INDEX idx_payrolls_pay_period_start ON payrolls(pay_period_start);
 CREATE INDEX idx_leaves_start_date ON leaves(start_date);
 CREATE INDEX idx_inventory_movements_movement_date ON inventory_movements(movement_date);
@@ -678,6 +678,20 @@ ALTER TABLE inventory_movements ADD CONSTRAINT chk_inventory_movements_quantity
 -- ==================== DONNÉES INITIALES ====================
 
 -- Insertion des rôles de base
+-- Données minimales pour la cohérence des migrations dépendantes
+INSERT INTO companies (id, name, country_code, currency, is_active)
+VALUES (1, 'Entreprise Démo', 'FR', 'EUR', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Utilisateur admin par défaut pour cohérence des seeds ultérieures
+INSERT INTO users (
+    id, username, email, password, first_name, last_name, is_active, is_admin,
+    created_at, updated_at
+) VALUES (
+    1, 'admin', 'admin@ecomptaia.com', '{noop}admin123', 'Admin', 'System', true, true,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+) ON CONFLICT (id) DO NOTHING;
+
 INSERT INTO roles (name, description) VALUES 
 ('ADMIN', 'Administrateur système'),
 ('ACCOUNTANT', 'Comptable'),

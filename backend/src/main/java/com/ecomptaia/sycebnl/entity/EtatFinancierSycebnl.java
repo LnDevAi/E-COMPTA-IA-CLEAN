@@ -1,6 +1,6 @@
-﻿ackage com.ecomptaia.sycebnl.entity;
+package com.ecomptaia.sycebnl.entity;
 
-import com.ecomptaia.security.entity.Company;
+import com.ecomptaia.entity.Company;
 import com.ecomptaia.entity.ExerciceSMT;
 import jakarta.persistence.*;
 

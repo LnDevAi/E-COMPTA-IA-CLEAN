@@ -1,6 +1,6 @@
-﻿ackage com.ecomptaia.sycebnl.service;
+package com.ecomptaia.sycebnl.service;
 
-import com.ecomptaia.security.entity.Company;
+import com.ecomptaia.entity.Company;
 import com.ecomptaia.entity.EcritureComptable;
 import com.ecomptaia.entity.FinancialPeriod;
 import com.ecomptaia.entity.LigneEcriture;

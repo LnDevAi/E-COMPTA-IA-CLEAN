@@ -1,6 +1,4 @@
-﻿ackage com.ecomptaia.controller;
-
-import com.ecomptaia.security.entity.Company;
+package com.ecomptaia.controller;
 
 import com.ecomptaia.service.DatabaseConnectionService;
 import com.ecomptaia.service.DataValidationService;

@@ -1,0 +1,8 @@
+/workspace/backend/src/test/java/com/ecomptaia/service/ThirdPartySoftwareServiceTest.java
+/workspace/backend/src/test/java/com/ecomptaia/sycebnl/service/PieceJustificativeSycebnlServiceTest.java
+/workspace/backend/src/test/java/com/ecomptaia/service/BalanceComptableServiceTest.java
+/workspace/backend/src/test/java/com/ecomptaia/sycebnl/controller/PieceJustificativeSycebnlControllerTest.java
+/workspace/backend/src/test/java/com/ecomptaia/controller/EtatsFinanciersControllerTest.java
+/workspace/backend/src/test/java/com/ecomptaia/controller/GovernmentPlatformControllerTest.java
+/workspace/backend/src/test/java/com/ecomptaia/sycebnl/integration/DataIntegrationTest.java
+/workspace/backend/src/test/java/com/ecomptaia/service/GovernmentPlatformServiceTest.java

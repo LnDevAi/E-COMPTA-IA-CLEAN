@@ -43,10 +43,10 @@ public class FinancialPeriod {
     private LocalDateTime updatedAt;
 
     @Column(nullable = false, length = 3)
-    private String countryCode; // Code pays
+    private String countryCode = "SN"; // Code pays par défaut pour tests
 
     @Column(nullable = false, length = 20)
-    private String accountingStandard; // Standard comptable
+    private String accountingStandard = "SYSCOHADA"; // Standard par défaut pour tests
 
     @Column(length = 500)
     private String notes; // Notes additionnelles
@@ -72,8 +72,8 @@ public class FinancialPeriod {
         this.periodName = periodName;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.countryCode = countryCode;
-        this.accountingStandard = accountingStandard;
+        this.countryCode = (countryCode == null || countryCode.isEmpty()) ? "SN" : countryCode;
+        this.accountingStandard = (accountingStandard == null || accountingStandard.isEmpty()) ? "SYSCOHADA" : accountingStandard;
         this.status = "OPEN";
         this.isCurrent = true;
         this.createdAt = LocalDateTime.now();

@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.accounting;
+package com.ecomptaia.accounting;
 
 import com.ecomptaia.accounting.entity.ChartOfAccounts;
 import com.ecomptaia.accounting.entity.AccountClass;
@@ -145,7 +145,7 @@ public class IFRSChartOfAccounts implements ChartOfAccounts {
         expenses.addAccount(new Account("5700"));
         accountClasses.add(expenses);
         
-        // Ajouter tous les comptes Ã  la liste gÃ©nÃ©rale
+        // Ajouter tous les comptes à la liste générale
         accountClasses.forEach(classe -> allAccounts.addAll(classe.getAccounts()));
     }
 }

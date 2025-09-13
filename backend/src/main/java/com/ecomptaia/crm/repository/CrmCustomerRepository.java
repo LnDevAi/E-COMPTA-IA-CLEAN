@@ -1,6 +1,4 @@
-﻿ackage com.ecomptaia.crm.repository;
-
-import com.ecomptaia.security.entity.Company;
+package com.ecomptaia.crm.repository;
 
 import com.ecomptaia.crm.entity.CrmCustomer;
 import com.ecomptaia.crm.entity.CrmCustomer.CustomerSegment;

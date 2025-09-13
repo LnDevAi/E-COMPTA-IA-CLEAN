@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.sycebnl.service;
+package com.ecomptaia.sycebnl.service;
 
 import com.ecomptaia.entity.Account;
 import com.ecomptaia.sycebnl.entity.AnalyseIASycebnl;

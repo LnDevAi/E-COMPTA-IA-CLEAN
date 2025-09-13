@@ -1,7 +1,7 @@
-﻿ackage com.ecomptaia.repository;
+package com.ecomptaia.repository;
 
 import com.ecomptaia.entity.BalanceComptable;
-import com.ecomptaia.security.entity.Company;
+import com.ecomptaia.entity.Company;
 import com.ecomptaia.entity.FinancialPeriod;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -42,6 +42,15 @@ public class Project {
     @JoinColumn(name = "company_id")
     private Company company;
     
+    @Column(name = "project_manager_id")
+    private Long projectManagerId;
+    
+    @Column(name = "client_id")
+    private Long clientId;
+    
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+    
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     
@@ -54,6 +63,7 @@ public class Project {
         this.updatedAt = LocalDateTime.now();
         this.status = ProjectStatus.ACTIVE;
         this.currency = "XOF";
+        this.isActive = true;
     }
     
     // Getters et Setters
@@ -86,6 +96,15 @@ public class Project {
     
     public Company getCompany() { return company; }
     public void setCompany(Company company) { this.company = company; }
+    
+    public Long getProjectManagerId() { return projectManagerId; }
+    public void setProjectManagerId(Long projectManagerId) { this.projectManagerId = projectManagerId; }
+    
+    public Long getClientId() { return clientId; }
+    public void setClientId(Long clientId) { this.clientId = clientId; }
+    
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

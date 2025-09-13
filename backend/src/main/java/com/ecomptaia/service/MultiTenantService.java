@@ -1,14 +1,12 @@
-﻿ackage com.ecomptaia.service;
+package com.ecomptaia.service;
 
-pa
-import com.ecomptaia.accounting.entity.ChartOfAccounts;
-ckage com.ecomptaia.service;
+ 
 
-import com.ecomptaia.security.entity.Company;
+import com.ecomptaia.entity.Company;
 import com.ecomptaia.entity.LocaleSettings;
 import com.ecomptaia.entity.CompanySubscription;
 import com.ecomptaia.entity.SubscriptionPlan;
-import com.ecomptaia.accounting.entity.AccountingStandard;
+import com.ecomptaia.accounting.AccountingStandard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,18 +51,20 @@ public class MultiTenantService {
     public LocaleSettings configureLocaleSettings(Company company) {
         LocaleSettings localeSettings = new LocaleSettings();
         localeSettings.setCompanyId(company.getId());
-        localeSettings.setLanguageCode(localizationService.getDefaultLanguage(company.getCountryCode()));
+        localeSettings.setLanguageCode(localizationService.getLanguage(company.getCountryCode()));
         localeSettings.setCountryCode(company.getCountryCode());
         localeSettings.setCurrencyCode(company.getCurrency());
         
         // Appliquer les formats par dÃ©faut selon le pays
-        LocaleSettings defaultSettings = localizationService.getDefaultLocaleSettings(company.getCountryCode());
-        localeSettings.setDateFormat(defaultSettings.getDateFormat());
-        localeSettings.setTimeFormat(defaultSettings.getTimeFormat());
-        localeSettings.setNumberFormat(defaultSettings.getNumberFormat());
-        localeSettings.setDecimalSeparator(defaultSettings.getDecimalSeparator());
-        localeSettings.setThousandsSeparator(defaultSettings.getThousandsSeparator());
-        localeSettings.setTimezone(defaultSettings.getTimezone());
+        Map<String, Object> cfg = localizationService.getLocalizationConfig(company.getCountryCode());
+        @SuppressWarnings("unchecked")
+        Map<String, Object> config = (Map<String, Object>) cfg.getOrDefault("config", Map.of());
+        localeSettings.setDateFormat((String) config.getOrDefault("dateFormat", "yyyy-MM-dd"));
+        localeSettings.setTimeFormat("24h");
+        localeSettings.setNumberFormat((String) config.getOrDefault("numberFormat", "#,##0.00"));
+        localeSettings.setDecimalSeparator((String) config.getOrDefault("decimalSeparator", "."));
+        localeSettings.setThousandsSeparator((String) config.getOrDefault("thousandsSeparator", ","));
+        localeSettings.setTimezone((String) config.getOrDefault("timezone", "UTC"));
         
         return localeSettings;
     }
@@ -141,7 +141,7 @@ public class MultiTenantService {
         config.put("localeSettings", localeSettings);
         
         // Pays supportÃ©s
-        config.put("supportedCountries", localizationService.getSupportedCountries());
+        config.put("supportedCountries", localizationService.getAllSupportedCountries());
         
         // Langues supportÃ©es
         config.put("supportedLanguages", localizationService.getSupportedLanguages());
@@ -165,15 +165,21 @@ public class MultiTenantService {
      * RÃ©cupÃ¨re le nom du pays
      */
     private String getCountryName(String countryCode) {
-        Map<String, String> countries = localizationService.getSupportedCountries();
-        return countries.getOrDefault(countryCode, countryCode);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> all = localizationService.getAllSupportedCountries();
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> list = (List<Map<String, Object>>) all.getOrDefault("countries", List.of());
+        return list.stream()
+            .filter(m -> Objects.equals(m.get("countryCode"), countryCode))
+            .map(m -> (String) m.getOrDefault("countryCode", countryCode))
+            .findFirst().orElse(countryCode);
     }
     
     /**
      * RÃ©cupÃ¨re la locale par dÃ©faut
      */
     private String getDefaultLocale(String countryCode) {
-        String language = localizationService.getDefaultLanguage(countryCode);
+        String language = localizationService.getLanguage(countryCode);
         return language + "_" + countryCode;
     }
     

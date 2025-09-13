@@ -1,6 +1,4 @@
-﻿ackage com.ecomptaia.crm.controller;
-
-import com.ecomptaia.security.entity.User;
+package com.ecomptaia.crm.controller;
 
 import com.ecomptaia.crm.entity.CrmCustomer;
 import com.ecomptaia.crm.service.CrmCustomerService;

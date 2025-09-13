@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.service;
+package com.ecomptaia.service;
 
 import com.ecomptaia.entity.SecurityAudit;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * Service pour la gestion de l'audit de sécurité
  */
-@Service
+@Service("domainSecurityAuditService")
 public class SecurityAuditService {
     
     /**
@@ -26,7 +26,7 @@ public class SecurityAuditService {
         audit.setSessionId(sessionId);
         audit.setEventType(eventType);
         audit.setEventCategory(eventCategory);
-        audit.setEventDescription(eventDescription);
+        audit.setDetails(eventDescription);
         audit.setRiskLevel(riskLevel);
         audit.setIsSuccessful(isSuccessful);
         audit.setIpAddress(ipAddress);

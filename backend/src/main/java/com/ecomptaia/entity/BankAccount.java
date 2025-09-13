@@ -84,6 +84,9 @@ public class BankAccount {
     @Column
     private Long reconciledBy; // ID de l'utilisateur qui a rapproché
 
+    @Column(length = 10)
+    private String bankCode; // Code banque (ex: 30004)
+
     // Constructeurs
     public BankAccount() {}
 
@@ -175,6 +178,9 @@ public class BankAccount {
 
     public Long getReconciledBy() { return reconciledBy; }
     public void setReconciledBy(Long reconciledBy) { this.reconciledBy = reconciledBy; }
+
+    public String getBankCode() { return bankCode; }
+    public void setBankCode(String bankCode) { this.bankCode = bankCode; }
 
     @Override
     public String toString() {

@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.sycebnl.controller;
+package com.ecomptaia.sycebnl.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
-﻿ackage com.ecomptaia.entity;
+package com.ecomptaia.entity;
 
-import com.ecomptaia.security.entity.Company;
+import com.ecomptaia.entity.Company;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -106,11 +106,16 @@ public class AdvancedIntegration {
     @JoinColumn(name = "company_id")
     private Company company;
     
-    @OneToMany(mappedBy = "integration", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ElementCollection(targetClass = IntegrationStatus.class, fetch = FetchType.LAZY)
+    @CollectionTable(name = "integration_status_history", joinColumns = @JoinColumn(name = "integration_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
     private List<IntegrationStatus> statusHistory = new ArrayList<>();
     
-    @OneToMany(mappedBy = "integration", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SyncResult> syncResults = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "integration_sync_results", joinColumns = @JoinColumn(name = "integration_id"))
+    @Column(name = "result_json", columnDefinition = "TEXT")
+    private List<String> syncResults = new ArrayList<>();
     
     @Column(columnDefinition = "TEXT")
     private String configuration; // Configuration complÃ¨te en JSON
@@ -232,8 +237,8 @@ public class AdvancedIntegration {
     public List<IntegrationStatus> getStatusHistory() { return statusHistory; }
     public void setStatusHistory(List<IntegrationStatus> statusHistory) { this.statusHistory = statusHistory; }
     
-    public List<SyncResult> getSyncResults() { return syncResults; }
-    public void setSyncResults(List<SyncResult> syncResults) { this.syncResults = syncResults; }
+    public List<String> getSyncResults() { return syncResults; }
+    public void setSyncResults(List<String> syncResults) { this.syncResults = syncResults; }
     
     public String getConfiguration() { return configuration; }
     public void setConfiguration(String configuration) { this.configuration = configuration; }

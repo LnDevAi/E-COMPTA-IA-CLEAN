@@ -1,6 +1,4 @@
-﻿ackage com.ecomptaia.sycebnl.repository;
-
-import com.ecomptaia.security.entity.Company;
+package com.ecomptaia.sycebnl.repository;
 
 import com.ecomptaia.sycebnl.entity.SycebnlOrganization;
 import com.ecomptaia.sycebnl.entity.SycebnlOrganization.AccountingSystem;

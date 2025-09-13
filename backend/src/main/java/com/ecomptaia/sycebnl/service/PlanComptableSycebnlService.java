@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.sycebnl.service;
+package com.ecomptaia.sycebnl.service;
 
 import com.ecomptaia.sycebnl.entity.PlanComptableSycebnl;
 import com.ecomptaia.sycebnl.repository.PlanComptableSycebnlRepository;

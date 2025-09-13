@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.sycebnl.service;
+package com.ecomptaia.sycebnl.service;
 
 import com.ecomptaia.sycebnl.entity.EtatFinancierSycebnl;
 import com.ecomptaia.sycebnl.entity.NoteAnnexeSycebnl;

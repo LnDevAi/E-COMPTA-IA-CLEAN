@@ -1,6 +1,6 @@
-﻿ackage com.ecomptaia.crm.entity;
+package com.ecomptaia.crm.entity;
 
-import com.ecomptaia.security.entity.Company;
+import com.ecomptaia.entity.Company;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

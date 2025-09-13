@@ -20,6 +20,12 @@ public class CostCenter {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
     
+    @Column(name = "type", length = 50)
+    private String type;
+    
+    @Column(name = "level")
+    private Integer level;
+    
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
     
@@ -52,6 +58,12 @@ public class CostCenter {
     
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    
+    public Integer getLevel() { return level; }
+    public void setLevel(Integer level) { this.level = level; }
     
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }

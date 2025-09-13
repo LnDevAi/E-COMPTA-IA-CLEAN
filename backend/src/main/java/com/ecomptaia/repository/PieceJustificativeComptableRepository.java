@@ -1,9 +1,9 @@
-﻿ackage com.ecomptaia.repository;
+package com.ecomptaia.repository;
 
 import com.ecomptaia.entity.PieceJustificativeComptable;
-import com.ecomptaia.security.entity.Company;
+import com.ecomptaia.entity.Company;
 import com.ecomptaia.entity.FinancialPeriod;
-import com.ecomptaia.security.entity.User;
+import com.ecomptaia.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

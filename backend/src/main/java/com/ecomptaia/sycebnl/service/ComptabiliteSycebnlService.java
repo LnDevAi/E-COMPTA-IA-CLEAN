@@ -1,4 +1,4 @@
-﻿ackage com.ecomptaia.sycebnl.service;
+package com.ecomptaia.sycebnl.service;
 
 import com.ecomptaia.entity.LigneEcriture;
 import com.ecomptaia.repository.LigneEcritureRepository;

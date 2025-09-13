@@ -1,11 +1,8 @@
-﻿ackage com.ecomptaia.service;
+package com.ecomptaia.service;
 
-pa
-import com.ecomptaia.accounting.entity.AccountingStandard;
-import com.ecomptaia.accounting.entity.ChartOfAccounts;
-ckage com.ecomptaia.service;
-
-import com.ecomptaia.accounting.*;
+import com.ecomptaia.accounting.AccountingStandard;
+import com.ecomptaia.accounting.ChartOfAccounts;
+import com.ecomptaia.accounting.ChartOfAccountsFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
