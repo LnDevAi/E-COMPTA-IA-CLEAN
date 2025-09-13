@@ -17,3 +17,4 @@ En cours:
 - Corriger persistance `BalanceComptable`/`SoldeCompte` (cascade ou ordre de persistance).
 - Finitions backend tests, puis build frontend Angular et corrections.
 
+\n- Final sync: prêt pour clonage local (PostgreSQL tests, Flyway configuré).\n
