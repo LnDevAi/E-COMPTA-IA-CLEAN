@@ -16,8 +16,17 @@ public class InventoryMovement {
     @Column(name = "movement_code", unique = true, nullable = false)
     private String movementCode;
     
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @Column(name = "inventory_id", nullable = false)
+    private Long inventoryId;
+    
+    @Column(name = "item_id", nullable = false)
+    private Long itemId;
+    
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+    
+    @Column(name = "reason", length = 500)
+    private String reason;
     
     @Column(name = "movement_type", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -58,9 +67,6 @@ public class InventoryMovement {
     
     @Column(name = "expiry_date")
     private LocalDate expiryDate;
-    
-    @Column(name = "reason")
-    private String reason;
     
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
@@ -127,7 +133,7 @@ public class InventoryMovement {
                             BigDecimal quantity, Long companyId, String countryCode, String accountingStandard) {
         this();
         this.movementCode = movementCode;
-        this.productId = productId;
+        this.itemId = productId;
         this.movementType = movementType;
         this.quantity = quantity;
         this.companyId = companyId;
@@ -142,8 +148,20 @@ public class InventoryMovement {
     public String getMovementCode() { return movementCode; }
     public void setMovementCode(String movementCode) { this.movementCode = movementCode; }
     
-    public Long getProductId() { return productId; }
-    public void setProductId(Long productId) { this.productId = productId; }
+    public Long getInventoryId() { return inventoryId; }
+    public void setInventoryId(Long inventoryId) { this.inventoryId = inventoryId; }
+    
+    public Long getItemId() { return itemId; }
+    public void setItemId(Long itemId) { this.itemId = itemId; }
+    
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+    
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
+    
+    public Long getProductId() { return itemId; }
+    public void setProductId(Long productId) { this.itemId = productId; }
     
     public MovementType getMovementType() { return movementType; }
     public void setMovementType(MovementType movementType) { this.movementType = movementType; }
@@ -183,9 +201,6 @@ public class InventoryMovement {
     
     public LocalDate getExpiryDate() { return expiryDate; }
     public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }
-    
-    public String getReason() { return reason; }
-    public void setReason(String reason) { this.reason = reason; }
     
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }

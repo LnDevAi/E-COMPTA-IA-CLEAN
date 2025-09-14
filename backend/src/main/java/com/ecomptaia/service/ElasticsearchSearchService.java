@@ -1,6 +1,5 @@
 package com.ecomptaia.service;
 
-import com.ecomptaia.accounting.entity.AccountingStandard;
 
 import com.ecomptaia.elasticsearch.DocumentSearchEntity;
 import com.ecomptaia.elasticsearch.DocumentSearchRepository;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * Service pour la recherche full-text avec Elasticsearch
  */
-@Profile("!test")
+@Profile({"!test", "!simple"})
 @Service
 @Transactional
 public class ElasticsearchSearchService {

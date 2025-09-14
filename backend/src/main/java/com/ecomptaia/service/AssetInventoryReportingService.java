@@ -152,7 +152,10 @@ public class AssetInventoryReportingService {
      */
     public Map<String, Object> generateInventoryStatusReport(Long companyId, String countryCode, String accountingStandard) {
         try {
-            List<Inventory> inventories = inventoryRepository.findByCompanyIdOrderByProductNameAsc(companyId);
+            List<Inventory> inventories = inventoryRepository.findAll().stream()
+                .filter(inv -> companyId.equals(inv.getCompanyId()))
+                .sorted((inv1, inv2) -> inv1.getName().compareTo(inv2.getName()))
+                .collect(java.util.stream.Collectors.toList());
             
             Map<String, Object> report = new HashMap<>();
             report.put("reportType", "INVENTORY_STATUS_REPORT");

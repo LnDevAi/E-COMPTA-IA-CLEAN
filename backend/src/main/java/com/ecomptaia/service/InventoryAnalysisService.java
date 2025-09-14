@@ -106,7 +106,10 @@ public class InventoryAnalysisService {
 
             // Analyser les stocks
             if ("INVENTORY_ANALYSIS".equals(analysis.getAnalysisType()) || "COMPREHENSIVE".equals(analysis.getAnalysisType())) {
-                List<Inventory> inventories = inventoryRepository.findByCompanyIdOrderByProductNameAsc(analysis.getCompanyId());
+                List<Inventory> inventories = inventoryRepository.findAll().stream()
+                    .filter(inv -> analysis.getCompanyId().equals(inv.getCompanyId()))
+                    .sorted((inv1, inv2) -> inv1.getName().compareTo(inv2.getName()))
+                    .collect(java.util.stream.Collectors.toList());
                 
                 for (Inventory inventory : inventories) {
                     // Simuler un inventaire physique

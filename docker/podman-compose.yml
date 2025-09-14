@@ -26,6 +26,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ecomptaia_user
       SPRING_DATASOURCE_PASSWORD: ecomptaia_password
       JWT_SECRET_KEY: ecomptaiaSecretKey2024ForProductionEnvironment
+      SPRING_PROFILES_ACTIVE: production
     depends_on:
       - postgres
     networks:

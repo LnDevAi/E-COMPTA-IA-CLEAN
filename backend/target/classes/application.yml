@@ -31,6 +31,10 @@ spring:
     init:
       mode: never
   
+  # Configuration Flyway (désactivé pour éviter les conflits)
+  flyway:
+    enabled: false
+  
   # Configuration de sécurité JWT
   security:
     jwt:
@@ -55,7 +59,7 @@ server:
   port: 8080
   address: 0.0.0.0
   servlet:
-    # context-path: /api  # Supprimé pour éviter la redondance
+    context-path: /api
   tomcat:
     remoteip:
       remote-ip-header: x-forwarded-for
@@ -66,8 +70,7 @@ logging:
   level:
     com.ecomptaia: DEBUG
     org.springframework.security: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    # servlet block removed to avoid empty binding error
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

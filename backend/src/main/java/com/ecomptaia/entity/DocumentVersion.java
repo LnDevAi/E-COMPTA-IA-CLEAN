@@ -30,6 +30,13 @@ public class DocumentVersion {
     @Column(name = "version_number", nullable = false)
     private Integer versionNumber;
     
+    @Column(name = "version_name", length = 100)
+    private String versionName;
+    
+    @Column(name = "is_active", nullable = false)
+    @Builder.Default
+    private Boolean isActive = true;
+    
     @Column(name = "version_label")
     private String versionLabel; // Ex: "1.0", "2.1", "Draft", "Final"
     
@@ -271,6 +278,37 @@ public class DocumentVersion {
                 return this.versionNumber.toString();
         }
     }
+
+    // Getters et Setters manquants
+    public Long getDocumentId() { return documentId; }
+    public void setDocumentId(Long documentId) { this.documentId = documentId; }
+
+    public Integer getVersionNumber() { return versionNumber; }
+    public void setVersionNumber(Integer versionNumber) { this.versionNumber = versionNumber; }
+
+    public String getVersionName() { return versionName; }
+    public void setVersionName(String versionName) { this.versionName = versionName; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public Long getCreatedBy() { return createdBy; }
+    public void setCreatedBy(Long createdBy) { this.createdBy = createdBy; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public ApprovalStatus getApprovalStatus() { return approvalStatus; }
+    public void setApprovalStatus(ApprovalStatus approvalStatus) { this.approvalStatus = approvalStatus; }
+
+    public LocalDateTime getApprovedAt() { return approvedAt; }
+    public void setApprovedAt(LocalDateTime approvedAt) { this.approvedAt = approvedAt; }
+
+    public Boolean getIsArchived() { return isArchived; }
+    public void setIsArchived(Boolean isArchived) { this.isArchived = isArchived; }
 }
 
 

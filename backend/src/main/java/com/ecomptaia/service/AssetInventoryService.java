@@ -167,7 +167,11 @@ public class AssetInventoryService {
     public Inventory createInventory(String productCode, String productName, String unit, 
                                    BigDecimal unitPrice, Long companyId, String countryCode, String accountingStandard) {
         
-        if (inventoryRepository.existsByProductCodeAndCompanyId(productCode, companyId)) {
+        // Vérifier si le code produit existe déjà
+        List<Inventory> existingProducts = inventoryRepository.findAll();
+        boolean productExists = existingProducts.stream()
+            .anyMatch(p -> productCode.equals(p.getProductCode()) && companyId.equals(p.getCompanyId()));
+        if (productExists) {
             throw new RuntimeException("Le code produit existe déjà");
         }
 
@@ -224,7 +228,11 @@ public class AssetInventoryService {
                                           InventoryMovement.MovementType movementType, BigDecimal quantity,
                                           BigDecimal unitPrice, Long companyId, String countryCode, String accountingStandard) {
         
-        if (movementRepository.existsByMovementCodeAndCompanyId(movementCode, companyId)) {
+        // Vérifier si le code de mouvement existe déjà
+        List<InventoryMovement> existingMovements = movementRepository.findAll();
+        boolean movementExists = existingMovements.stream()
+            .anyMatch(m -> movementCode.equals(m.getMovementCode()) && companyId.equals(m.getCompanyId()));
+        if (movementExists) {
             throw new RuntimeException("Le code de mouvement existe déjà");
         }
 
@@ -389,54 +397,118 @@ public class AssetInventoryService {
         Map<String, Object> statistics = new HashMap<>();
 
         // Statistiques par catégorie
-        List<Object[]> categoryStats = inventoryRepository.getInventoryStatisticsByCategory(companyId);
+        List<Inventory> inventories = inventoryRepository.findAll();
         Map<String, Object> categoryStatistics = new HashMap<>();
-        for (Object[] stat : categoryStats) {
+        
+        // Calculer les statistiques par catégorie
+        Map<String, Integer> categoryCounts = new HashMap<>();
+        Map<String, BigDecimal> categoryQuantities = new HashMap<>();
+        Map<String, BigDecimal> categoryValues = new HashMap<>();
+        
+        for (Inventory inventory : inventories) {
+            String category = inventory.getCategory() != null ? inventory.getCategory() : "Sans catégorie";
+            
+            categoryCounts.merge(category, 1, Integer::sum);
+            categoryQuantities.merge(category, inventory.getQuantityOnHand(), BigDecimal::add);
+            categoryValues.merge(category, inventory.getTotalValue(), BigDecimal::add);
+        }
+        
+        for (String category : categoryCounts.keySet()) {
             Map<String, Object> catStat = new HashMap<>();
-            catStat.put("count", stat[1]);
-            catStat.put("quantity", stat[2]);
-            catStat.put("value", stat[3]);
-            categoryStatistics.put(stat[0] != null ? stat[0].toString() : "Sans catégorie", catStat);
+            catStat.put("count", categoryCounts.get(category));
+            catStat.put("quantity", categoryQuantities.get(category));
+            catStat.put("value", categoryValues.get(category));
+            categoryStatistics.put(category, catStat);
         }
         statistics.put("byCategory", categoryStatistics);
 
         // Statistiques par statut
-        List<Object[]> statusStats = inventoryRepository.getInventoryStatisticsByStatus(companyId);
         Map<String, Object> statusStatistics = new HashMap<>();
-        for (Object[] stat : statusStats) {
+        
+        // Calculer les statistiques par statut
+        Map<String, Integer> statusCounts = new HashMap<>();
+        Map<String, BigDecimal> statusQuantities = new HashMap<>();
+        Map<String, BigDecimal> statusValues = new HashMap<>();
+        
+        for (Inventory inventory : inventories) {
+            String status = inventory.getStatus() != null ? inventory.getStatus().toString() : "ACTIF";
+            
+            statusCounts.merge(status, 1, Integer::sum);
+            statusQuantities.merge(status, inventory.getQuantityOnHand(), BigDecimal::add);
+            statusValues.merge(status, inventory.getTotalValue(), BigDecimal::add);
+        }
+        
+        for (String status : statusCounts.keySet()) {
             Map<String, Object> statusStat = new HashMap<>();
-            statusStat.put("count", stat[1]);
-            statusStat.put("quantity", stat[2]);
-            statusStat.put("value", stat[3]);
-            statusStatistics.put(stat[0].toString(), statusStat);
+            statusStat.put("count", statusCounts.get(status));
+            statusStat.put("quantity", statusQuantities.get(status));
+            statusStat.put("value", statusValues.get(status));
+            statusStatistics.put(status, statusStat);
         }
         statistics.put("byStatus", statusStatistics);
 
         // Statistiques par entrepôt
-        List<Object[]> warehouseStats = inventoryRepository.getInventoryStatisticsByWarehouse(companyId);
         Map<String, Object> warehouseStatistics = new HashMap<>();
-        for (Object[] stat : warehouseStats) {
+        
+        // Calculer les statistiques par entrepôt
+        Map<String, Integer> warehouseCounts = new HashMap<>();
+        Map<String, BigDecimal> warehouseQuantities = new HashMap<>();
+        Map<String, BigDecimal> warehouseValues = new HashMap<>();
+        
+        for (Inventory inventory : inventories) {
+            String warehouse = inventory.getWarehouse() != null ? inventory.getWarehouse() : "Entrepôt principal";
+            
+            warehouseCounts.merge(warehouse, 1, Integer::sum);
+            warehouseQuantities.merge(warehouse, inventory.getQuantityOnHand(), BigDecimal::add);
+            warehouseValues.merge(warehouse, inventory.getTotalValue(), BigDecimal::add);
+        }
+        
+        for (String warehouse : warehouseCounts.keySet()) {
             Map<String, Object> warehouseStat = new HashMap<>();
-            warehouseStat.put("count", stat[1]);
-            warehouseStat.put("quantity", stat[2]);
-            warehouseStat.put("value", stat[3]);
-            warehouseStatistics.put(stat[0] != null ? stat[0].toString() : "Sans entrepôt", warehouseStat);
+            warehouseStat.put("count", warehouseCounts.get(warehouse));
+            warehouseStat.put("quantity", warehouseQuantities.get(warehouse));
+            warehouseStat.put("value", warehouseValues.get(warehouse));
+            warehouseStatistics.put(warehouse, warehouseStat);
         }
         statistics.put("byWarehouse", warehouseStatistics);
 
         // Totaux
-        statistics.put("totalProducts", inventoryRepository.getTotalInventoryCount(companyId));
-        statistics.put("totalQuantity", inventoryRepository.getTotalInventoryQuantity(companyId));
-        statistics.put("totalValue", inventoryRepository.getTotalInventoryValue(companyId));
+        statistics.put("totalProducts", inventoryRepository.count());
+        
+        // Calculer les totaux réels
+        BigDecimal totalQuantity = inventories.stream()
+            .map(Inventory::getQuantityOnHand)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalValue = inventories.stream()
+            .map(Inventory::getTotalValue)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+            
+        statistics.put("totalQuantity", totalQuantity);
+        statistics.put("totalValue", totalValue);
 
         // Alertes
         LocalDate today = LocalDate.now();
         LocalDate thirtyDaysFromNow = today.plusDays(30);
         
-        statistics.put("outOfStock", inventoryRepository.getOutOfStockProducts(companyId).size());
-        statistics.put("toReorder", inventoryRepository.getProductsToReorder(companyId).size());
-        statistics.put("expired", inventoryRepository.getExpiredProducts(companyId, today).size());
-        statistics.put("expiringSoon", inventoryRepository.getProductsExpiringSoon(companyId, today, thirtyDaysFromNow).size());
+        // Calculer les alertes réelles
+        long outOfStock = inventories.stream()
+            .filter(inv -> inv.getQuantityOnHand().compareTo(BigDecimal.ZERO) <= 0)
+            .count();
+        long toReorder = inventories.stream()
+            .filter(inv -> inv.getQuantityOnHand().compareTo(BigDecimal.valueOf(10)) <= 0) // Seuil fixe de 10
+            .count();
+        long expired = inventories.stream()
+            .filter(inv -> inv.getExpiryDate() != null && inv.getExpiryDate().isBefore(today))
+            .count();
+        long expiringSoon = inventories.stream()
+            .filter(inv -> inv.getExpiryDate() != null && inv.getExpiryDate().isAfter(today) && inv.getExpiryDate().isBefore(thirtyDaysFromNow))
+            .count();
+            
+        statistics.put("outOfStock", outOfStock);
+        statistics.put("toReorder", toReorder);
+        statistics.put("expired", expired);
+        statistics.put("expiringSoon", expiringSoon);
+        statistics.put("alertDate", thirtyDaysFromNow.toString()); // Utilise la variable thirtyDaysFromNow
 
         return statistics;
     }
@@ -448,36 +520,75 @@ public class AssetInventoryService {
         Map<String, Object> statistics = new HashMap<>();
 
         // Statistiques par type de mouvement
-        List<Object[]> typeStats = movementRepository.getMovementStatisticsByType(companyId);
+        List<InventoryMovement> movements = movementRepository.findAll();
         Map<String, Object> typeStatistics = new HashMap<>();
-        for (Object[] stat : typeStats) {
+        
+        // Calculer les statistiques par type
+        Map<String, Integer> typeCounts = new HashMap<>();
+        Map<String, BigDecimal> typeQuantities = new HashMap<>();
+        Map<String, BigDecimal> typeValues = new HashMap<>();
+        
+        for (InventoryMovement movement : movements) {
+            String type = movement.getMovementType() != null ? movement.getMovementType().toString() : "IN";
+            
+            typeCounts.merge(type, 1, Integer::sum);
+            typeQuantities.merge(type, movement.getQuantity(), BigDecimal::add);
+            typeValues.merge(type, movement.getTotalAmount(), BigDecimal::add);
+        }
+        
+        for (String type : typeCounts.keySet()) {
             Map<String, Object> typeStat = new HashMap<>();
-            typeStat.put("count", stat[1]);
-            typeStat.put("quantity", stat[2]);
-            typeStat.put("value", stat[3]);
-            typeStatistics.put(stat[0].toString(), typeStat);
+            typeStat.put("count", typeCounts.get(type));
+            typeStat.put("quantity", typeQuantities.get(type));
+            typeStat.put("value", typeValues.get(type));
+            typeStatistics.put(type, typeStat);
         }
         statistics.put("byType", typeStatistics);
 
         // Statistiques par statut
-        List<Object[]> statusStats = movementRepository.getMovementStatisticsByStatus(companyId);
         Map<String, Object> statusStatistics = new HashMap<>();
-        for (Object[] stat : statusStats) {
+        
+        // Calculer les statistiques par statut
+        Map<String, Integer> statusCounts = new HashMap<>();
+        Map<String, BigDecimal> statusQuantities = new HashMap<>();
+        Map<String, BigDecimal> statusValues = new HashMap<>();
+        
+        for (InventoryMovement movement : movements) {
+            String status = movement.getStatus() != null ? movement.getStatus().toString() : "PENDING";
+            
+            statusCounts.merge(status, 1, Integer::sum);
+            statusQuantities.merge(status, movement.getQuantity(), BigDecimal::add);
+            statusValues.merge(status, movement.getTotalAmount(), BigDecimal::add);
+        }
+        
+        for (String status : statusCounts.keySet()) {
             Map<String, Object> statusStat = new HashMap<>();
-            statusStat.put("count", stat[1]);
-            statusStat.put("quantity", stat[2]);
-            statusStat.put("value", stat[3]);
-            statusStatistics.put(stat[0].toString(), statusStat);
+            statusStat.put("count", statusCounts.get(status));
+            statusStat.put("quantity", statusQuantities.get(status));
+            statusStat.put("value", statusValues.get(status));
+            statusStatistics.put(status, statusStat);
         }
         statistics.put("byStatus", statusStatistics);
 
         // Totaux
-        statistics.put("totalMovements", movementRepository.getTotalMovementCount(companyId));
-        statistics.put("totalQuantity", movementRepository.getTotalMovementQuantity(companyId));
-        statistics.put("totalValue", movementRepository.getTotalMovementValue(companyId));
+        statistics.put("totalMovements", movementRepository.count());
+        
+        // Calculer les totaux réels
+        BigDecimal totalQuantity = movements.stream()
+            .map(InventoryMovement::getQuantity)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalValue = movements.stream()
+            .map(InventoryMovement::getTotalAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+            
+        statistics.put("totalQuantity", totalQuantity);
+        statistics.put("totalValue", totalValue);
 
         // Mouvements en attente
-        statistics.put("pendingMovements", movementRepository.getPendingMovements(companyId).size());
+        long pendingMovements = movements.stream()
+            .filter(m -> m.getStatus() != null && "PENDING".equals(m.getStatus().toString()))
+            .count();
+        statistics.put("pendingMovements", pendingMovements);
 
         return statistics;
     }
@@ -497,7 +608,13 @@ public class AssetInventoryService {
      */
     public List<Inventory> searchInventory(Long companyId, String category, 
                                          Inventory.InventoryStatus status, String warehouse, String supplier) {
-        return inventoryRepository.findInventoryByFilters(companyId, category, status, warehouse, supplier);
+        return inventoryRepository.findAll().stream()
+            .filter(inv -> companyId == null || companyId.equals(inv.getCompanyId()))
+            .filter(inv -> category == null || category.equals(inv.getCategory()))
+            .filter(inv -> status == null || status.equals(inv.getStatus()))
+            .filter(inv -> warehouse == null || warehouse.equals(inv.getWarehouse()))
+            .filter(inv -> supplier == null || supplier.equals(inv.getSupplier()))
+            .collect(java.util.stream.Collectors.toList());
     }
 
     /**
@@ -507,7 +624,14 @@ public class AssetInventoryService {
                                                   InventoryMovement.MovementType movementType,
                                                   InventoryMovement.MovementStatus status,
                                                   LocalDate startDate, LocalDate endDate) {
-        return movementRepository.findMovementsByFilters(companyId, productId, movementType, status, startDate, endDate);
+        return movementRepository.findAll().stream()
+            .filter(mov -> companyId == null || companyId.equals(mov.getCompanyId()))
+            .filter(mov -> productId == null || productId.equals(mov.getItemId()))
+            .filter(mov -> movementType == null || movementType.equals(mov.getMovementType()))
+            .filter(mov -> status == null || status.equals(mov.getStatus()))
+            .filter(mov -> startDate == null || mov.getMovementDate().isAfter(startDate) || mov.getMovementDate().isEqual(startDate))
+            .filter(mov -> endDate == null || mov.getMovementDate().isBefore(endDate) || mov.getMovementDate().isEqual(endDate))
+            .collect(java.util.stream.Collectors.toList());
     }
 
     // ==================== MÉTHODES UTILITAIRES ====================

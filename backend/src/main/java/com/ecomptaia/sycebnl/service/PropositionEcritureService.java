@@ -1,6 +1,6 @@
 package com.ecomptaia.sycebnl.service;
 
-import com.ecomptaia.entity.Account;
+import com.ecomptaia.accounting.entity.Account;
 import com.ecomptaia.sycebnl.entity.AnalyseIASycebnl;
 import com.ecomptaia.sycebnl.entity.LignePropositionEcritureSycebnl;
 import com.ecomptaia.sycebnl.entity.PieceJustificativeSycebnl;

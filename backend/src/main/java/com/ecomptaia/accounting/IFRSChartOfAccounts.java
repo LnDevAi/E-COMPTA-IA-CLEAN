@@ -2,7 +2,7 @@ package com.ecomptaia.accounting;
 
 import com.ecomptaia.accounting.entity.ChartOfAccounts;
 import com.ecomptaia.accounting.entity.AccountClass;
-import com.ecomptaia.entity.Account;
+import com.ecomptaia.accounting.entity.Account;
 import com.ecomptaia.accounting.entity.AccountType;
 import com.ecomptaia.accounting.entity.AccountingStandard;
 import java.util.*;
@@ -81,7 +81,7 @@ public class IFRSChartOfAccounts implements ChartOfAccounts {
         AccountClass assets = new AccountClass("1", "Assets", AccountType.ASSET);
         assets.addAccount(new Account("1000", "Current Assets", AccountType.ASSET));
         assets.addAccount(new Account("1100"));
-        assets.addAccount(new Account("1110", "Cash on Hand", AccountType.ASSET));
+        assets.addAccount(new Account("1110", "Cash and Cash Equivalents", AccountType.ASSET));
         assets.addAccount(new Account("1120"));
         assets.addAccount(new Account("1200", "Trade Receivables", AccountType.ASSET));
         assets.addAccount(new Account("1210"));
@@ -115,10 +115,8 @@ public class IFRSChartOfAccounts implements ChartOfAccounts {
         AccountClass equity = new AccountClass("3", "Equity", AccountType.EQUITY);
         equity.addAccount(new Account("3000", "Share Capital", AccountType.EQUITY));
         equity.addAccount(new Account("3100"));
-        equity.addAccount(new Account("3200", "Preferred Stock", AccountType.EQUITY));
+        equity.addAccount(new Account("3200", "Retained Earnings", AccountType.EQUITY));
         equity.addAccount(new Account("3300"));
-        equity.addAccount(new Account("3400", "Other Comprehensive Income", AccountType.EQUITY));
-        equity.addAccount(new Account("3500"));
         accountClasses.add(equity);
         
         // Classe 4 - Revenue (Produits)
@@ -127,22 +125,16 @@ public class IFRSChartOfAccounts implements ChartOfAccounts {
         revenue.addAccount(new Account("4100"));
         revenue.addAccount(new Account("4200", "Service Revenue", AccountType.REVENUE));
         revenue.addAccount(new Account("4300"));
-        revenue.addAccount(new Account("4400", "Interest Income", AccountType.REVENUE));
-        revenue.addAccount(new Account("4500"));
         accountClasses.add(revenue);
         
         // Classe 5 - Expenses (Charges)
         AccountClass expenses = new AccountClass("5", "Expenses", AccountType.EXPENSE);
         expenses.addAccount(new Account("5000", "Cost of Goods Sold", AccountType.EXPENSE));
         expenses.addAccount(new Account("5100"));
-        expenses.addAccount(new Account("5200", "Direct Labor", AccountType.EXPENSE));
+        expenses.addAccount(new Account("5200", "Operating Expenses", AccountType.EXPENSE));
         expenses.addAccount(new Account("5300"));
-        expenses.addAccount(new Account("5400", "Operating Expenses", AccountType.EXPENSE));
-        expenses.addAccount(new Account("5410"));
-        expenses.addAccount(new Account("5420", "Administrative Expenses", AccountType.EXPENSE));
+        expenses.addAccount(new Account("5400", "Administrative Expenses", AccountType.EXPENSE));
         expenses.addAccount(new Account("5500"));
-        expenses.addAccount(new Account("5600", "Interest Expense", AccountType.EXPENSE));
-        expenses.addAccount(new Account("5700"));
         accountClasses.add(expenses);
         
         // Ajouter tous les comptes à la liste générale

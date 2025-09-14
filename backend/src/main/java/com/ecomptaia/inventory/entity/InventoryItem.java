@@ -11,8 +11,14 @@ public class InventoryItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
-    private String name;
+    @Column(name = "inventory_id", nullable = false)
+    private Long inventoryId;
+    
+    @Column(name = "item_name", nullable = false)
+    private String itemName;
+    
+    @Column(name = "unit", length = 10)
+    private String unit;
     
     private String description;
     
@@ -35,8 +41,8 @@ public class InventoryItem {
     // Constructeurs
     public InventoryItem() {}
     
-    public InventoryItem(String name, String description, String sku, BigDecimal unitPrice, Integer quantity, String category) {
-        this.name = name;
+    public InventoryItem(String itemName, String description, String sku, BigDecimal unitPrice, Integer quantity, String category) {
+        this.itemName = itemName;
         this.description = description;
         this.sku = sku;
         this.unitPrice = unitPrice;
@@ -50,8 +56,16 @@ public class InventoryItem {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public Long getInventoryId() { return inventoryId; }
+    public void setInventoryId(Long inventoryId) { this.inventoryId = inventoryId; }
+    
+    public String getItemName() { return itemName; }
+    public void setItemName(String itemName) { this.itemName = itemName; }
+    
+    public String getUnit() { return unit; }
+    public void setUnit(String unit) { this.unit = unit; }
+    
+    // getName/setName removed - use getItemName/setItemName instead
     
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

@@ -1,0 +1,44 @@
+# Dockerfile sécurisé pour E-COMPTA-IA INTERNATIONAL Backend
+FROM openjdk:17-jdk-alpine AS builder
+
+# Créer un utilisateur non-root
+RUN addgroup -g 1000 appgroup && adduser -u 1000 -G appgroup -s /bin/sh -D appuser
+
+# Installer les dépendances de sécurité
+RUN apk add --no-cache curl openssl
+
+# Copier les fichiers de build
+COPY . /app
+WORKDIR /app
+
+# Construire l'application
+RUN mvn clean package -DskipTests -q
+
+# Image de production
+FROM eclipse-temurin:17-jre
+
+# Créer un utilisateur non-root
+RUN addgroup -g 1000 appgroup && adduser -u 1000 -G appgroup -s /bin/sh -D appuser
+
+# Installer les dépendances de sécurité
+RUN apk add --no-cache curl openssl
+
+# Créer les répertoires nécessaires
+RUN mkdir -p /app/logs /app/backup /app/tmp && \
+    chown -R appuser:appgroup /app
+
+# Copier l'application depuis le builder
+COPY --from=builder /app/target/*.jar /app/app.jar
+
+# Changer vers l'utilisateur non-root
+USER appuser
+
+# Exposer le port
+EXPOSE 8080
+
+# Configuration de sécurité
+ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseStringDeduplication -Djava.security.egd=file:/dev/./urandom"
+
+# Point d'entrée sécurisé
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
+

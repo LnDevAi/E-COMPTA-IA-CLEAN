@@ -1,8 +1,8 @@
 package com.ecomptaia.sycebnl.integration;
 
 import com.ecomptaia.entity.Company;
-import com.ecomptaia.entity.User;
-import com.ecomptaia.entity.Account;
+import com.ecomptaia.security.entity.User;
+import com.ecomptaia.accounting.entity.Account;
 import com.ecomptaia.entity.FinancialPeriod;
 import com.ecomptaia.sycebnl.entity.PieceJustificativeSycebnl;
 import com.ecomptaia.sycebnl.entity.AnalyseOCRSycebnl;
@@ -33,13 +33,15 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests d'intÃ©gration pour vÃ©rifier que les donnÃ©es de test sont bien insÃ©rÃ©es
  * et que toutes les relations fonctionnent correctement
  */
-@SpringBootTest
+@SpringBootTest(classes = com.ecomptaia.EcomptaiaApplication.class)
 @ActiveProfiles("test")
 @Transactional
 public class DataIntegrationTest {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    // Security filters are disabled by TestSecurityConfig for test profile
 
     @Autowired
     private UserRepository userRepository;

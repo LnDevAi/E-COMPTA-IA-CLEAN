@@ -27,6 +27,14 @@ spring:
   sql:
     init:
       mode: never
+  
+  # Configuration Flyway (désactivé pour éviter les conflits)
+  flyway:
+    enabled: false
+  
+  # Configuration Elasticsearch (désactivé pour le profil simple)
+  elasticsearch:
+    enabled: false
 
 # Configuration du serveur
 server:
@@ -35,13 +43,11 @@ server:
   servlet:
     context-path: /api
 
-# Configuration des logs
-logging:
   level:
     com.ecomptaia: INFO
     org.springframework: INFO
-    org.hibernate: INFO
-
+    servlet:
+      context-path: /api
 # Configuration de l'application
 app:
   name: E-COMPTA-IA INTERNATIONAL

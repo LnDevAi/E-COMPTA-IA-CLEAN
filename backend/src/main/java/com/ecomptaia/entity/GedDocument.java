@@ -28,11 +28,23 @@ public class GedDocument {
     @Column(name = "file_path", nullable = false)
     private String filePath;
     
+    @Column(name = "file_type", length = 50)
+    private String fileType;
+    
     @Column(name = "file_size")
     private Long fileSize;
     
-    @Column(name = "file_type")
-    private String fileType;
+    @Column(name = "uploaded_by", nullable = false)
+    private Long uploadedBy;
+    
+    @Column(name = "upload_date", nullable = false)
+    private LocalDateTime uploadDate;
+    
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+    
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
     
     @Column(name = "mime_type")
     private String mimeType;
@@ -200,14 +212,26 @@ public class GedDocument {
     public String getFileName() { return fileName; }
     public void setFileName(String fileName) { this.fileName = fileName; }
     
-    public String getFilePath() { return filePath; }
-    public void setFilePath(String filePath) { this.filePath = filePath; }
+    public String getFileType() { return fileType; }
+    public void setFileType(String fileType) { this.fileType = fileType; }
     
     public Long getFileSize() { return fileSize; }
     public void setFileSize(Long fileSize) { this.fileSize = fileSize; }
     
-    public String getFileType() { return fileType; }
-    public void setFileType(String fileType) { this.fileType = fileType; }
+    public Long getUploadedBy() { return uploadedBy; }
+    public void setUploadedBy(Long uploadedBy) { this.uploadedBy = uploadedBy; }
+    
+    public LocalDateTime getUploadDate() { return uploadDate; }
+    public void setUploadDate(LocalDateTime uploadDate) { this.uploadDate = uploadDate; }
+    
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    
+    public DocumentStatus getStatus() { return status; }
+    public void setStatus(DocumentStatus status) { this.status = status; }
+    
+    public String getFilePath() { return filePath; }
+    public void setFilePath(String filePath) { this.filePath = filePath; }
     
     public String getMimeType() { return mimeType; }
     public void setMimeType(String mimeType) { this.mimeType = mimeType; }
@@ -230,9 +254,6 @@ public class GedDocument {
     public Long getParentDocumentId() { return parentDocumentId; }
     public void setParentDocumentId(Long parentDocumentId) { this.parentDocumentId = parentDocumentId; }
     
-    public DocumentStatus getStatus() { return status; }
-    public void setStatus(DocumentStatus status) { this.status = status; }
-    
     public SecurityLevel getSecurityLevel() { return securityLevel; }
     public void setSecurityLevel(SecurityLevel securityLevel) { this.securityLevel = securityLevel; }
     
@@ -250,6 +271,9 @@ public class GedDocument {
     
     public String getModuleReference() { return moduleReference; }
     public void setModuleReference(String moduleReference) { this.moduleReference = moduleReference; }
+    
+    public LocalDateTime getDeletedAt() { return deletedAt; }
+    public void setDeletedAt(LocalDateTime deletedAt) { this.deletedAt = deletedAt; }
     
     public Long getEntityReferenceId() { return entityReferenceId; }
     public void setEntityReferenceId(Long entityReferenceId) { this.entityReferenceId = entityReferenceId; }

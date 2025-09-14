@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/advanced-ai")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:4200", "https://ecomptaia.com"}, allowCredentials = "true")
 public class AdvancedAIController {
 
     @Autowired

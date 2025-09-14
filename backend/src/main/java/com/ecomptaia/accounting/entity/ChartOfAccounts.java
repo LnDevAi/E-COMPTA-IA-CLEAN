@@ -1,7 +1,5 @@
 package com.ecomptaia.accounting.entity;
 
-import com.ecomptaia.entity.Account;
-import com.ecomptaia.accounting.entity.AccountingStandard;
 
 import java.util.List;
 import java.util.Map;

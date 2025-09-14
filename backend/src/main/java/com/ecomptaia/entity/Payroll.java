@@ -19,6 +19,15 @@ public class Payroll {
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;
 
+    @Column(name = "company_id", nullable = false)
+    private Long companyId;
+
+    @Column(name = "month", nullable = false)
+    private Integer month;
+    
+    @Column(name = "year", nullable = false)
+    private Integer year;
+    
     @Column(name = "pay_period", nullable = false)
     @Enumerated(EnumType.STRING)
     private PayPeriod payPeriod;
@@ -68,7 +77,7 @@ public class Payroll {
     @Column(name = "gross_salary")
     private BigDecimal grossSalary;
 
-    @Column(name = "income_tax")
+    @Column(name = "income_tax", precision = 15, scale = 2)
     private BigDecimal incomeTax;
 
     @Column(name = "social_security_tax")
@@ -86,8 +95,17 @@ public class Payroll {
     @Column(name = "deduction_description")
     private String deductionDescription;
 
-    @Column(name = "net_salary")
+    @Column(name = "social_charges", precision = 15, scale = 2)
+    private BigDecimal socialCharges;
+    
+    @Column(name = "net_salary", precision = 15, scale = 2)
     private BigDecimal netSalary;
+    
+    @Column(name = "status", length = 20)
+    private String status;
+    
+    @Column(name = "payment_date")
+    private LocalDateTime paymentDate;
 
     @Column(name = "currency", nullable = false)
     private String currency;
@@ -130,14 +148,6 @@ public class Payroll {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Constructeur
-    public Payroll() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        this.payrollStatus = PayrollStatus.DRAFT;
-        this.currency = "XOF";
-        this.exchangeRate = BigDecimal.ONE;
-    }
 
     // Enums
     public enum PayPeriod {
@@ -287,6 +297,12 @@ public class Payroll {
     public String getPayrollCode() { return payrollCode; }
     public void setPayrollCode(String payrollCode) { this.payrollCode = payrollCode; }
 
+    public Integer getMonth() { return month; }
+    public void setMonth(Integer month) { this.month = month; }
+    
+    public Integer getYear() { return year; }
+    public void setYear(Integer year) { this.year = year; }
+    
     public Long getEmployeeId() { return employeeId; }
     public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
 
@@ -356,6 +372,15 @@ public class Payroll {
     public String getDeductionDescription() { return deductionDescription; }
     public void setDeductionDescription(String deductionDescription) { this.deductionDescription = deductionDescription; }
 
+    public BigDecimal getSocialCharges() { return socialCharges; }
+    public void setSocialCharges(BigDecimal socialCharges) { this.socialCharges = socialCharges; }
+    
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    
+    public LocalDateTime getPaymentDate() { return paymentDate; }
+    public void setPaymentDate(LocalDateTime paymentDate) { this.paymentDate = paymentDate; }
+    
     public BigDecimal getNetSalary() { return netSalary; }
     public void setNetSalary(BigDecimal netSalary) { this.netSalary = netSalary; }
 
@@ -402,6 +427,10 @@ public class Payroll {
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    // Getter et Setter pour companyId
+    public Long getCompanyId() { return companyId; }
+    public void setCompanyId(Long companyId) { this.companyId = companyId; }
 }
 
 

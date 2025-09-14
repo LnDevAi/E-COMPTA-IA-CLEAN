@@ -3,7 +3,7 @@ package com.ecomptaia.sycebnl.entity;
 import com.ecomptaia.entity.GedDocument;
 import com.ecomptaia.entity.EcritureComptable;
 import com.ecomptaia.entity.Company;
-import com.ecomptaia.entity.User;
+import com.ecomptaia.security.entity.User;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;

@@ -1,51 +1,1057 @@
 -------------------------------------------------------------------------------
 Test set: com.ecomptaia.service.ThirdPartySoftwareServiceTest
 -------------------------------------------------------------------------------
-Tests run: 13, Failures: 3, Errors: 1, Skipped: 0, Time elapsed: 0.029 s <<< FAILURE! -- in com.ecomptaia.service.ThirdPartySoftwareServiceTest
-com.ecomptaia.service.ThirdPartySoftwareServiceTest.testRunCompleteTest_Failure -- Time elapsed: 0.003 s <<< FAILURE!
-org.opentest4j.AssertionFailedError: expected: <ERROR> but was: <OPERATIONAL>
-	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
-	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
-	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
-	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
-	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
-	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1145)
-	at com.ecomptaia.service.ThirdPartySoftwareServiceTest.testRunCompleteTest_Failure(ThirdPartySoftwareServiceTest.java:185)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Tests run: 13, Failures: 0, Errors: 13, Skipped: 0, Time elapsed: 15.91 s <<< FAILURE! -- in com.ecomptaia.service.ThirdPartySoftwareServiceTest
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testGetSyncLogs_Success -- Time elapsed: 1.320 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
 
-com.ecomptaia.service.ThirdPartySoftwareServiceTest.testSyncData_Failure -- Time elapsed: 0.001 s <<< ERROR!
-org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
 
-Unnecessary stubbings detected.
-Clean & maintainable test code requires zero unnecessary code.
-Following stubbings are unnecessary (click to navigate to relevant line of code):
-  1. -> at com.ecomptaia.service.ThirdPartySoftwareServiceTest.testSyncData_Failure(ThirdPartySoftwareServiceTest.java:109)
-Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
-	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:192)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+If you're not sure why you're getting this error, please open an issue on GitHub.
 
-com.ecomptaia.service.ThirdPartySoftwareServiceTest.testTestConnection_InvalidSoftware -- Time elapsed: 0.001 s <<< FAILURE!
-org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown.
-	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
-	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
-	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
-	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3115)
-	at com.ecomptaia.service.ThirdPartySoftwareServiceTest.testTestConnection_InvalidSoftware(ThirdPartySoftwareServiceTest.java:209)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.ecomptaia.service.ThirdPartySoftwareServiceTest.testSyncData_InvalidSoftware -- Time elapsed: 0.001 s <<< FAILURE!
-org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown.
-	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
-	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
-	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
-	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3115)
-	at com.ecomptaia.service.ThirdPartySoftwareServiceTest.testSyncData_InvalidSoftware(ThirdPartySoftwareServiceTest.java:216)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testGetAvailableSoftware_ContainsAllTypes -- Time elapsed: 1.416 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testRunCompleteTest_Failure -- Time elapsed: 1.267 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testSyncData_Success -- Time elapsed: 1.350 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testGetAvailableSoftware_Success -- Time elapsed: 1.119 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testGetIntegrationStatistics_Success -- Time elapsed: 1.597 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testSyncData_Failure -- Time elapsed: 1.067 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testTestConnection_Success -- Time elapsed: 1.433 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testTestConnection_InvalidSoftware -- Time elapsed: 1.211 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testTestConnection_Failure -- Time elapsed: 0.929 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testConfigureIntegration_Success -- Time elapsed: 1.212 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testRunCompleteTest_Success -- Time elapsed: 0.693 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
+
+com.ecomptaia.service.ThirdPartySoftwareServiceTest.testSyncData_InvalidSoftware -- Time elapsed: 1.071 s <<< ERROR!
+org.mockito.exceptions.base.MockitoException: 
+
+Mockito cannot mock this class: class org.springframework.web.client.RestTemplate.
+
+If you're not sure why you're getting this error, please open an issue on GitHub.
+
+
+Java               : 24
+JVM vendor name    : Oracle Corporation
+JVM vendor version : 24.0.2+12-54
+JVM name           : Java HotSpot(TM) 64-Bit Server VM
+JVM version        : 24.0.2+12-54
+JVM info           : mixed mode, sharing
+OS name            : Windows 10
+OS version         : 10.0
+
+
+You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+You can learn about inline mocks and their limitations under item #39 of the Mockito class javadoc.
+
+Underlying exception : org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:159)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: java.lang.NullPointerException: Cannot invoke "java.util.Set.forEach(java.util.function.Consumer)" because the return value of "org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)" is null
+		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:190)
+		... 2 more
+Caused by: org.mockito.exceptions.base.MockitoException: Could not modify all classes [class org.springframework.web.client.RestTemplate, interface org.springframework.web.client.RestOperations, class org.springframework.http.client.support.InterceptingHttpAccessor, class java.lang.Object, class org.springframework.http.client.support.HttpAccessor]
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	... 3 more
+Caused by: java.lang.IllegalStateException: 
+Byte Buddy could not instrument all classes within the mock's type hierarchy
+
+This problem should never occur for javac-compiled classes. This problem has been observed for classes that are:
+ - Compiled by older versions of scalac
+ - Classes that are part of the Android distribution
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:285)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.mockClass(InlineBytecodeGenerator.java:218)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.lambda$mockClass$0(TypeCachingBytecodeGenerator.java:78)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:168)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:399)
+	at net.bytebuddy.TypeCache.findOrInsert(TypeCache.java:190)
+	at net.bytebuddy.TypeCache$WithInlineExpunction.findOrInsert(TypeCache.java:410)
+	at org.mockito.internal.creation.bytebuddy.TypeCachingBytecodeGenerator.mockClass(TypeCachingBytecodeGenerator.java:75)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMockType(InlineDelegateByteBuddyMockMaker.java:412)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.doCreateMock(InlineDelegateByteBuddyMockMaker.java:371)
+	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.createMock(InlineDelegateByteBuddyMockMaker.java:350)
+	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.createMock(InlineByteBuddyMockMaker.java:56)
+	at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:99)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:88)
+	at org.mockito.Mockito.mock(Mockito.java:2101)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
+	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
+	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
+	at org.mockito.internal.framework.DefaultMockitoSession.<init>(DefaultMockitoSession.java:43)
+	at org.mockito.internal.session.DefaultMockitoSessionBuilder.startMocking(DefaultMockitoSessionBuilder.java:83)
+	... 3 more
+Caused by: java.lang.IllegalArgumentException: Java 24 (68) is not supported by the current version of Byte Buddy which officially supports Java 22 (66) - update Byte Buddy or set net.bytebuddy.experimental as a VM property
+	at net.bytebuddy.utility.OpenedClassReader.of(OpenedClassReader.java:100)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default$ForInlining.create(TypeWriter.java:4011)
+	at net.bytebuddy.dynamic.scaffold.TypeWriter$Default.make(TypeWriter.java:2224)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase$UsingTypeWriter.make(DynamicType.java:4055)
+	at net.bytebuddy.dynamic.DynamicType$Builder$AbstractBase.make(DynamicType.java:3739)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.transform(InlineBytecodeGenerator.java:402)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses0(Native Method)
+	at java.instrument/sun.instrument.InstrumentationImpl.retransformClasses(InstrumentationImpl.java:221)
+	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.triggerRetransformation(InlineBytecodeGenerator.java:281)
+	... 27 more
 

@@ -23,7 +23,7 @@ COPY src /app/src
 RUN mvn clean package -DskipTests -B
 
 # Stage de production
-FROM openjdk:17-jre-slim
+FROM eclipse-temurin:17-jre
 
 # Création d'un utilisateur non-root
 RUN groupadd -r appuser && useradd -r -g appuser appuser

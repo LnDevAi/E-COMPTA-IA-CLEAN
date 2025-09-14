@@ -1,6 +1,5 @@
 package com.ecomptaia.service;
 
-import com.ecomptaia.entity.BalanceComptable;
 import com.ecomptaia.entity.EtatFinancier;
 import org.springframework.stereotype.Service;
 

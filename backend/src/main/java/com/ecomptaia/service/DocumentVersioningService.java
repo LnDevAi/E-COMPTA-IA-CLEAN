@@ -30,7 +30,10 @@ public class DocumentVersioningService {
 
     public List<DocumentVersion> getDocumentVersions(Long documentId) {
         try {
-            return versionRepository.findByDocumentIdOrderByVersionNumberDesc(documentId);
+            return versionRepository.findAll().stream()
+                .filter(v -> documentId.equals(v.getDocumentId()))
+                .sorted((v1, v2) -> v2.getVersionNumber().compareTo(v1.getVersionNumber()))
+                .collect(java.util.stream.Collectors.toList());
         } catch (Exception ex) {
             return Collections.emptyList();
         }
@@ -38,8 +41,10 @@ public class DocumentVersioningService {
 
     public Optional<DocumentVersion> getCurrentVersion(Long documentId) {
         try {
-            return versionRepository.findByDocumentIdOrderByVersionNumberDesc(documentId)
-                    .stream().findFirst();
+            return versionRepository.findAll().stream()
+                .filter(v -> documentId.equals(v.getDocumentId()))
+                .sorted((v1, v2) -> v2.getVersionNumber().compareTo(v1.getVersionNumber()))
+                .findFirst();
         } catch (Exception ex) {
             return Optional.empty();
         }
@@ -59,7 +64,10 @@ public class DocumentVersioningService {
 
     public List<DocumentVersion> getPendingApprovalVersions() {
         try {
-            return versionRepository.findByApprovalStatusOrderByCreatedAtAsc(DocumentVersion.ApprovalStatus.PENDING);
+            return versionRepository.findAll().stream()
+                .filter(v -> DocumentVersion.ApprovalStatus.PENDING.equals(v.getApprovalStatus()))
+                .sorted((v1, v2) -> v1.getCreatedAt().compareTo(v2.getCreatedAt()))
+                .collect(java.util.stream.Collectors.toList());
         } catch (Exception ex) {
             return Collections.emptyList();
         }
@@ -67,7 +75,10 @@ public class DocumentVersioningService {
 
     public List<DocumentVersion> getApprovedVersions() {
         try {
-            return versionRepository.findByApprovalStatusOrderByApprovedAtDesc(DocumentVersion.ApprovalStatus.APPROVED);
+            return versionRepository.findAll().stream()
+                .filter(v -> DocumentVersion.ApprovalStatus.APPROVED.equals(v.getApprovalStatus()))
+                .sorted((v1, v2) -> v2.getApprovedAt().compareTo(v1.getApprovedAt()))
+                .collect(java.util.stream.Collectors.toList());
         } catch (Exception ex) {
             return Collections.emptyList();
         }
@@ -75,7 +86,9 @@ public class DocumentVersioningService {
 
     public List<DocumentVersion> getArchivedVersions() {
         try {
-            return versionRepository.findByIsArchivedTrue();
+            return versionRepository.findAll().stream()
+                .filter(v -> Boolean.TRUE.equals(v.getIsArchived()))
+                .collect(java.util.stream.Collectors.toList());
         } catch (Exception ex) {
             return Collections.emptyList();
         }

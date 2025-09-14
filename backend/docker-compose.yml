@@ -5,13 +5,34 @@ services:
     container_name: ecomptaia-postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ^Dq^V)o:]S~"={<q}~MF;I}W_)|*2;`7
       POSTGRES_DB: ecomptaia_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
+    # secrets removed, password set directly
+
+  # Exemple d'intégration des secrets dans le backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecomptaia-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: production
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ecomptaia_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ^Dq^V)o:]S~"={<q}~MF;I}W_)|*2;`7
+    ports:
+      - "8082:8080"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    # secrets removed, password set directly
 
 volumes:
   postgres_data:
+
+## secrets section removed

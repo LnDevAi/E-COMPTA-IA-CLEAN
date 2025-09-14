@@ -165,7 +165,6 @@ public class MultiTenantService {
      * RÃ©cupÃ¨re le nom du pays
      */
     private String getCountryName(String countryCode) {
-        @SuppressWarnings("unchecked")
         Map<String, Object> all = localizationService.getAllSupportedCountries();
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> list = (List<Map<String, Object>>) all.getOrDefault("countries", List.of());

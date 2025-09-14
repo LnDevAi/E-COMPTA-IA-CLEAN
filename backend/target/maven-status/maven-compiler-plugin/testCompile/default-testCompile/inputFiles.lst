@@ -1,8 +1,9 @@
-/workspace/backend/src/test/java/com/ecomptaia/service/ThirdPartySoftwareServiceTest.java
-/workspace/backend/src/test/java/com/ecomptaia/sycebnl/service/PieceJustificativeSycebnlServiceTest.java
-/workspace/backend/src/test/java/com/ecomptaia/service/BalanceComptableServiceTest.java
-/workspace/backend/src/test/java/com/ecomptaia/sycebnl/controller/PieceJustificativeSycebnlControllerTest.java
-/workspace/backend/src/test/java/com/ecomptaia/controller/EtatsFinanciersControllerTest.java
-/workspace/backend/src/test/java/com/ecomptaia/controller/GovernmentPlatformControllerTest.java
-/workspace/backend/src/test/java/com/ecomptaia/sycebnl/integration/DataIntegrationTest.java
-/workspace/backend/src/test/java/com/ecomptaia/service/GovernmentPlatformServiceTest.java
+C:\Users\HP\Documents\GitHub\E_COMPTA_IA\E_COMPTA_IA_INTERNATIONAL\E-COMPTA-IA-CLEAN\backend\src\test\java\com\ecomptaia\sycebnl\controller\PieceJustificativeSycebnlControllerTest.java
+C:\Users\HP\Documents\GitHub\E_COMPTA_IA\E_COMPTA_IA_INTERNATIONAL\E-COMPTA-IA-CLEAN\backend\src\test\java\com\ecomptaia\sycebnl\service\PieceJustificativeSycebnlServiceTest.java
+C:\Users\HP\Documents\GitHub\E_COMPTA_IA\E_COMPTA_IA_INTERNATIONAL\E-COMPTA-IA-CLEAN\backend\src\test\java\com\ecomptaia\service\ThirdPartySoftwareServiceTest.java
+C:\Users\HP\Documents\GitHub\E_COMPTA_IA\E_COMPTA_IA_INTERNATIONAL\E-COMPTA-IA-CLEAN\backend\src\test\java\com\ecomptaia\security\TestSecurityConfig.java
+C:\Users\HP\Documents\GitHub\E_COMPTA_IA\E_COMPTA_IA_INTERNATIONAL\E-COMPTA-IA-CLEAN\backend\src\test\java\com\ecomptaia\service\BalanceComptableServiceTest.java
+C:\Users\HP\Documents\GitHub\E_COMPTA_IA\E_COMPTA_IA_INTERNATIONAL\E-COMPTA-IA-CLEAN\backend\src\test\java\com\ecomptaia\sycebnl\integration\DataIntegrationTest.java
+C:\Users\HP\Documents\GitHub\E_COMPTA_IA\E_COMPTA_IA_INTERNATIONAL\E-COMPTA-IA-CLEAN\backend\src\test\java\com\ecomptaia\controller\EtatsFinanciersControllerTest.java
+C:\Users\HP\Documents\GitHub\E_COMPTA_IA\E_COMPTA_IA_INTERNATIONAL\E-COMPTA-IA-CLEAN\backend\src\test\java\com\ecomptaia\controller\GovernmentPlatformControllerTest.java
+C:\Users\HP\Documents\GitHub\E_COMPTA_IA\E_COMPTA_IA_INTERNATIONAL\E-COMPTA-IA-CLEAN\backend\src\test\java\com\ecomptaia\service\GovernmentPlatformServiceTest.java

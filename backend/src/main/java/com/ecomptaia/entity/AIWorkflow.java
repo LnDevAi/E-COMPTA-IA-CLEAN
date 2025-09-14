@@ -1,12 +1,9 @@
 package com.ecomptaia.entity;
 
-import com.ecomptaia.entity.Company;
-import com.ecomptaia.entity.User;
+import com.ecomptaia.security.entity.User;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * EntitÃ© pour les workflows intelligents automatisÃ©s par l'IA

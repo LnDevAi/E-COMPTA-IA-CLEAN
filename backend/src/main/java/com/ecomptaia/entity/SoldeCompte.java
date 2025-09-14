@@ -1,7 +1,6 @@
 package com.ecomptaia.entity;
 
-import com.ecomptaia.entity.Account;
-import com.ecomptaia.entity.BalanceComptable;
+import com.ecomptaia.accounting.entity.Account;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

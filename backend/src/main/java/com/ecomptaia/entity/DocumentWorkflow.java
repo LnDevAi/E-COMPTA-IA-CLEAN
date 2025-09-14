@@ -17,6 +17,24 @@ public class DocumentWorkflow {
     @Column(name = "workflow_name", nullable = false)
     private String workflowName;
     
+    @Column(name = "document_id", nullable = false)
+    private Long documentId;
+    
+    @Column(name = "company_id", nullable = false)
+    private Long companyId;
+    
+    @Column(name = "status", length = 20)
+    private String status;
+    
+    @Column(name = "approved_by")
+    private Long approvedBy;
+    
+    @Column(name = "approval_date")
+    private LocalDateTime approvalDate;
+    
+    @Column(name = "comments", columnDefinition = "TEXT")
+    private String comments;
+    
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
     
@@ -44,9 +62,6 @@ public class DocumentWorkflow {
     
     @Column(name = "retention_years")
     private Integer retentionYears = 7;
-    
-    @Column(name = "company_id", nullable = false)
-    private Long companyId;
     
     @Column(name = "country_code", nullable = false)
     private String countryCode;
@@ -89,6 +104,24 @@ public class DocumentWorkflow {
     public String getWorkflowCode() { return workflowCode; }
     public void setWorkflowCode(String workflowCode) { this.workflowCode = workflowCode; }
     
+    public Long getDocumentId() { return documentId; }
+    public void setDocumentId(Long documentId) { this.documentId = documentId; }
+    
+    public Long getCompanyId() { return companyId; }
+    public void setCompanyId(Long companyId) { this.companyId = companyId; }
+    
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    
+    public Long getApprovedBy() { return approvedBy; }
+    public void setApprovedBy(Long approvedBy) { this.approvedBy = approvedBy; }
+    
+    public LocalDateTime getApprovalDate() { return approvalDate; }
+    public void setApprovalDate(LocalDateTime approvalDate) { this.approvalDate = approvalDate; }
+    
+    public String getComments() { return comments; }
+    public void setComments(String comments) { this.comments = comments; }
+    
     public String getWorkflowName() { return workflowName; }
     public void setWorkflowName(String workflowName) { this.workflowName = workflowName; }
     
@@ -118,9 +151,6 @@ public class DocumentWorkflow {
     
     public Integer getRetentionYears() { return retentionYears; }
     public void setRetentionYears(Integer retentionYears) { this.retentionYears = retentionYears; }
-    
-    public Long getCompanyId() { return companyId; }
-    public void setCompanyId(Long companyId) { this.companyId = companyId; }
     
     public String getCountryCode() { return countryCode; }
     public void setCountryCode(String countryCode) { this.countryCode = countryCode; }

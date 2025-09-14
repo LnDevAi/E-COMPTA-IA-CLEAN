@@ -4,11 +4,10 @@ import com.ecomptaia.entity.EcritureComptable;
 import com.ecomptaia.entity.LigneEcriture;
 import com.ecomptaia.entity.PieceJustificativeComptable;
 import com.ecomptaia.entity.Company;
-import com.ecomptaia.entity.User;
-import com.ecomptaia.entity.Account;
+import com.ecomptaia.security.entity.User;
+import com.ecomptaia.accounting.entity.Account;
 import com.ecomptaia.entity.FinancialPeriod;
 
-import com.ecomptaia.entity.*;
 import com.ecomptaia.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,5 @@
 package com.ecomptaia.entity;
 
-import com.ecomptaia.entity.PredictiveMetric;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

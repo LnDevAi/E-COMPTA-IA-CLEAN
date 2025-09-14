@@ -1,6 +1,6 @@
 package com.ecomptaia.repository;
 
-import com.ecomptaia.entity.Account;
+import com.ecomptaia.accounting.entity.Account;
 import com.ecomptaia.entity.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,10 +20,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findByCompanyOrderByAccountNumberAsc(Company company);
     
     // Recherche par entreprise et type
-    List<Account> findByCompanyAndTypeOrderByAccountNumberAsc(Company company, Account.AccountType type);
+    List<Account> findByCompanyAndTypeOrderByAccountNumberAsc(Company company, String type);
     
     // Recherche par entreprise et classe de compte
-    List<Account> findByCompanyAndAccountClassOrderByAccountNumberAsc(Company company, Account.AccountClass accountClass);
+    List<Account> findByCompanyAndAccountClassOrderByAccountNumberAsc(Company company, String accountClass);
     
     // Recherche des comptes actifs par entreprise
     List<Account> findByCompanyAndIsActiveTrueOrderByAccountNumberAsc(Company company);
@@ -45,10 +45,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     long countByCompanyAndIsActiveTrue(Company company);
     
     // Compter les comptes par type et entreprise
-    long countByCompanyAndType(Company company, Account.AccountType type);
+    long countByCompanyAndType(Company company, String type);
     
     // Compter les comptes par classe et entreprise
-    long countByCompanyAndAccountClass(Company company, Account.AccountClass accountClass);
+    long countByCompanyAndAccountClass(Company company, String accountClass);
     
     // Recherche avancée avec critères multiples
     @Query("SELECT a FROM Account a WHERE a.company = :company " +
@@ -59,8 +59,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
            "ORDER BY a.accountNumber ASC")
     List<Account> findAccountsWithCriteria(
         @Param("company") Company company,
-        @Param("type") Account.AccountType type,
-        @Param("accountClass") Account.AccountClass accountClass,
+        @Param("type") String type,
+        @Param("accountClass") String accountClass,
         @Param("isActive") Boolean isActive,
         @Param("currency") String currency
     );

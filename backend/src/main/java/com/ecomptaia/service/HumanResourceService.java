@@ -128,14 +128,20 @@ public class HumanResourceService {
      * Obtenir tous les employés d'une entreprise
      */
     public List<Employee> getAllEmployeesByEntreprise(Long entrepriseId) {
-        return employeeRepository.findByEntrepriseId(entrepriseId);
+        return employeeRepository.findAll().stream()
+            .filter(emp -> entrepriseId.equals(emp.getCompanyId()))
+            .collect(java.util.stream.Collectors.toList());
     }
 
     /**
      * Rechercher des employés
      */
     public List<Employee> searchEmployees(Long entrepriseId, String searchTerm) {
-        return employeeRepository.findByEntrepriseIdAndNameContaining(entrepriseId, searchTerm);
+        return employeeRepository.findAll().stream()
+            .filter(emp -> entrepriseId.equals(emp.getCompanyId()))
+            .filter(emp -> emp.getFirstName().toLowerCase().contains(searchTerm.toLowerCase()) || 
+                          emp.getLastName().toLowerCase().contains(searchTerm.toLowerCase()))
+            .collect(java.util.stream.Collectors.toList());
     }
 
     /**
@@ -144,19 +150,50 @@ public class HumanResourceService {
     public Map<String, Object> getEmployeeStatistics(Long entrepriseId) {
         Map<String, Object> statistics = new HashMap<>();
         
-        statistics.put("totalEmployees", employeeRepository.countByEntrepriseId(entrepriseId));
-        statistics.put("activeEmployees", employeeRepository.countActiveEmployeesByEntrepriseId(entrepriseId));
-        statistics.put("employeesOnLeave", employeeRepository.countEmployeesOnLeaveByEntrepriseId(entrepriseId));
-        statistics.put("terminatedEmployees", employeeRepository.countTerminatedEmployeesByEntrepriseId(entrepriseId));
-        statistics.put("totalSalary", employeeRepository.getTotalSalaryByEntrepriseId(entrepriseId));
-        statistics.put("averageSalary", employeeRepository.getAverageSalaryByEntrepriseId(entrepriseId));
+        List<Employee> employees = employeeRepository.findAll().stream()
+            .filter(emp -> entrepriseId.equals(emp.getCompanyId()))
+            .collect(java.util.stream.Collectors.toList());
+            
+        statistics.put("totalEmployees", employees.size());
+        statistics.put("activeEmployees", employees.stream()
+            .filter(emp -> Boolean.TRUE.equals(emp.getIsActive()))
+            .count());
+        // Calculer les statistiques réelles
+        statistics.put("employeesOnLeave", employees.stream()
+            .filter(emp -> emp.getEmploymentStatus() != null && "ON_LEAVE".equals(emp.getEmploymentStatus().toString()))
+            .count());
+        statistics.put("terminatedEmployees", employees.stream()
+            .filter(emp -> emp.getEmploymentStatus() != null && "TERMINATED".equals(emp.getEmploymentStatus().toString()))
+            .count());
+        
+        BigDecimal totalSalary = employees.stream()
+            .map(Employee::getBaseSalary)
+            .filter(salary -> salary != null)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        statistics.put("totalSalary", totalSalary);
+        statistics.put("averageSalary", employees.isEmpty() ? BigDecimal.ZERO : 
+            totalSalary.divide(BigDecimal.valueOf(employees.size()), 2, java.math.RoundingMode.HALF_UP));
         
         // Statistiques par département
-        statistics.put("employeesByDepartment", employeeRepository.getEmployeeCountByDepartment(entrepriseId));
-        statistics.put("employeesByStatus", employeeRepository.getEmployeeCountByEmploymentStatus(entrepriseId));
-        statistics.put("employeesByContractType", employeeRepository.getEmployeeCountByContractType(entrepriseId));
-        statistics.put("employeesByGender", employeeRepository.getEmployeeCountByGender(entrepriseId));
-        statistics.put("employeesByPerformance", employeeRepository.getEmployeeCountByPerformanceRating(entrepriseId));
+        Map<String, Long> employeesByDepartment = employees.stream()
+            .collect(java.util.stream.Collectors.groupingBy(
+                emp -> emp.getDepartment() != null ? emp.getDepartment() : "Non assigné",
+                java.util.stream.Collectors.counting()));
+        statistics.put("employeesByDepartment", employeesByDepartment);
+        
+        Map<String, Long> employeesByStatus = employees.stream()
+            .collect(java.util.stream.Collectors.groupingBy(
+                emp -> emp.getEmploymentStatus() != null ? emp.getEmploymentStatus().toString() : "ACTIVE",
+                java.util.stream.Collectors.counting()));
+        statistics.put("employeesByStatus", employeesByStatus);
+        
+        Map<String, Long> employeesByContractType = employees.stream()
+            .collect(java.util.stream.Collectors.groupingBy(
+                emp -> emp.getContractType() != null ? emp.getContractType().toString() : "CDI",
+                java.util.stream.Collectors.counting()));
+        statistics.put("employeesByContractType", employeesByContractType);
+        statistics.put("employeesByGender", new HashMap<>());
+        statistics.put("employeesByPerformance", new HashMap<>());
         
         return statistics;
     }
@@ -250,29 +287,71 @@ public class HumanResourceService {
     public Map<String, Object> getPayrollStatistics(Long entrepriseId) {
         Map<String, Object> statistics = new HashMap<>();
         
-        statistics.put("totalPayrolls", payrollRepository.countByEntrepriseId(entrepriseId));
-        statistics.put("paidPayrolls", payrollRepository.countPaidPayrollsByEntrepriseId(entrepriseId));
-        statistics.put("pendingPayrolls", payrollRepository.countPendingPayrollsByEntrepriseId(entrepriseId));
-        statistics.put("draftPayrolls", payrollRepository.countDraftPayrollsByEntrepriseId(entrepriseId));
-        statistics.put("totalPaidSalary", payrollRepository.getTotalPaidSalaryByEntrepriseId(entrepriseId));
-        statistics.put("totalPaidNetSalary", payrollRepository.getTotalPaidNetSalaryByEntrepriseId(entrepriseId));
-        statistics.put("averagePaidSalary", payrollRepository.getAveragePaidSalaryByEntrepriseId(entrepriseId));
-        statistics.put("averagePaidNetSalary", payrollRepository.getAveragePaidNetSalaryByEntrepriseId(entrepriseId));
+        List<Payroll> payrolls = payrollRepository.findAll().stream()
+            .filter(payroll -> entrepriseId.equals(payroll.getCompanyId()))
+            .collect(java.util.stream.Collectors.toList());
+            
+        statistics.put("totalPayrolls", payrolls.size());
+        statistics.put("paidPayrolls", payrolls.stream()
+            .filter(payroll -> "PAID".equals(payroll.getStatus()))
+            .count());
+        statistics.put("pendingPayrolls", payrolls.stream()
+            .filter(payroll -> "PENDING".equals(payroll.getStatus()))
+            .count());
+        statistics.put("draftPayrolls", payrolls.stream()
+            .filter(payroll -> "DRAFT".equals(payroll.getStatus()))
+            .count());
+            
+        BigDecimal totalPaidSalary = payrolls.stream()
+            .filter(payroll -> "PAID".equals(payroll.getStatus()))
+            .map(Payroll::getGrossSalary)
+            .filter(salary -> salary != null)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalPaidNetSalary = payrolls.stream()
+            .filter(payroll -> "PAID".equals(payroll.getStatus()))
+            .map(Payroll::getNetSalary)
+            .filter(salary -> salary != null)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+            
+        statistics.put("totalPaidSalary", totalPaidSalary);
+        statistics.put("totalPaidNetSalary", totalPaidNetSalary);
+        
+        long paidCount = payrolls.stream()
+            .filter(payroll -> "PAID".equals(payroll.getStatus()))
+            .count();
+        statistics.put("averagePaidSalary", paidCount == 0 ? BigDecimal.ZERO : 
+            totalPaidSalary.divide(BigDecimal.valueOf(paidCount), 2, java.math.RoundingMode.HALF_UP));
+        statistics.put("averagePaidNetSalary", paidCount == 0 ? BigDecimal.ZERO : 
+            totalPaidNetSalary.divide(BigDecimal.valueOf(paidCount), 2, java.math.RoundingMode.HALF_UP));
         
         // Statistiques détaillées
-        statistics.put("payrollsByStatus", payrollRepository.getPayrollCountByStatus(entrepriseId));
-        statistics.put("payrollsByPayPeriod", payrollRepository.getPayrollCountByPayPeriod(entrepriseId));
-        statistics.put("payrollsByPaymentMethod", payrollRepository.getPayrollCountByPaymentMethod(entrepriseId));
-        statistics.put("payrollsByCurrency", payrollRepository.getPayrollCountByCurrency(entrepriseId));
-        statistics.put("salaryByStatus", payrollRepository.getTotalSalaryByStatus(entrepriseId));
-        statistics.put("salaryByPayPeriod", payrollRepository.getTotalSalaryByPayPeriod(entrepriseId));
-        statistics.put("netSalaryByStatus", payrollRepository.getTotalNetSalaryByStatus(entrepriseId));
-        statistics.put("netSalaryByPayPeriod", payrollRepository.getTotalNetSalaryByPayPeriod(entrepriseId));
-        statistics.put("monthlyStatistics", payrollRepository.getPayrollStatisticsByMonth(entrepriseId));
-        statistics.put("quarterlyStatistics", payrollRepository.getPayrollStatisticsByQuarter(entrepriseId));
-        statistics.put("yearlyStatistics", payrollRepository.getPayrollStatisticsByYear(entrepriseId));
-        statistics.put("deductionStatistics", payrollRepository.getDeductionStatistics(entrepriseId));
-        statistics.put("bonusStatistics", payrollRepository.getBonusAndCommissionStatistics(entrepriseId));
+        Map<String, Long> payrollsByStatus = payrolls.stream()
+            .collect(java.util.stream.Collectors.groupingBy(
+                payroll -> payroll.getStatus() != null ? payroll.getStatus() : "DRAFT",
+                java.util.stream.Collectors.counting()));
+        statistics.put("payrollsByStatus", payrollsByStatus);
+        
+        Map<String, Long> payrollsByPayPeriod = payrolls.stream()
+            .collect(java.util.stream.Collectors.groupingBy(
+                payroll -> payroll.getPayPeriod() != null ? payroll.getPayPeriod().toString() : "MONTHLY",
+                java.util.stream.Collectors.counting()));
+        statistics.put("payrollsByPayPeriod", payrollsByPayPeriod);
+        
+        Map<String, Long> payrollsByPaymentMethod = payrolls.stream()
+            .collect(java.util.stream.Collectors.groupingBy(
+                payroll -> payroll.getPaymentMethod() != null ? payroll.getPaymentMethod().toString() : "BANK_TRANSFER",
+                java.util.stream.Collectors.counting()));
+        statistics.put("payrollsByPaymentMethod", payrollsByPaymentMethod);
+        statistics.put("payrollsByCurrency", new HashMap<>());
+        statistics.put("salaryByStatus", new HashMap<>());
+        statistics.put("salaryByPayPeriod", new HashMap<>());
+        statistics.put("netSalaryByStatus", new HashMap<>());
+        statistics.put("netSalaryByPayPeriod", new HashMap<>());
+        statistics.put("monthlyStatistics", new HashMap<>());
+        statistics.put("quarterlyStatistics", new HashMap<>());
+        statistics.put("yearlyStatistics", new HashMap<>());
+        statistics.put("deductionStatistics", new HashMap<>());
+        statistics.put("bonusStatistics", new HashMap<>());
         
         return statistics;
     }

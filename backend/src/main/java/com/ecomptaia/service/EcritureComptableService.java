@@ -2,6 +2,7 @@ package com.ecomptaia.service;
 
 import com.ecomptaia.entity.*;
 import com.ecomptaia.repository.*;
+import com.ecomptaia.accounting.entity.Account;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

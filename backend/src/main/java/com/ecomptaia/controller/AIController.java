@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/ai")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:4200", "https://ecomptaia.com"}, allowCredentials = "true", maxAge = 3600)
 public class AIController {
 
     @Autowired

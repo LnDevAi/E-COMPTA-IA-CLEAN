@@ -2,7 +2,7 @@ package com.ecomptaia.repository;
 
 import com.ecomptaia.entity.BalanceComptable;
 import com.ecomptaia.entity.SoldeCompte;
-import com.ecomptaia.entity.Account;
+import com.ecomptaia.accounting.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

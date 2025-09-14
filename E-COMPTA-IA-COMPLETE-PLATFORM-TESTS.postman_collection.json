@@ -1,0 +1,988 @@
+{
+	"info": {
+		"_postman_id": "ecomptaia-platform-tests-2024",
+		"name": "E-COMPTA-IA INTERNATIONAL - Tests Complets Plateforme",
+		"description": "Collection complète de tests pour toute la plateforme ERP E-COMPTA-IA INTERNATIONAL\n\nModules testés:\n- Authentification et Sécurité\n- Comptabilité Générale\n- Gestion des Tiers\n- Ressources Humaines\n- Gestion des Stocks\n- Gestion Documentaire\n- Intelligence Artificielle\n- Configuration Internationale\n- Système de Surveillance\n- Workflow et Approbations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 Authentification et Sécurité",
+			"item": [
+				{
+					"name": "Connexion Utilisateur",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inscription Utilisateur",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@ecomptaia.com\",\n  \"password\": \"Test123!@#\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"companyId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vérification Santé Sécurité",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/security/dashboard",
+							"host": ["{{base_url}}"],
+							"path": ["api", "security", "dashboard"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Métriques de Sécurité",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/security/metrics",
+							"host": ["{{base_url}}"],
+							"path": ["api", "security", "metrics"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logs de Sécurité",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/security/logs",
+							"host": ["{{base_url}}"],
+							"path": ["api", "security", "logs"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Audit de Sécurité",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/security/audit",
+							"host": ["{{base_url}}"],
+							"path": ["api", "security", "audit"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📊 Comptabilité Générale",
+			"item": [
+				{
+					"name": "Créer Compte Comptable",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountNumber\": \"411000\",\n  \"name\": \"Clients - Ventes\",\n  \"type\": \"ASSET\",\n  \"accountClass\": \"CURRENT_ASSETS\",\n  \"openingBalance\": 0.00,\n  \"currency\": \"XOF\",\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/accounting/accounts",
+							"host": ["{{base_url}}"],
+							"path": ["api", "accounting", "accounts"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lister Comptes Comptables",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/accounting/accounts",
+							"host": ["{{base_url}}"],
+							"path": ["api", "accounting", "accounts"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Créer Écriture Comptable",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"journalCode\": \"VT\",\n  \"reference\": \"VT-2024-001\",\n  \"description\": \"Vente de marchandises\",\n  \"date\": \"2024-01-15\",\n  \"totalDebit\": 100000.00,\n  \"totalCredit\": 100000.00,\n  \"lignes\": [\n    {\n      \"accountNumber\": \"411000\",\n      \"description\": \"Client ABC\",\n      \"debit\": 100000.00,\n      \"credit\": 0.00\n    },\n    {\n      \"accountNumber\": \"701000\",\n      \"description\": \"Ventes de marchandises\",\n      \"debit\": 0.00,\n      \"credit\": 100000.00\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/accounting/ecritures",
+							"host": ["{{base_url}}"],
+							"path": ["api", "accounting", "ecritures"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Balance Comptable",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/accounting/balance?date=2024-01-31",
+							"host": ["{{base_url}}"],
+							"path": ["api", "accounting", "balance"],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-01-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Grand Livre",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/accounting/grand-livre?accountNumber=411000&startDate=2024-01-01&endDate=2024-01-31",
+							"host": ["{{base_url}}"],
+							"path": ["api", "accounting", "grand-livre"],
+							"query": [
+								{
+									"key": "accountNumber",
+									"value": "411000"
+								},
+								{
+									"key": "startDate",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-01-31"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "👥 Gestion des Tiers",
+			"item": [
+				{
+					"name": "Créer Client",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"CLI-001\",\n  \"name\": \"Entreprise ABC SARL\",\n  \"type\": \"CLIENT\",\n  \"email\": \"contact@abc-sarl.com\",\n  \"phone\": \"+225 20 30 40 50\",\n  \"address\": \"Abidjan, Côte d'Ivoire\",\n  \"taxNumber\": \"CI123456789\",\n  \"paymentTerms\": 30,\n  \"creditLimit\": 5000000.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/third-parties/clients",
+							"host": ["{{base_url}}"],
+							"path": ["api", "third-parties", "clients"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Créer Fournisseur",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"FOU-001\",\n  \"name\": \"Fournisseur XYZ SARL\",\n  \"type\": \"SUPPLIER\",\n  \"email\": \"contact@xyz-sarl.com\",\n  \"phone\": \"+225 20 30 40 60\",\n  \"address\": \"Abidjan, Côte d'Ivoire\",\n  \"taxNumber\": \"CI987654321\",\n  \"paymentTerms\": 15,\n  \"bankAccount\": \"CI12345678901234567890\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/third-parties/suppliers",
+							"host": ["{{base_url}}"],
+							"path": ["api", "third-parties", "suppliers"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lister Tiers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/third-parties",
+							"host": ["{{base_url}}"],
+							"path": ["api", "third-parties"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rapport Âge des Créances",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/third-parties/reports/aging-receivables",
+							"host": ["{{base_url}}"],
+							"path": ["api", "third-parties", "reports", "aging-receivables"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "👨‍💼 Ressources Humaines",
+			"item": [
+				{
+					"name": "Créer Employé",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"employeeNumber\": \"EMP-001\",\n  \"firstName\": \"Jean\",\n  \"lastName\": \"Dupont\",\n  \"email\": \"jean.dupont@ecomptaia.com\",\n  \"phone\": \"+225 20 30 40 70\",\n  \"position\": \"Développeur\",\n  \"department\": \"IT\",\n  \"hireDate\": \"2024-01-01\",\n  \"baseSalary\": 500000.00,\n  \"employmentStatus\": \"ACTIVE\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/hr/employees",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hr", "employees"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Créer Paie",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"employeeId\": 1,\n  \"payPeriod\": \"2024-01\",\n  \"baseSalary\": 500000.00,\n  \"overtimeHours\": 10,\n  \"overtimeRate\": 7500.00,\n  \"bonus\": 50000.00,\n  \"deductions\": 75000.00,\n  \"netSalary\": 475000.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/hr/payroll",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hr", "payroll"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Statistiques RH",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/hr/statistics",
+							"host": ["{{base_url}}"],
+							"path": ["api", "hr", "statistics"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📦 Gestion des Stocks",
+			"item": [
+				{
+					"name": "Créer Article",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"itemCode\": \"ART-001\",\n  \"itemName\": \"Ordinateur Portable\",\n  \"description\": \"Laptop Dell Inspiron 15\",\n  \"category\": \"Informatique\",\n  \"unitPrice\": 450000.00,\n  \"unitCost\": 350000.00,\n  \"currentStock\": 50,\n  \"minimumStock\": 10,\n  \"maximumStock\": 100,\n  \"warehouse\": \"Entrepôt Principal\",\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/assets/inventory/items",
+							"host": ["{{base_url}}"],
+							"path": ["api", "assets", "inventory", "items"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mouvement de Stock - Entrée",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"movementCode\": \"ENT-001\",\n  \"itemId\": 1,\n  \"movementType\": \"IN\",\n  \"quantity\": 25,\n  \"unitPrice\": 350000.00,\n  \"reason\": \"Réception commande fournisseur\",\n  \"reference\": \"CMD-FOU-001\",\n  \"movementDate\": \"2024-01-15\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/assets/inventory/movements",
+							"host": ["{{base_url}}"],
+							"path": ["api", "assets", "inventory", "movements"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mouvement de Stock - Sortie",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"movementCode\": \"SOR-001\",\n  \"itemId\": 1,\n  \"movementType\": \"OUT\",\n  \"quantity\": 5,\n  \"unitPrice\": 450000.00,\n  \"reason\": \"Vente client\",\n  \"reference\": \"VT-CLI-001\",\n  \"movementDate\": \"2024-01-20\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/assets/inventory/movements",
+							"host": ["{{base_url}}"],
+							"path": ["api", "assets", "inventory", "movements"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Statistiques Stocks",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/assets/inventory/statistics",
+							"host": ["{{base_url}}"],
+							"path": ["api", "assets", "inventory", "statistics"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📄 Gestion Documentaire",
+			"item": [
+				{
+					"name": "Uploader Document",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/path/to/document.pdf"
+								},
+								{
+									"key": "title",
+									"value": "Contrat Client ABC",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Contrat de vente avec le client ABC SARL",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "CONTRAT",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/documents/upload",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents", "upload"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lister Documents",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/documents",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Statistiques Documents",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/documents/statistics",
+							"host": ["{{base_url}}"],
+							"path": ["api", "documents", "statistics"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🤖 Intelligence Artificielle",
+			"item": [
+				{
+					"name": "Analyse Prédictive",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"analysisType\": \"CASH_FLOW\",\n  \"period\": \"MONTHLY\",\n  \"dataPoints\": 12,\n  \"parameters\": {\n    \"confidenceLevel\": 0.95,\n    \"seasonality\": true,\n    \"trendAnalysis\": true\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/ai/predictive-analysis",
+							"host": ["{{base_url}}"],
+							"path": ["api", "ai", "predictive-analysis"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Recommandations IA",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/ai/recommendations",
+							"host": ["{{base_url}}"],
+							"path": ["api", "ai", "recommendations"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Détection d'Anomalies",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"dataType\": \"FINANCIAL_TRANSACTIONS\",\n  \"threshold\": 0.8,\n  \"timeWindow\": \"7_DAYS\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/ai/anomaly-detection",
+							"host": ["{{base_url}}"],
+							"path": ["api", "ai", "anomaly-detection"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🌍 Configuration Internationale",
+			"item": [
+				{
+					"name": "Configuration OHADA",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/international/ohada",
+							"host": ["{{base_url}}"],
+							"path": ["api", "international", "ohada"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Configuration IFRS",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/international/ifrs",
+							"host": ["{{base_url}}"],
+							"path": ["api", "international", "ifrs"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Configuration Multi-Devises",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/international/currencies",
+							"host": ["{{base_url}}"],
+							"path": ["api", "international", "currencies"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📈 Système de Surveillance",
+			"item": [
+				{
+					"name": "Vérification Santé Générale",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Santé Détaillée",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/health/detailed",
+							"host": ["{{base_url}}"],
+							"path": ["api", "health", "detailed"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Métriques Prometheus",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/actuator/prometheus",
+							"host": ["{{base_url}}"],
+							"path": ["api", "actuator", "prometheus"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Informations Application",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/actuator/info",
+							"host": ["{{base_url}}"],
+							"path": ["api", "actuator", "info"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔄 Workflow et Approbations",
+			"item": [
+				{
+					"name": "Créer Workflow",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"workflowName\": \"Approbation Factures\",\n  \"documentType\": \"INVOICE\",\n  \"description\": \"Workflow d'approbation des factures\",\n  \"steps\": [\n    {\n      \"stepName\": \"Validation Comptable\",\n      \"stepOrder\": 1,\n      \"requiredRole\": \"ACCOUNTANT\",\n      \"isMandatory\": true\n    },\n    {\n      \"stepName\": \"Approbation Manager\",\n      \"stepOrder\": 2,\n      \"requiredRole\": \"MANAGER\",\n      \"isMandatory\": true\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/workflow",
+							"host": ["{{base_url}}"],
+							"path": ["api", "workflow"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lister Workflows",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workflow",
+							"host": ["{{base_url}}"],
+							"path": ["api", "workflow"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Statistiques Workflow",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workflow/statistics",
+							"host": ["{{base_url}}"],
+							"path": ["api", "workflow", "statistics"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🧪 Tests de Charge et Performance",
+			"item": [
+				{
+					"name": "Test Charge - Création Comptes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountNumber\": \"{{$randomInt}}\",\n  \"name\": \"Compte Test {{$randomInt}}\",\n  \"type\": \"ASSET\",\n  \"accountClass\": \"CURRENT_ASSETS\",\n  \"openingBalance\": {{$randomInt}},\n  \"currency\": \"XOF\",\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/accounting/accounts",
+							"host": ["{{base_url}}"],
+							"path": ["api", "accounting", "accounts"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Charge - Création Clients",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"CLI-{{$randomInt}}\",\n  \"name\": \"Client Test {{$randomInt}}\",\n  \"type\": \"CLIENT\",\n  \"email\": \"client{{$randomInt}}@test.com\",\n  \"phone\": \"+225 20 30 40 {{$randomInt}}\",\n  \"address\": \"Adresse Test {{$randomInt}}\",\n  \"taxNumber\": \"CI{{$randomInt}}\",\n  \"paymentTerms\": 30,\n  \"creditLimit\": {{$randomInt}}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/third-parties/clients",
+							"host": ["{{base_url}}"],
+							"path": ["api", "third-parties", "clients"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Script de pré-requête pour générer des données de test",
+					"if (!pm.environment.get('auth_token')) {",
+					"    console.log('Token d\\'authentification manquant');",
+					"}",
+					"",
+					"// Générer des données aléatoires pour les tests",
+					"pm.environment.set('random_int', Math.floor(Math.random() * 10000));",
+					"pm.environment.set('random_email', 'test' + Math.random().toString(36).substr(2, 5) + '@ecomptaia.com');"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Tests automatiques pour chaque requête",
+					"pm.test('Status code is successful', function () {",
+					"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+					"});",
+					"",
+					"pm.test('Response time is acceptable', function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"});",
+					"",
+					"pm.test('Response has content', function () {",
+					"    pm.expect(pm.response.text()).to.not.be.empty;",
+					"});",
+					"",
+					"// Sauvegarder le token d'authentification",
+					"if (pm.response.json() && pm.response.json().token) {",
+					"    pm.environment.set('auth_token', pm.response.json().token);",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
+

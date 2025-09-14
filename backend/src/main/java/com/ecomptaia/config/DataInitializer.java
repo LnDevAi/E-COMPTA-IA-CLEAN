@@ -1,7 +1,7 @@
 package com.ecomptaia.config;
 
 import com.ecomptaia.entity.Country;
-import com.ecomptaia.entity.User;
+import com.ecomptaia.security.entity.User;
 import com.ecomptaia.repository.CountryRepository;
 import com.ecomptaia.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

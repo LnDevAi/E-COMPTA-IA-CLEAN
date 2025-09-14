@@ -1,6 +1,5 @@
 package com.ecomptaia.elasticsearch;
 
-import com.ecomptaia.accounting.entity.AccountingStandard;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;

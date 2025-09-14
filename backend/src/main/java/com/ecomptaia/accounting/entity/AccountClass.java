@@ -1,6 +1,5 @@
 package com.ecomptaia.accounting.entity;
 
-import com.ecomptaia.entity.Account;
 
 import java.util.ArrayList;
 import java.util.List;

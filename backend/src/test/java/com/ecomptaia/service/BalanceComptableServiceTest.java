@@ -2,6 +2,9 @@ package com.ecomptaia.service;
 
 import com.ecomptaia.entity.*;
 import com.ecomptaia.repository.*;
+import com.ecomptaia.accounting.entity.Account;
+import com.ecomptaia.accounting.entity.AccountType;
+import com.ecomptaia.accounting.entity.AccountClassEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +71,8 @@ public class BalanceComptableServiceTest {
         testAccount = new Account();
         testAccount.setAccountNumber("411");
         testAccount.setName("Clients");
-        testAccount.setType(Account.AccountType.ASSET);
-        testAccount.setAccountClass(Account.AccountClass.CURRENT_ASSETS);
+        testAccount.setType(AccountType.ASSET);
+        testAccount.setAccountClass(AccountClassEnum.CURRENT_ASSETS);
         testAccount.setCompany(testCompany);
         testAccount.setIsActive(true);
         testAccount = accountRepository.save(testAccount);

@@ -1,0 +1,120 @@
+# Règles d'alerte Prometheus pour E-COMPTA-IA INTERNATIONAL
+groups:
+  - name: ecomptaia-backend-alerts
+    rules:
+      # Alerte pour les erreurs HTTP élevées
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Taux d'erreur HTTP élevé"
+          description: "Le taux d'erreur HTTP est de {{ $value }} erreurs par seconde"
+
+      # Alerte pour la latence élevée
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latence HTTP élevée"
+          description: "La latence HTTP 95e percentile est de {{ $value }} secondes"
+
+      # Alerte pour la mémoire élevée
+      - alert: HighMemoryUsage
+        expr: (jvm_memory_used_bytes / jvm_memory_max_bytes) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Utilisation mémoire élevée"
+          description: "L'utilisation mémoire est de {{ $value }}%"
+
+      # Alerte pour les erreurs de base de données
+      - alert: DatabaseConnectionError
+        expr: increase(database_connection_errors_total[5m]) > 10
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Erreurs de connexion base de données"
+          description: "{{ $value }} erreurs de connexion base de données en 5 minutes"
+
+  - name: ecomptaia-frontend-alerts
+    rules:
+      # Alerte pour les erreurs Nginx
+      - alert: NginxErrorRate
+        expr: rate(nginx_http_requests_total{status=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Taux d'erreur Nginx élevé"
+          description: "Le taux d'erreur Nginx est de {{ $value }} erreurs par seconde"
+
+      # Alerte pour la latence Nginx
+      - alert: NginxHighLatency
+        expr: histogram_quantile(0.95, rate(nginx_http_request_duration_seconds_bucket[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latence Nginx élevée"
+          description: "La latence Nginx 95e percentile est de {{ $value }} secondes"
+
+  - name: ecomptaia-database-alerts
+    rules:
+      # Alerte pour les connexions PostgreSQL élevées
+      - alert: PostgreSQLHighConnections
+        expr: pg_stat_database_numbackends / pg_settings_max_connections > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Connexions PostgreSQL élevées"
+          description: "{{ $value }}% des connexions PostgreSQL sont utilisées"
+
+      # Alerte pour les erreurs Redis
+      - alert: RedisErrorRate
+        expr: rate(redis_commands_total{status="error"}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Taux d'erreur Redis élevé"
+          description: "Le taux d'erreur Redis est de {{ $value }} erreurs par seconde"
+
+  - name: ecomptaia-security-alerts
+    rules:
+      # Alerte pour les tentatives d'authentification échouées
+      - alert: FailedAuthenticationAttempts
+        expr: increase(authentication_failures_total[5m]) > 50
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Tentatives d'authentification échouées"
+          description: "{{ $value }} tentatives d'authentification échouées en 5 minutes"
+
+      # Alerte pour les attaques par déni de service
+      - alert: DoSAttack
+        expr: rate(http_requests_total[1m]) > 100
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Attaque par déni de service détectée"
+          description: "{{ $value }} requêtes par seconde détectées"
+
+      # Alerte pour les accès non autorisés
+      - alert: UnauthorizedAccess
+        expr: increase(http_requests_total{status="403"}[5m]) > 20
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Accès non autorisés"
+          description: "{{ $value }} accès non autorisés en 5 minutes"
+

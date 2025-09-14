@@ -17,9 +17,10 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:4200", "http://localhost:8080", "http://localhost:8082", "http://localhost:80")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-                .allowedHeaders("*")
+                .allowedOrigins("http://localhost:4200", "https://ecomptaia.com", "https://*.ecomptaia.com")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "X-Company-Id")
+                .exposedHeaders("Authorization", "X-Total-Count")
                 .allowCredentials(true)
                 .maxAge(3600);
     }
@@ -29,13 +30,22 @@ public class CorsConfig implements WebMvcConfigurer {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:4200", 
-            "http://localhost:8080", 
-            "http://localhost:8082",
-            "http://localhost:80"
+            "https://ecomptaia.com",
+            "https://*.ecomptaia.com"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList(
+            "Authorization", 
+            "Content-Type", 
+            "X-Requested-With", 
+            "Accept", 
+            "Origin",
+            "X-Company-Id",
+            "X-User-Role"
+        ));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "X-Total-Count"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", configuration);

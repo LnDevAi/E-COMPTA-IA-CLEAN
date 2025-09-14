@@ -1,7 +1,7 @@
 package com.ecomptaia.sycebnl.controller;
 
 import com.ecomptaia.entity.Company;
-import com.ecomptaia.entity.User;
+import com.ecomptaia.security.entity.User;
 import com.ecomptaia.sycebnl.entity.PieceJustificativeSycebnl;
 import com.ecomptaia.sycebnl.entity.PropositionEcritureSycebnl;
 import com.ecomptaia.sycebnl.service.PieceJustificativeSycebnlService;

@@ -1,6 +1,5 @@
 package com.ecomptaia.elasticsearch;
 
-import com.ecomptaia.accounting.entity.AccountingStandard;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * Repository Elasticsearch pour la recherche de documents
  */
-@Profile("!test")
+@Profile({"!test", "!simple"})
 @Repository
 public interface DocumentSearchRepository extends ElasticsearchRepository<DocumentSearchEntity, String> {
     

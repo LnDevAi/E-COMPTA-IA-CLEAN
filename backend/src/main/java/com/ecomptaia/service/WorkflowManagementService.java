@@ -5,7 +5,6 @@ import com.ecomptaia.entity.DocumentApproval;
 import com.ecomptaia.entity.GedDocument;
 import com.ecomptaia.repository.DocumentWorkflowRepository;
 import com.ecomptaia.repository.DocumentApprovalRepository;
-import com.ecomptaia.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,18 +14,18 @@ public class WorkflowManagementService {
     
     private final DocumentWorkflowRepository workflowRepository;
     private final DocumentApprovalRepository approvalRepository;
-    private final UserRepository userRepository;
     
     public WorkflowManagementService(DocumentWorkflowRepository workflowRepository,
-                                     DocumentApprovalRepository approvalRepository,
-                                     UserRepository userRepository) {
+                                     DocumentApprovalRepository approvalRepository) {
         this.workflowRepository = workflowRepository;
         this.approvalRepository = approvalRepository;
-        this.userRepository = userRepository;
     }
     
     public List<DocumentWorkflow> getWorkflowsByCompany(Long companyId) {
-        return workflowRepository.findByCompanyIdOrderByWorkflowNameAsc(companyId);
+        return workflowRepository.findAll().stream()
+            .filter(w -> companyId.equals(w.getCompanyId()))
+            .sorted((w1, w2) -> w1.getWorkflowName().compareTo(w2.getWorkflowName()))
+            .collect(java.util.stream.Collectors.toList());
     }
     
     public Optional<DocumentWorkflow> getWorkflowById(Long workflowId) {
@@ -34,7 +33,10 @@ public class WorkflowManagementService {
     }
     
     public List<DocumentWorkflow> getActiveWorkflowsByDocumentType(Long companyId, GedDocument.DocumentType documentType) {
-        List<DocumentWorkflow> all = workflowRepository.findByCompanyIdAndDocumentTypeOrderByWorkflowNameAsc(companyId, documentType);
+        List<DocumentWorkflow> all = workflowRepository.findAll().stream()
+            .filter(w -> companyId.equals(w.getCompanyId()) && documentType.equals(w.getDocumentType()))
+            .sorted((w1, w2) -> w1.getWorkflowName().compareTo(w2.getWorkflowName()))
+            .collect(java.util.stream.Collectors.toList());
         List<DocumentWorkflow> active = new ArrayList<>();
         for (DocumentWorkflow w : all) {
             if (Boolean.TRUE.equals(w.getIsActive())) {
@@ -115,7 +117,10 @@ public class WorkflowManagementService {
     
     public Map<String, Object> getWorkflowStatistics(Long companyId) {
         Map<String, Object> stats = new HashMap<>();
-        stats.put("workflows", workflowRepository.findByCompanyIdOrderByCreatedAtDesc(companyId).size());
+        long workflowCount = workflowRepository.findAll().stream()
+            .filter(w -> companyId.equals(w.getCompanyId()))
+            .count();
+        stats.put("workflows", workflowCount);
         stats.put("approvals", approvalRepository.findByCompanyIdOrderByCreatedAtDesc(companyId).size());
         return stats;
     }

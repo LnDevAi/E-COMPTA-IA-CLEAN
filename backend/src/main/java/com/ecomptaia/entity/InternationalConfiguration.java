@@ -1,6 +1,5 @@
 package com.ecomptaia.entity;
 
-import com.ecomptaia.accounting.entity.AccountingStandard;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

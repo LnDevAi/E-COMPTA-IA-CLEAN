@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import com.ecomptaia.entity.GedDocument;
+import com.ecomptaia.security.entity.User;
 
 @Entity
 @Table(name = "ecritures_comptables")

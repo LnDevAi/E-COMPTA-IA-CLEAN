@@ -1,6 +1,6 @@
 package com.ecomptaia.repository;
 
-import com.ecomptaia.entity.User;
+import com.ecomptaia.security.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -50,7 +50,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByNameContainingIgnoreCase(@Param("name") String name);
 
     // Recherche des utilisateurs par entreprise (via l'ID de l'entreprise)
-    @Query("SELECT u FROM User u WHERE u.companyId = :companyId")
+    @Query("SELECT u FROM User u WHERE u.company.id = :companyId")
     List<User> findByCompanyId(@Param("companyId") Long companyId);
 
     // Recherche des utilisateurs connectés récemment

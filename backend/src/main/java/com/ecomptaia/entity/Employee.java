@@ -27,6 +27,15 @@ public class Employee {
 
     @Column(name = "phone")
     private String phone;
+    
+    @Column(name = "position", length = 100)
+    private String position;
+    
+    @Column(name = "company_id", nullable = false)
+    private Long companyId;
+    
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 
     @Column(name = "address", columnDefinition = "TEXT")
     private String address;
@@ -60,9 +69,6 @@ public class Employee {
 
     @Column(name = "department")
     private String department;
-
-    @Column(name = "position")
-    private String position;
 
     @Column(name = "job_title")
     private String jobTitle;
@@ -118,13 +124,6 @@ public class Employee {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Constructeur
-    public Employee() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        this.employmentStatus = EmploymentStatus.ACTIVE;
-        this.performanceRating = 3;
-    }
 
     // Enums
     public enum Gender {
@@ -222,6 +221,15 @@ public class Employee {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
+    public String getPosition() { return position; }
+    public void setPosition(String position) { this.position = position; }
+    
+    public Long getCompanyId() { return companyId; }
+    public void setCompanyId(Long companyId) { this.companyId = companyId; }
+    
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
@@ -245,6 +253,10 @@ public class Employee {
 
     public LocalDate getHireDate() { return hireDate; }
     public void setHireDate(LocalDate hireDate) { this.hireDate = hireDate; }
+    
+    public void setHireDate(LocalDateTime hireDate) { 
+        this.hireDate = hireDate != null ? hireDate.toLocalDate() : null; 
+    }
 
     public ContractType getContractType() { return contractType; }
     public void setContractType(ContractType contractType) { this.contractType = contractType; }
@@ -254,9 +266,6 @@ public class Employee {
 
     public String getDepartment() { return department; }
     public void setDepartment(String department) { this.department = department; }
-
-    public String getPosition() { return position; }
-    public void setPosition(String position) { this.position = position; }
 
     public String getJobTitle() { return jobTitle; }
     public void setJobTitle(String jobTitle) { this.jobTitle = jobTitle; }
@@ -296,6 +305,10 @@ public class Employee {
 
     public LocalDate getTerminationDate() { return terminationDate; }
     public void setTerminationDate(LocalDate terminationDate) { this.terminationDate = terminationDate; }
+    
+    public void setTerminationDate(LocalDateTime terminationDate) { 
+        this.terminationDate = terminationDate != null ? terminationDate.toLocalDate() : null; 
+    }
 
     public String getTerminationReason() { return terminationReason; }
     public void setTerminationReason(String terminationReason) { this.terminationReason = terminationReason; }

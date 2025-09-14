@@ -3,7 +3,7 @@ package com.ecomptaia.service;
 import com.ecomptaia.entity.EcritureComptable;
 import com.ecomptaia.entity.LigneEcriture;
 import com.ecomptaia.entity.Company;
-import com.ecomptaia.entity.Account;
+import com.ecomptaia.accounting.entity.Account;
 import com.ecomptaia.entity.FinancialPeriod;
 import com.ecomptaia.entity.BalanceComptable;
 

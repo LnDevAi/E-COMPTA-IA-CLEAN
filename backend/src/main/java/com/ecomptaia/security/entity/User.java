@@ -1,7 +1,6 @@
 package com.ecomptaia.security.entity;
 
-import com.ecomptaia.security.entity.Company;
-
+import com.ecomptaia.entity.Company;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.math.BigDecimal;

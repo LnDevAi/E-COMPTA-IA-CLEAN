@@ -3,6 +3,7 @@ package com.ecomptaia;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,8 +16,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @since 2024
  */
 @SpringBootApplication
+@ComponentScan(basePackages = {
+    "com.ecomptaia",
+    "com.ecomptaia.security"
+})
 @EntityScan(basePackages = {
     "com.ecomptaia.entity",
+    "com.ecomptaia.security.entity",
+    "com.ecomptaia.accounting.entity",
     "com.ecomptaia.crm.entity",
     "com.ecomptaia.sycebnl.entity",
     "com.ecomptaia.payroll.entity"

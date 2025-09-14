@@ -2,7 +2,7 @@ package com.ecomptaia.accounting;
 
 import com.ecomptaia.accounting.entity.ChartOfAccounts;
 import com.ecomptaia.accounting.entity.AccountClass;
-import com.ecomptaia.entity.Account;
+import com.ecomptaia.accounting.entity.Account;
 import com.ecomptaia.accounting.entity.AccountType;
 import com.ecomptaia.accounting.entity.AccountingStandard;
 import java.util.*;

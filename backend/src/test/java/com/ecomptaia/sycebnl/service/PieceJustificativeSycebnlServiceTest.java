@@ -16,13 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests d'intégration pour le service des pièces justificatives SYCEBNL
  * Utilise les vraies données de test insérées via data.sql
  */
-@SpringBootTest
+@SpringBootTest(classes = com.ecomptaia.EcomptaiaApplication.class)
 @ActiveProfiles("test")
 @Transactional
 public class PieceJustificativeSycebnlServiceTest {
 
     @Autowired
     private PieceJustificativeSycebnlService pjService;
+
+    // Security filters are disabled by TestSecurityConfig for test profile
 
 
     @Test

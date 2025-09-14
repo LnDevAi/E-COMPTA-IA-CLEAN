@@ -13,7 +13,7 @@ import java.util.HashMap;
  */
 @RestController
 @RequestMapping("/api/ai-document-analysis")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:4200", "https://ecomptaia.com"}, allowCredentials = "true")
 public class AIDocumentAnalysisController {
 
     @Autowired

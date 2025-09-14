@@ -1,0 +1,42 @@
+# Dockerfile sécurisé pour E-COMPTA-IA INTERNATIONAL Frontend
+FROM node:18-alpine AS builder
+
+# Créer un utilisateur non-root
+RUN addgroup -g 1000 appgroup && adduser -u 1000 -G appgroup -s /bin/sh -D appuser
+
+# Installer les dépendances
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production --silent
+
+# Copier le code source
+COPY . .
+
+# Construire l'application
+RUN npm run build --silent
+
+# Image de production avec Nginx
+FROM nginx:alpine
+
+# Créer un utilisateur non-root
+RUN addgroup -g 1000 appgroup && adduser -u 1000 -G appgroup -s /bin/sh -D appuser
+
+# Copier la configuration Nginx sécurisée
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copier l'application depuis le builder
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Créer les répertoires nécessaires
+RUN mkdir -p /var/log/nginx /var/cache/nginx && \
+    chown -R appuser:appgroup /var/log/nginx /var/cache/nginx /usr/share/nginx/html
+
+# Changer vers l'utilisateur non-root
+USER appuser
+
+# Exposer le port
+EXPOSE 80
+
+# Point d'entrée sécurisé
+CMD ["nginx", "-g", "daemon off;"]
+

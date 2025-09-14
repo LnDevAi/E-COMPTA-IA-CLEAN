@@ -1,5 +1,5 @@
 # Stage 1: Build avec Maven
-FROM maven:3.9.6-openjdk-17-slim AS build
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -15,7 +15,7 @@ RUN mvn dependency:go-offline -B
 RUN mvn clean package -DskipTests -Dmaven.test.skip=true
 
 # Stage 2: Runtime optimisé
-FROM openjdk:17-jre-slim
+FROM eclipse-temurin:17-jre
 
 # Créer un utilisateur non-root pour la sécurité
 RUN groupadd -r ecomptaia && useradd -r -g ecomptaia ecomptaia

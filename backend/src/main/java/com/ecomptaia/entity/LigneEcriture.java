@@ -3,7 +3,7 @@ package com.ecomptaia.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import com.ecomptaia.entity.Account;
+import com.ecomptaia.accounting.entity.Account;
 import com.ecomptaia.entity.CostCenter;
 import com.ecomptaia.entity.Project;
 import com.ecomptaia.entity.ThirdParty;

@@ -2,7 +2,7 @@ package com.ecomptaia.repository;
 
 import com.ecomptaia.entity.LigneEcriture;
 import com.ecomptaia.entity.EcritureComptable;
-import com.ecomptaia.entity.Account;
+import com.ecomptaia.accounting.entity.Account;
 import com.ecomptaia.entity.ThirdParty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

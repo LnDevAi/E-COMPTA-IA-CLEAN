@@ -16,14 +16,20 @@ public class Inventory {
     @Column(name = "product_code", unique = true, nullable = false)
     private String productCode;
     
-    @Column(name = "product_name", nullable = false)
-    private String productName;
-    
-    @Column(name = "category")
-    private String category;
+    @Column(name = "name", nullable = false)
+    private String name;
     
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+    
+    @Column(name = "company_id", nullable = false)
+    private Long companyId;
+    
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+    
+    @Column(name = "category")
+    private String category;
     
     @Column(name = "unit", nullable = false)
     private String unit; // pièce, kg, litre, mètre, etc.
@@ -84,9 +90,6 @@ public class Inventory {
     @Column(name = "last_movement_date")
     private LocalDate lastMovementDate;
     
-    @Column(name = "company_id", nullable = false)
-    private Long companyId;
-    
     @Column(name = "country_code", nullable = false)
     private String countryCode;
     
@@ -137,7 +140,7 @@ public class Inventory {
                      Long companyId, String countryCode, String accountingStandard) {
         this();
         this.productCode = productCode;
-        this.productName = productName;
+        this.name = productName;
         this.unit = unit;
         this.unitPrice = unitPrice;
         this.companyId = companyId;
@@ -152,14 +155,24 @@ public class Inventory {
     public String getProductCode() { return productCode; }
     public void setProductCode(String productCode) { this.productCode = productCode; }
     
-    public String getProductName() { return productName; }
-    public void setProductName(String productName) { this.productName = productName; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    
+    
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    
+    public String getProductName() { return name; }
+    public void setProductName(String productName) { this.name = productName; }
     
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
     
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public Long getCompanyId() { return companyId; }
+    public void setCompanyId(Long companyId) { this.companyId = companyId; }
     
     public String getUnit() { return unit; }
     public void setUnit(String unit) { this.unit = unit; }
@@ -218,8 +231,6 @@ public class Inventory {
     public LocalDate getLastMovementDate() { return lastMovementDate; }
     public void setLastMovementDate(LocalDate lastMovementDate) { this.lastMovementDate = lastMovementDate; }
     
-    public Long getCompanyId() { return companyId; }
-    public void setCompanyId(Long companyId) { this.companyId = companyId; }
     
     public String getCountryCode() { return countryCode; }
     public void setCountryCode(String countryCode) { this.countryCode = countryCode; }

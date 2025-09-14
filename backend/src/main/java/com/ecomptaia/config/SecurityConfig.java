@@ -1,17 +1,26 @@
 package com.ecomptaia.config;
+import com.ecomptaia.security.SecurityFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    
+    @Autowired
+    private SecurityFilter securityFilter;
+
+    @Autowired
+    private com.ecomptaia.security.JwtAuthenticationFilter jwtAuthenticationFilter;
+    
     @Bean
     public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
     
@@ -24,50 +33,52 @@ public class SecurityConfig {
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+        http.csrf(csrf -> csrf.disable()) // Réactiver CSRF pour la production
             .cors(cors -> cors.configurationSource(new CorsConfig().corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                // Endpoints sans contexte /api
+                // Endpoints publics (sans authentification)
                 .requestMatchers("/health").permitAll()
-                .requestMatchers("/test/**").permitAll()
-                .requestMatchers("/actuator/**").permitAll()
-                .requestMatchers("/dashboard/**").permitAll()
-                .requestMatchers("/public/**").permitAll()
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/accounting/**").permitAll()
-                .requestMatchers("/hr/**").permitAll()
-                .requestMatchers("/third-parties/**").permitAll()
-                .requestMatchers("/assets/**").permitAll()
-                .requestMatchers("/documents/**").permitAll()
-                .requestMatchers("/ai/**").permitAll()
-                .requestMatchers("/international/**").permitAll()
-                .requestMatchers("/system/**").permitAll()
-                .requestMatchers("/workflow/**").permitAll()
-                .requestMatchers("/subscription/**").permitAll()
-                .requestMatchers("/government-platform/**").permitAll()
-                .requestMatchers("/smt/**").permitAll()
-                // Endpoints avec contexte /api
-                .requestMatchers("/api/security/**").permitAll()
-                .requestMatchers("/api/test/**").permitAll()
-                .requestMatchers("/api/actuator/**").permitAll()
-                .requestMatchers("/api/dashboard/**").permitAll()
-                .requestMatchers("/api/public/**").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/accounting/**").permitAll()
-                .requestMatchers("/api/hr/**").permitAll()
-                .requestMatchers("/api/third-parties/**").permitAll()
-                .requestMatchers("/api/assets/**").permitAll()
-                .requestMatchers("/api/documents/**").permitAll()
-                .requestMatchers("/api/ai/**").permitAll()
-                .requestMatchers("/api/international/**").permitAll()
-                .requestMatchers("/api/system/**").permitAll()
-                .requestMatchers("/api/workflow/**").permitAll()
-                .requestMatchers("/api/subscription/**").permitAll()
-                .requestMatchers("/api/government-platform/**").permitAll()
-                .requestMatchers("/api/smt/**").permitAll()
                 .requestMatchers("/api/health").permitAll()
-                .anyRequest().permitAll() // Temporaire pour les tests
-            );
+                .requestMatchers("/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/register").permitAll()
+                .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/actuator/health").permitAll()
+                
+                // Endpoints d'authentification
+                .requestMatchers("/api/auth/**").permitAll()
+                
+                // Endpoints sensibles nécessitant une authentification
+                .requestMatchers("/api/accounting/**").authenticated()
+                .requestMatchers("/api/hr/**").authenticated()
+                .requestMatchers("/api/third-parties/**").authenticated()
+                .requestMatchers("/api/assets/**").authenticated()
+                .requestMatchers("/api/documents/**").authenticated()
+                .requestMatchers("/api/ai/**").authenticated()
+                .requestMatchers("/api/international/**").authenticated()
+                .requestMatchers("/api/system/**").hasRole("ADMIN")
+                .requestMatchers("/api/workflow/**").authenticated()
+                .requestMatchers("/api/subscription/**").authenticated()
+                .requestMatchers("/api/government-platform/**").authenticated()
+                .requestMatchers("/api/smt/**").authenticated()
+                .requestMatchers("/api/dashboard/**").authenticated()
+                
+                // Endpoints d'administration
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/actuator/**").hasRole("ADMIN")
+                
+                // Tous les autres endpoints nécessitent une authentification
+                .anyRequest().authenticated()
+            )
+            .headers(headers -> headers
+                .frameOptions(frameOptions -> frameOptions.deny())
+                .contentTypeOptions(contentTypeOptions -> {})
+                .httpStrictTransportSecurity(hstsConfig -> hstsConfig
+                    .maxAgeInSeconds(31536000)
+                    .includeSubDomains(true)
+                )
+            )
+            .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

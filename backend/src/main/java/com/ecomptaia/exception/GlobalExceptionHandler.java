@@ -55,7 +55,8 @@ public class GlobalExceptionHandler {
         errorResponse.put("error", "Authentication Error");
         errorResponse.put("message", "Erreur d'authentification");
         errorResponse.put("path", request.getDescription(false));
-        errorResponse.put("details", Map.of("error", ex.getMessage()));
+        // Ne pas exposer les détails de l'erreur d'authentification
+        errorResponse.put("details", Map.of("error", "Identifiants invalides"));
 
         logger.warn("Authentication error: {}", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
@@ -71,7 +72,8 @@ public class GlobalExceptionHandler {
         errorResponse.put("error", "Access Denied");
         errorResponse.put("message", "Accès refusé");
         errorResponse.put("path", request.getDescription(false));
-        errorResponse.put("details", Map.of("error", ex.getMessage()));
+        // Ne pas exposer les détails de l'erreur d'accès
+        errorResponse.put("details", Map.of("error", "Permissions insuffisantes"));
 
         logger.warn("Access denied: {}", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
@@ -87,7 +89,8 @@ public class GlobalExceptionHandler {
         errorResponse.put("error", "Internal Server Error");
         errorResponse.put("message", "Une erreur interne s'est produite");
         errorResponse.put("path", request.getDescription(false));
-        errorResponse.put("details", Map.of("error", ex.getMessage()));
+        // Ne pas exposer les détails de l'erreur interne
+        errorResponse.put("details", Map.of("error", "Erreur technique"));
 
         logger.error("Unexpected error occurred", ex);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);

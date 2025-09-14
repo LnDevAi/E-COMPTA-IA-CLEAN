@@ -26,7 +26,7 @@ public class DocumentManagementController {
     @GetMapping("/documents")
     public ResponseEntity<?> getAllDocuments() {
         try {
-            List<GedDocument> documents = documentManagementService.getAllDocuments();
+            List<GedDocument> documents = documentManagementService.findAll();
 
             Map<String, Object> response = new HashMap<>();
             response.put("documents", documents);
@@ -49,7 +49,7 @@ public class DocumentManagementController {
     @PostMapping("/documents")
     public ResponseEntity<?> createDocument(@RequestBody GedDocument document) {
         try {
-            GedDocument createdDocument = documentManagementService.createDocument(document);
+            GedDocument createdDocument = documentManagementService.save(document);
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Document créé avec succès");
@@ -72,7 +72,7 @@ public class DocumentManagementController {
     @PutMapping("/documents/{id}")
     public ResponseEntity<?> updateDocument(@PathVariable Long id, @RequestBody GedDocument document) {
         try {
-            GedDocument updatedDocument = documentManagementService.updateDocument(id, document);
+            GedDocument updatedDocument = documentManagementService.save(document);
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Document mis à jour avec succès");
